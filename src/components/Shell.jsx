@@ -374,7 +374,9 @@ function Shell({ selectedProject, selectedSession, isActive }) {
 
   // Fit terminal when tab becomes active
   useEffect(() => {
-    if (!isActive || !isInitialized) return;
+    if (!isActive || !isInitialized) {
+      return;
+    }
 
     // Fit terminal when tab becomes active and notify backend
     setTimeout(() => {
@@ -394,7 +396,9 @@ function Shell({ selectedProject, selectedSession, isActive }) {
 
   // WebSocket connection function (called manually)
   const connectWebSocket = async () => {
-    if (isConnecting || isConnected) return;
+    if (isConnecting || isConnected) {
+      return;
+    }
     
     try {
       // Get authentication token
@@ -564,7 +568,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
           <div className="flex items-center space-x-2">
             <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
             {selectedSession && (
-              <span className="text-xs text-blue-300">
+              <span className="text-xs text-gemini-300">
                 ({selectedSession.summary.slice(0, 30)}...)
               </span>
             )}
@@ -575,7 +579,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
               <span className="text-xs text-yellow-400">(Initializing...)</span>
             )}
             {isRestarting && (
-              <span className="text-xs text-blue-400">(Restarting...)</span>
+              <span className="text-xs text-gemini-400">(Restarting...)</span>
             )}
           </div>
           <div className="flex items-center space-x-3">
@@ -591,7 +595,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
                 <span>Disconnect</span>
               </button>
             )}
-            
+
             <button
               onClick={restartShell}
               disabled={isRestarting || isConnected}
@@ -610,14 +614,14 @@ function Shell({ selectedProject, selectedSession, isActive }) {
       {/* Terminal */}
       <div className="flex-1 p-2 overflow-hidden relative">
         <div ref={terminalRef} className="h-full w-full focus:outline-none" style={{ outline: 'none' }} />
-        
+
         {/* Loading state */}
         {!isInitialized && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90">
             <div className="text-white">Loading terminal...</div>
           </div>
         )}
-        
+
         {/* Connect button when not connected */}
         {isInitialized && !isConnected && !isConnecting && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 p-4">
@@ -633,7 +637,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
                 <span>Continue in Shell</span>
               </button>
               <p className="text-gray-400 text-sm mt-3 px-2">
-                {selectedSession ? 
+                {selectedSession ?
                   `Resume session: ${selectedSession.summary.slice(0, 50)}...` : 
                   'Start a new Gemini session'
                 }
@@ -641,7 +645,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
             </div>
           </div>
         )}
-        
+
         {/* Connecting state */}
         {isConnecting && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 p-4">

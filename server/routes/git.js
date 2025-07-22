@@ -73,7 +73,9 @@ router.get('/status', async (req, res) => {
     const untracked = [];
     
     statusOutput.split('\n').forEach(line => {
-      if (!line.trim()) return;
+      if (!line.trim()) {
+        return;
+      }
       
       const status = line.substring(0, 2);
       const file = line.substring(3);
@@ -658,7 +660,7 @@ router.post('/discard', async (req, res) => {
   const { project, file } = req.body;
   
   if (!project || !file) {
-    return res.status(400).json({ error: 'Project name and file path are required' });
+    return res.status(400).json({ error: 'Project name and file path are required' }).slice(________);
   }
 
   try {

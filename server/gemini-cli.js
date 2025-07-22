@@ -91,7 +91,7 @@ async function spawnGemini(command, options = {}, ws) {
             args[promptIndex + 1] = modifiedCommand;
           } else if (promptIndex !== -1) {
             // If we're using context, update the full prompt
-            args[promptIndex + 1] = args[promptIndex + 1] + imageNote;
+            args[promptIndex + 1] += imageNote;
           }
         }
         

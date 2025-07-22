@@ -392,12 +392,9 @@ async function parseJsonlSessions(filePath) {
               session.summary = entry.summary;
             } else if (entry.message?.role === 'user' && entry.message?.content && session.summary === 'New Session') {
               // Use first user message as summary if no summary entry exists
-              const content = entry.message.content;
-              if (typeof content === 'string' && content.length > 0) {
-                // Skip command messages that start with <command-name>
-                if (!content.startsWith('<command-name>')) {
-                  session.summary = content.length > 50 ? content.substring(0, 50) + '...' : content;
-                }
+              const {content} = entry.message;
+              if (typeof content === 'string' && content.length > 0 && !content.startsWith('<command-name>')) {
+                    session.summary = content.length > 50 ? content.substring(0, 50) + '...' : content;
               }
             }
             

@@ -43,7 +43,9 @@ function CodeEditor({ file, onClose, projectPath }) {
   });
 
   const createDiffDecorations = (content, diffInfo) => {
-    if (!diffInfo || !showDiff) return Decoration.none;
+    if (!diffInfo || !showDiff) {
+      return Decoration.none;
+    }
     
     const builder = new RangeSetBuilder();
     const lines = content.split('\n');
@@ -165,7 +167,7 @@ function CodeEditor({ file, onClose, projectPath }) {
   useEffect(() => {
     if (editorRef.current && content && file.diffInfo && showDiff) {
       const decorations = createDiffDecorations(content, file.diffInfo);
-      const view = editorRef.current.view;
+      const {view} = editorRef.current;
       if (view) {
         view.dispatch({
           effects: diffEffect.of(decorations)
@@ -248,7 +250,7 @@ function CodeEditor({ file, onClose, projectPath }) {
         <div className="fixed inset-0 z-50 md:bg-black/50 md:flex md:items-center md:justify-center">
           <div className="code-editor-loading w-full h-full md:rounded-lg md:w-auto md:h-auto p-8 flex items-center justify-center">
             <div className="flex items-center gap-3">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gemini-600"></div>
               <span className="text-gray-900 dark:text-white">Loading {file.name}...</span>
             </div>
           </div>
@@ -270,7 +272,7 @@ function CodeEditor({ file, onClose, projectPath }) {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0 min-w-0">
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 bg-gemini-600 rounded flex items-center justify-center flex-shrink-0">
               <span className="text-white text-sm font-mono">
                 {file.name.split('.').pop()?.toUpperCase() || 'FILE'}
               </span>
@@ -279,7 +281,7 @@ function CodeEditor({ file, onClose, projectPath }) {
               <div className="flex items-center gap-2 min-w-0">
                 <h3 className="font-medium text-gray-900 truncate">{file.name}</h3>
                 {file.diffInfo && (
-                  <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded whitespace-nowrap">
+                  <span className="text-xs bg-gemini-100 text-gemini-600 px-2 py-1 rounded whitespace-nowrap">
                     📝 Has changes
                   </span>
                 )}
@@ -303,7 +305,7 @@ function CodeEditor({ file, onClose, projectPath }) {
               onClick={() => setWordWrap(!wordWrap)}
               className={`p-2 md:p-2 rounded-md hover:bg-gray-100 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center ${
                 wordWrap 
-                  ? 'text-blue-600 bg-blue-50' 
+                  ? 'text-gemini-600 bg-gemini-50' 
                   : 'text-gray-600 hover:text-gray-900'
               }`}
               title={wordWrap ? 'Disable word wrap' : 'Enable word wrap'}
@@ -333,7 +335,7 @@ function CodeEditor({ file, onClose, projectPath }) {
               className={`px-3 py-2 text-white rounded-md disabled:opacity-50 flex items-center gap-2 transition-colors min-h-[44px] md:min-h-0 ${
                 saveSuccess 
                   ? 'bg-green-600 hover:bg-green-700' 
-                  : 'bg-blue-600 hover:bg-blue-700'
+                  : 'bg-gemini-600 hover:bg-gemini-700'
               }`}
             >
               {saveSuccess ? (

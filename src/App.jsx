@@ -1,20 +1,20 @@
 /*
  * App.jsx - Main Application Component with Session Protection System
- * 
+ *
  * SESSION PROTECTION SYSTEM OVERVIEW:
  * ===================================
- * 
+ *
  * Problem: Automatic project updates from WebSocket would refresh the sidebar and clear chat messages
  * during active conversations, creating a poor user experience.
- * 
+ *
  * Solution: Track "active sessions" and pause project updates during conversations.
- * 
+ *
  * How it works:
- * 1. When user sends message → session marked as "active" 
+ * 1. When user sends message → session marked as "active"
  * 2. Project updates are skipped while session is active
  * 3. When conversation completes/aborts → session marked as "inactive"
  * 4. Project updates resume normally
- * 
+ *
  * Handles both existing sessions (with real IDs) and new sessions (with temporary IDs).
  */
 
@@ -127,15 +127,10 @@ function AppContent() {
 
     // Check if the selected session's content has changed (modification vs addition)
     // Compare key fields that would affect the loaded chat interface
-    const sessionUnchanged = 
-      currentSelectedSession.id === updatedSelectedSession.id &&
-      currentSelectedSession.title === updatedSelectedSession.title &&
-      currentSelectedSession.created_at === updatedSelectedSession.created_at &&
-      currentSelectedSession.updated_at === updatedSelectedSession.updated_at;
-
-    // This is considered additive if the selected session is unchanged
-    // (new sessions may have been added elsewhere, but active session is protected)
-    return sessionUnchanged;
+    return currentSelectedSession.id === updatedSelectedSession.id &&
+          currentSelectedSession.title === updatedSelectedSession.title &&
+          currentSelectedSession.created_at === updatedSelectedSession.created_at &&
+          currentSelectedSession.updated_at === updatedSelectedSession.updated_at;
   };
 
   // Handle WebSocket messages for real-time project updates
@@ -209,7 +204,9 @@ function AppContent() {
         // Check if the projects data has actually changed
         const hasChanges = data.some((newProject, index) => {
           const prevProject = prevProjects[index];
-          if (!prevProject) return true;
+          if (!prevProject) {
+            return true;
+          }
           
           // Compare key properties that would affect UI
           return (
@@ -326,7 +323,9 @@ function AppContent() {
         // Check if projects data has actually changed
         const hasChanges = freshProjects.some((newProject, index) => {
           const prevProject = prevProjects[index];
-          if (!prevProject) return true;
+          if (!prevProject) {
+            return true;
+          }
           
           return (
             newProject.name !== prevProject.name ||
@@ -419,7 +418,9 @@ function AppContent() {
 
   // Version Upgrade Modal Component
   const VersionUpgradeModal = () => {
-    if (!showVersionModal) return null;
+    if (!showVersionModal) {
+      return null;
+    }
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -434,8 +435,8 @@ function AppContent() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-10 h-10 bg-gemini-100 dark:bg-gemini-900/30 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-gemini-600 dark:text-gemini-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                 </svg>
               </div>
@@ -460,9 +461,9 @@ function AppContent() {
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Current Version</span>
               <span className="text-sm text-gray-900 dark:text-white font-mono">{currentVersion}</span>
             </div>
-            <div className="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Latest Version</span>
-              <span className="text-sm text-blue-900 dark:text-blue-100 font-mono">{latestVersion}</span>
+            <div className="flex justify-between items-center p-3 bg-gemini-50 dark:bg-gemini-900/20 rounded-lg border border-gemini-200 dark:border-gemini-700">
+              <span className="text-sm font-medium text-gemini-700 dark:text-gemini-300">Latest Version</span>
+              <span className="text-sm text-gemini-900 dark:text-gemini-100 font-mono">{latestVersion}</span>
             </div>
           </div>
 
@@ -496,7 +497,7 @@ function AppContent() {
                   });
                 setShowVersionModal(false);
               }}
-              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-gemini-500 hover:bg-gemini-600 rounded-md transition-colors"
             >
               Copy Command
             </button>
@@ -507,7 +508,7 @@ function AppContent() {
   };
 
   return (
-    <div className="fixed inset-0 flex bg-background">
+    <div className="fixed inset-0 flex bg-zinc-950 text-white">
       {/* Fixed Desktop Sidebar */}
       {!isMobile && (
         <div className="w-80 flex-shrink-0 border-r border-border bg-card">

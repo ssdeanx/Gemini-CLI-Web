@@ -91,7 +91,7 @@ class SessionManager {
     // Find first user message
     const firstUserMessage = session.messages.find(m => m.role === 'user');
     if (firstUserMessage) {
-      const content = firstUserMessage.content;
+      const {content} = firstUserMessage;
       return content.length > 50 ? content.substring(0, 50) + '...' : content;
     }
     
@@ -127,7 +127,9 @@ class SessionManager {
   // Save session to disk
   async saveSession(sessionId) {
     const session = this.sessions.get(sessionId);
-    if (!session) return;
+    if (!session) {
+      return;
+    }
     
     try {
       const filePath = path.join(this.sessionsDir, `${sessionId}.json`);
@@ -170,7 +172,7 @@ class SessionManager {
   // Delete a session
   async deleteSession(sessionId) {
     this.sessions.delete(sessionId);
-    
+
     try {
       const filePath = path.join(this.sessionsDir, `${sessionId}.json`);
       await fs.unlink(filePath);
@@ -182,8 +184,10 @@ class SessionManager {
   // Get session messages for display
   getSessionMessages(sessionId) {
     const session = this.sessions.get(sessionId);
-    if (!session) return [];
-    
+    if (!session) {
+      return [];
+    }
+
     return session.messages.map(msg => ({
       type: 'message',
       message: {

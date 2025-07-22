@@ -69,7 +69,9 @@ function FileTree({ selectedProject }) {
 
   // Format file size
   const formatFileSize = (bytes) => {
-    if (!bytes || bytes === 0) return '0 B';
+    if (!bytes || bytes === 0) {
+      return '0 B';
+    }
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -78,15 +80,25 @@ function FileTree({ selectedProject }) {
 
   // Format date as relative time
   const formatRelativeTime = (date) => {
-    if (!date) return '-';
+    if (!date) {
+      return '-';
+    }
     const now = new Date();
     const past = new Date(date);
     const diffInSeconds = Math.floor((now - past) / 1000);
     
-    if (diffInSeconds < 60) return 'just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    if (diffInSeconds < 60) {
+      return 'just now';
+    }
+    if (diffInSeconds < 3600) {
+      return `${Math.floor(diffInSeconds / 60)} min ago`;
+    }
+    if (diffInSeconds < 86400) {
+      return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    }
+    if (diffInSeconds < 2592000) {
+      return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    }
     return past.toLocaleDateString();
   };
 
@@ -124,7 +136,7 @@ function FileTree({ selectedProject }) {
           <div className="flex items-center gap-2 min-w-0 w-full">
             {item.type === 'directory' ? (
               expandedDirs.has(item.path) ? (
-                <FolderOpen className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                <FolderOpen className="w-4 h-4 text-gemini-500 flex-shrink-0" />
               ) : (
                 <Folder className="w-4 h-4 text-muted-foreground flex-shrink-0" />
               )
@@ -165,9 +177,9 @@ function FileTree({ selectedProject }) {
     if (codeExtensions.includes(ext)) {
       return <FileCode className="w-4 h-4 text-green-500 flex-shrink-0" />;
     } else if (docExtensions.includes(ext)) {
-      return <FileText className="w-4 h-4 text-blue-500 flex-shrink-0" />;
+      return <FileText className="w-4 h-4 text-gemini-500 flex-shrink-0" />;
     } else if (imageExtensions.includes(ext)) {
-      return <File className="w-4 h-4 text-purple-500 flex-shrink-0" />;
+      return <File className="w-4 h-4 text-gemini-500 flex-shrink-0" />;
     } else {
       return <File className="w-4 h-4 text-muted-foreground flex-shrink-0" />;
     }
@@ -205,7 +217,7 @@ function FileTree({ selectedProject }) {
           <div className="col-span-5 flex items-center gap-2 min-w-0">
             {item.type === 'directory' ? (
               expandedDirs.has(item.path) ? (
-                <FolderOpen className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                <FolderOpen className="w-4 h-4 text-gemini-500 flex-shrink-0" />
               ) : (
                 <Folder className="w-4 h-4 text-muted-foreground flex-shrink-0" />
               )
@@ -267,7 +279,7 @@ function FileTree({ selectedProject }) {
           <div className="flex items-center gap-2 min-w-0">
             {item.type === 'directory' ? (
               expandedDirs.has(item.path) ? (
-                <FolderOpen className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                <FolderOpen className="w-4 h-4 text-gemini-500 flex-shrink-0" />
               ) : (
                 <Folder className="w-4 h-4 text-muted-foreground flex-shrink-0" />
               )

@@ -61,6 +61,9 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        zinc: {
+          950: '#09090b',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

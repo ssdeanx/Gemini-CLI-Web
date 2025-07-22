@@ -12,7 +12,7 @@ const TodoList = ({ todos, isResult = false }) => {
       case 'completed':
         return <CheckCircle2 className="w-4 h-4 text-green-500 dark:text-green-400" />;
       case 'in_progress':
-        return <Clock className="w-4 h-4 text-blue-500 dark:text-blue-400" />;
+        return <Clock className="w-4 h-4 text-gemini-500 dark:text-gemini-400" />;
       case 'pending':
       default:
         return <Circle className="w-4 h-4 text-gray-400 dark:text-gray-500" />;
@@ -24,7 +24,7 @@ const TodoList = ({ todos, isResult = false }) => {
       case 'completed':
         return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border-green-200 dark:border-green-800';
       case 'in_progress':
-        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800';
+        return 'bg-gemini-100 dark:bg-gemini-900/30 text-gemini-800 dark:text-gemini-200 border-gemini-200 dark:border-gemini-800';
       case 'pending':
       default:
         return 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700';
@@ -50,7 +50,7 @@ const TodoList = ({ todos, isResult = false }) => {
           Todo List ({todos.length} {todos.length === 1 ? 'item' : 'items'})
         </div>
       )}
-      
+
       {todos.map((todo) => (
         <div
           key={todo.id}
@@ -59,13 +59,13 @@ const TodoList = ({ todos, isResult = false }) => {
           <div className="flex-shrink-0 mt-0.5">
             {getStatusIcon(todo.status)}
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-2">
               <p className={`text-sm font-medium ${todo.status === 'completed' ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-100'}`}>
                 {todo.content}
               </p>
-              
+
               <div className="flex gap-1 flex-shrink-0">
                 <Badge
                   variant="outline"

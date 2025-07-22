@@ -94,14 +94,19 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 192 91% 36%;
     --radius: 0.5rem;
+
+    /* Glassmorphism and Glow variables */
+    --glow-color: 0 0% 100%; /* White glow for light mode */
+    --glass-blur: 10px;
+    --glass-bg-opacity: 0.05;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 240 5% 9.5%; /* zinc-950 */
     --foreground: 210 40% 98%;
-    --card: 217.2 91.2% 8%;
+    --card: 240 5% 9.5%; /* zinc-950 */
     --card-foreground: 210 40% 98%;
-    --popover: 217.2 91.2% 8%;
+    --popover: 240 5% 9.5%; /* zinc-950 */
     --popover-foreground: 210 40% 98%;
     --primary: 192 91% 46%;
     --primary-foreground: 222.2 47.4% 11.2%;
@@ -113,9 +118,35 @@
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 240 3.7% 15.9%; /* zinc-800 */
+    --input: 240 3.7% 15.9%; /* zinc-800 */
     --ring: 192 91% 46%;
+
+    /* Glassmorphism and Glow variables for dark mode */
+    --glow-color: 192 91% 46%; /* Primary color glow for dark mode */
+    --glass-blur: 15px; /* Slightly more blur in dark mode */
+    --glass-bg-opacity: 0.02; /* More subtle background in dark mode */
+  }
+}
+
+@layer components {
+  .glassmorphic {
+    background: hsla(var(--background), var(--glass-bg-opacity));
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid hsla(var(--foreground), 0.1);
+    border-radius: var(--radius);
+  }
+
+  .glowing-shadow {
+    box-shadow: 0 0 15px hsla(var(--glow-color), 0.3),
+                0 0 30px hsla(var(--glow-color), 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .glowing-shadow-hover:hover {
+    box-shadow: 0 0 20px hsla(var(--glow-color), 0.5),
+                0 0 40px hsla(var(--glow-color), 0.3);
   }
 }
 

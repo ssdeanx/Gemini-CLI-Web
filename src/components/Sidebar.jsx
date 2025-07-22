@@ -25,13 +25,27 @@ const formatTimeAgo = (dateString, currentTime) => {
   const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
   const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
   
-  if (diffInSeconds < 60) return 'Just now';
-  if (diffInMinutes === 1) return '1 min ago';
-  if (diffInMinutes < 60) return `${diffInMinutes} mins ago`;
-  if (diffInHours === 1) return '1 hour ago';
-  if (diffInHours < 24) return `${diffInHours} hours ago`;
-  if (diffInDays === 1) return '1 day ago';
-  if (diffInDays < 7) return `${diffInDays} days ago`;
+  if (diffInSeconds < 60) {
+    return 'Just now';
+  }
+  if (diffInMinutes === 1) {
+    return '1 min ago';
+  }
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} mins ago`;
+  }
+  if (diffInHours === 1) {
+    return '1 hour ago';
+  }
+  if (diffInHours < 24) {
+    return `${diffInHours} hours ago`;
+  }
+  if (diffInDays === 1) {
+    return '1 day ago';
+  }
+  if (diffInDays < 7) {
+    return `${diffInDays} days ago`;
+  }
   return date.toLocaleDateString();
 };
 
@@ -215,12 +229,10 @@ function Sidebar({
     }
     
     // Find the most recent session activity
-    const mostRecentDate = allSessions.reduce((latest, session) => {
-      const sessionDate = new Date(session.lastActivity);
-      return sessionDate > latest ? sessionDate : latest;
-    }, new Date(0));
-    
-    return mostRecentDate;
+    return allSessions.reduce((latest, session) => {
+          const sessionDate = new Date(session.lastActivity);
+          return sessionDate > latest ? sessionDate : latest;
+        }, new Date(0));
   };
 
   // Combined sorting: starred projects first, then by selected order
@@ -229,8 +241,12 @@ function Sidebar({
     const bStarred = isProjectStarred(b.name);
     
     // First, sort by starred status
-    if (aStarred && !bStarred) return -1;
-    if (!aStarred && bStarred) return 1;
+    if (aStarred && !bStarred) {
+      return -1;
+    }
+    if (!aStarred && bStarred) {
+      return 1;
+    }
     
     // For projects with same starred status, sort by selected order
     if (projectSortOrder === 'date') {
@@ -375,7 +391,7 @@ function Sidebar({
     try {
       const currentSessionCount = (project.sessions?.length || 0) + (additionalSessions[project.name]?.length || 0);
       const result = await api.getSessions(project.name, 5, currentSessionCount);
-      
+
       // Store additional sessions locally
       setAdditionalSessions(prev => ({
         ...prev,
@@ -384,7 +400,7 @@ function Sidebar({
           ...result.sessions
         ]
       }));
-      
+
       // Update project metadata if needed
       if (result.hasMore === false) {
         // Mark that there are no more sessions to load
@@ -399,12 +415,14 @@ function Sidebar({
 
   // Filter projects based on search input
   const filteredProjects = sortedProjects.filter(project => {
-    if (!searchFilter.trim()) return true;
-    
+    if (!searchFilter.trim()) {
+      return true;
+    }
+
     const searchLower = searchFilter.toLowerCase();
     const displayName = (project.displayName || project.name).toLowerCase();
     const projectName = project.name.toLowerCase();
-    
+
     // Search in both display name and actual project name/path
     return displayName.includes(searchLower) || projectName.includes(searchLower);
   });
@@ -453,7 +471,7 @@ function Sidebar({
             </Button>
           </div>
         </div>
-        
+
         {/* Mobile Header */}
         <div className="md:hidden p-3 border-b border-border">
           <div className="flex items-center justify-between">
@@ -491,7 +509,7 @@ function Sidebar({
           </div>
         </div>
       </div>
-      
+
       {/* New Project Form */}
       {showNewProject && (
         <div className="md:p-3 md:border-b md:border-border md:bg-muted/30">
@@ -508,8 +526,12 @@ function Sidebar({
               className="text-sm focus:ring-2 focus:ring-primary/20"
               autoFocus
               onKeyDown={(e) => {
-                if (e.key === 'Enter') createNewProject();
-                if (e.key === 'Escape') cancelNewProject();
+                if (e.key === 'Enter') {
+                  createNewProject();
+                }
+                if (e.key === 'Escape') {
+                  cancelNewProject();
+                }
               }}
             />
             <div className="flex gap-2">
@@ -532,7 +554,7 @@ function Sidebar({
               </Button>
             </div>
           </div>
-          
+
           {/* Mobile Form - Simple Overlay */}
           <div className="md:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
             <div className="absolute bottom-0 left-0 right-0 bg-card rounded-t-lg border-t border-border p-4 space-y-4 animate-in slide-in-from-bottom duration-300">
@@ -553,7 +575,7 @@ function Sidebar({
                   <X className="w-3 h-3" />
                 </button>
               </div>
-              
+
               <div className="space-y-3">
                 <Input
                   value={newProjectPath}
@@ -562,11 +584,15 @@ function Sidebar({
                   className="text-sm h-10 rounded-md focus:border-primary transition-colors"
                   autoFocus
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') createNewProject();
-                    if (e.key === 'Escape') cancelNewProject();
+                    if (e.key === 'Enter') {
+                      createNewProject();
+                    }
+                    if (e.key === 'Escape') {
+                      cancelNewProject();
+                    }
                   }}
                 />
-                
+
                 <div className="flex gap-2">
                   <Button
                     onClick={cancelNewProject}
@@ -585,14 +611,14 @@ function Sidebar({
                   </Button>
                 </div>
               </div>
-              
+
               {/* Safe area for mobile */}
               <div className="h-4" />
             </div>
           </div>
         </div>
       )}
-      
+
       {/* Search Filter */}
       {projects.length > 0 && !isLoading && (
         <div className="px-3 md:px-4 py-2 border-b border-border">
@@ -616,7 +642,7 @@ function Sidebar({
           </div>
         </div>
       )}
-      
+
       {/* Projects List */}
       <ScrollArea className="flex-1 md:px-2 md:py-3 overflow-y-auto overscroll-contain">
         <div className="md:space-y-1 pb-safe-area-inset-bottom">
@@ -655,7 +681,7 @@ function Sidebar({
               const isExpanded = expandedProjects.has(project.name);
               const isSelected = selectedProject?.name === project.name;
               const isStarred = isProjectStarred(project.name);
-              
+
               return (
                 <div key={project.name} className="md:space-y-1">
                   {/* Project Header */}
@@ -698,8 +724,12 @@ function Sidebar({
                                   autoComplete="off"
                                   onClick={(e) => e.stopPropagation()}
                                   onKeyDown={(e) => {
-                                    if (e.key === 'Enter') saveProjectName(project.name);
-                                    if (e.key === 'Escape') cancelEditing();
+                                    if (e.key === 'Enter') {
+                                      saveProjectName(project.name);
+                                    }
+                                    if (e.key === 'Escape') {
+                                      cancelEditing();
+                                    }
                                   }}
                                   style={{
                                     fontSize: '16px', // Prevents zoom on iOS
@@ -845,8 +875,12 @@ function Sidebar({
                                 placeholder="Project name"
                                 autoFocus
                                 onKeyDown={(e) => {
-                                  if (e.key === 'Enter') saveProjectName(project.name);
-                                  if (e.key === 'Escape') cancelEditing();
+                                  if (e.key === 'Enter') {
+                                    saveProjectName(project.name);
+                                  }
+                                  if (e.key === 'Escape') {
+                                    cancelEditing();
+                                  }
                                 }}
                               />
                               <div className="text-xs text-muted-foreground truncate" title={project.fullPath}>
@@ -979,7 +1013,7 @@ function Sidebar({
                           const sessionDate = new Date(session.lastActivity);
                           const diffInMinutes = Math.floor((currentTime - sessionDate) / (1000 * 60));
                           const isActive = diffInMinutes < 10;
-                          
+
                           return (
                           <div key={session.id} className="group relative">
                             {/* Active session indicator dot */}
@@ -1045,7 +1079,7 @@ function Sidebar({
                                 </div>
                               </div>
                             </div>
-                            
+
                             {/* Desktop Session Item */}
                             <div className="hidden md:block">
                               <Button
@@ -1124,7 +1158,7 @@ function Sidebar({
                                   <>
                                     {/* Generate summary button */}
                                     {/* <button
-                                      className="w-6 h-6 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 rounded flex items-center justify-center"
+                                      className="w-6 h-6 bg-gemini-50 hover:bg-gemini-100 dark:bg-gemini-900/20 dark:hover:bg-gemini-900/40 rounded flex items-center justify-center"
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         generateSessionSummary(project.name, session.id);
@@ -1133,9 +1167,9 @@ function Sidebar({
                                       disabled={generatingSummary[`${project.name}-${session.id}`]}
                                     >
                                       {generatingSummary[`${project.name}-${session.id}`] ? (
-                                        <div className="w-3 h-3 animate-spin rounded-full border border-blue-600 dark:border-blue-400 border-t-transparent" />
+                                        <div className="w-3 h-3 animate-spin rounded-full border border-gemini-600 dark:border-gemini-400 border-t-transparent" />
                                       ) : (
-                                        <Sparkles className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                                        <Sparkles className="w-3 h-3 text-gemini-600 dark:text-gemini-400" />
                                       )}
                                     </button> */}
                                     {/* Edit button */}
@@ -1232,18 +1266,18 @@ function Sidebar({
           <div className="hidden md:block">
             <Button
               variant="ghost"
-              className="w-full justify-start gap-3 p-3 h-auto font-normal text-left hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors duration-200 border border-blue-200 dark:border-blue-700 rounded-lg mb-2"
+              className="w-full justify-start gap-3 p-3 h-auto font-normal text-left hover:bg-gemini-50 dark:hover:bg-gemini-900/20 transition-colors duration-200 border border-gemini-200 dark:border-gemini-700 rounded-lg mb-2"
               onClick={onShowVersionModal}
             >
               <div className="relative">
-                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gemini-600 dark:text-gemini-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                 </svg>
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-gemini-500 rounded-full animate-pulse" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium text-blue-700 dark:text-blue-300">Update Available</div>
-                <div className="text-xs text-blue-600 dark:text-blue-400">Version {latestVersion} is ready</div>
+                <div className="text-sm font-medium text-gemini-700 dark:text-gemini-300">Update Available</div>
+                <div className="text-xs text-gemini-600 dark:text-gemini-400">Version {latestVersion} is ready</div>
               </div>
             </Button>
           </div>
@@ -1251,18 +1285,18 @@ function Sidebar({
           {/* Mobile Version Notification */}
           <div className="md:hidden p-3 pb-2">
             <button
-              className="w-full h-12 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl flex items-center justify-start gap-3 px-4 active:scale-[0.98] transition-all duration-150"
+              className="w-full h-12 bg-gemini-50 dark:bg-gemini-900/20 border border-gemini-200 dark:border-gemini-700 rounded-xl flex items-center justify-start gap-3 px-4 active:scale-[0.98] transition-all duration-150"
               onClick={onShowVersionModal}
             >
               <div className="relative">
-                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gemini-600 dark:text-gemini-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                 </svg>
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-gemini-500 rounded-full animate-pulse" />
               </div>
               <div className="min-w-0 flex-1 text-left">
-                <div className="text-sm font-medium text-blue-700 dark:text-blue-300">Update Available</div>
-                <div className="text-xs text-blue-600 dark:text-blue-400">Version {latestVersion} is ready</div>
+                <div className="text-sm font-medium text-gemini-700 dark:text-gemini-300">Update Available</div>
+                <div className="text-xs text-gemini-600 dark:text-gemini-400">Version {latestVersion} is ready</div>
               </div>
             </button>
           </div>

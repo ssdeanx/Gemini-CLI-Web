@@ -51,30 +51,32 @@ function GitPanel({ selectedProject, isMobile }) {
         setShowBranchDropdown(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const fetchGitStatus = async () => {
-    if (!selectedProject) return;
-    
+    if (!selectedProject) {
+      return;
+    }
+
     // console.log('Fetching git status for project:', selectedProject.name, 'path:', selectedProject.path);
-    
+
     setIsLoading(true);
     try {
       const response = await authenticatedFetch(`/api/git/status?project=${encodeURIComponent(selectedProject.name)}`);
       const data = await response.json();
-      
+
       // console.log('Git status response:', data);
-      
+
       if (data.error) {
         console.error('Git status error:', data.error);
         setGitStatus({ error: data.error, details: data.details });
       } else {
         setGitStatus(data);
         setCurrentBranch(data.branch || 'main');
-        
+
         // Auto-select all changed files
         const allFiles = new Set([
           ...(data.modified || []),
@@ -83,7 +85,7 @@ function GitPanel({ selectedProject, isMobile }) {
           ...(data.untracked || [])
         ]);
         setSelectedFiles(allFiles);
-        
+
         // Fetch diffs for changed files
         for (const file of data.modified || []) {
           fetchFileDiff(file);
@@ -103,7 +105,7 @@ function GitPanel({ selectedProject, isMobile }) {
     try {
       const response = await authenticatedFetch(`/api/git/branches?project=${encodeURIComponent(selectedProject.name)}`);
       const data = await response.json();
-      
+
       if (!data.error && data.branches) {
         setBranches(data.branches);
       }
@@ -113,12 +115,14 @@ function GitPanel({ selectedProject, isMobile }) {
   };
 
   const fetchRemoteStatus = async () => {
-    if (!selectedProject) return;
-    
+    if (!selectedProject) {
+      return;
+    }
+
     try {
       const response = await authenticatedFetch(`/api/git/remote-status?project=${encodeURIComponent(selectedProject.name)}`);
       const data = await response.json();
-      
+
       if (!data.error) {
         setRemoteStatus(data);
       } else {
@@ -140,7 +144,7 @@ function GitPanel({ selectedProject, isMobile }) {
           branch: branchName
         })
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setCurrentBranch(branchName);
@@ -155,8 +159,10 @@ function GitPanel({ selectedProject, isMobile }) {
   };
 
   const createBranch = async () => {
-    if (!newBranchName.trim()) return;
-    
+    if (!newBranchName.trim()) {
+      return;
+    }
+
     setIsCreatingBranch(true);
     try {
       const response = await authenticatedFetch('/api/git/create-branch', {
@@ -167,7 +173,7 @@ function GitPanel({ selectedProject, isMobile }) {
           branch: newBranchName.trim()
         })
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setCurrentBranch(newBranchName.trim());
@@ -196,7 +202,7 @@ function GitPanel({ selectedProject, isMobile }) {
           project: selectedProject.name
         })
       });
-      
+
       const data = await response.json();
       if (data.success) {
         // Refresh status after successful fetch
@@ -222,7 +228,7 @@ function GitPanel({ selectedProject, isMobile }) {
           project: selectedProject.name
         })
       });
-      
+
       const data = await response.json();
       if (data.success) {
         // Refresh status after successful pull
@@ -249,7 +255,7 @@ function GitPanel({ selectedProject, isMobile }) {
           project: selectedProject.name
         })
       });
-      
+
       const data = await response.json();
       if (data.success) {
         // Refresh status after successful push
@@ -276,7 +282,7 @@ function GitPanel({ selectedProject, isMobile }) {
           file: filePath
         })
       });
-      
+
       const data = await response.json();
       if (data.success) {
         // Remove from selected files and refresh status
@@ -295,7 +301,9 @@ function GitPanel({ selectedProject, isMobile }) {
   };
 
   const confirmAndExecute = async () => {
-    if (!confirmAction) return;
+    if (!confirmAction) {
+      return;
+    }
 
     const { type, file, message } = confirmAction;
     setConfirmAction(null);
@@ -324,7 +332,7 @@ function GitPanel({ selectedProject, isMobile }) {
     try {
       const response = await authenticatedFetch(`/api/git/diff?project=${encodeURIComponent(selectedProject.name)}&file=${encodeURIComponent(filePath)}`);
       const data = await response.json();
-      
+
       if (!data.error && data.diff) {
         setGitDiff(prev => ({
           ...prev,
@@ -340,7 +348,7 @@ function GitPanel({ selectedProject, isMobile }) {
     try {
       const response = await authenticatedFetch(`/api/git/commits?project=${encodeURIComponent(selectedProject.name)}&limit=10`);
       const data = await response.json();
-      
+
       if (!data.error && data.commits) {
         setRecentCommits(data.commits);
       }
@@ -353,7 +361,7 @@ function GitPanel({ selectedProject, isMobile }) {
     try {
       const response = await authenticatedFetch(`/api/git/commit-diff?project=${encodeURIComponent(selectedProject.name)}&commit=${commitHash}`);
       const data = await response.json();
-      
+
       if (!data.error && data.diff) {
         setCommitDiffs(prev => ({
           ...prev,
@@ -376,7 +384,7 @@ function GitPanel({ selectedProject, isMobile }) {
           files: Array.from(selectedFiles)
         })
       });
-      
+
       const data = await response.json();
       if (data.message) {
         setCommitMessage(data.message);
@@ -431,7 +439,9 @@ function GitPanel({ selectedProject, isMobile }) {
   };
 
   const handleCommit = async () => {
-    if (!commitMessage.trim() || selectedFiles.size === 0) return;
+    if (!commitMessage.trim() || selectedFiles.size === 0) {
+      return;
+    }
     
     setIsCommitting(true);
     try {
@@ -475,7 +485,7 @@ function GitPanel({ selectedProject, isMobile }) {
         } ${
           isAddition ? 'bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300' :
           isDeletion ? 'bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300' :
-          isHeader ? 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300' :
+          isHeader ? 'bg-gemini-50 dark:bg-gemini-950 text-gemini-700 dark:text-gemini-300' :
           'text-gray-600 dark:text-gray-400'
         }`}
       >
@@ -497,7 +507,7 @@ function GitPanel({ selectedProject, isMobile }) {
   const renderCommitItem = (commit) => {
     const isExpanded = expandedCommits.has(commit.hash);
     const diff = commitDiffs[commit.hash];
-    
+
     return (
       <div key={commit.hash} className="border-b border-gray-200 dark:border-gray-700 last:border-0">
         <div 
@@ -541,7 +551,7 @@ function GitPanel({ selectedProject, isMobile }) {
     const isExpanded = expandedFiles.has(filePath);
     const isSelected = selectedFiles.has(filePath);
     const diff = gitDiff[filePath];
-    
+
     return (
       <div key={filePath} className="border-b border-gray-200 dark:border-gray-700 last:border-0">
         <div className={`flex items-center hover:bg-gray-50 dark:hover:bg-gray-800 ${isMobile ? 'px-2 py-1.5' : 'px-3 py-2'}`}>
@@ -550,9 +560,9 @@ function GitPanel({ selectedProject, isMobile }) {
             checked={isSelected}
             onChange={() => toggleFileSelected(filePath)}
             onClick={(e) => e.stopPropagation()}
-            className={`rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-500 focus:ring-blue-500 dark:focus:ring-blue-400 dark:bg-gray-800 dark:checked:bg-blue-600 ${isMobile ? 'mr-1.5' : 'mr-2'}`}
+            className={`rounded border-gray-300 dark:border-gray-600 text-gemini-500 dark:text-gemini-500 focus:ring-gemini-500 dark:focus:ring-gemini-400 dark:bg-gray-800 dark:checked:bg-gemini-500 ${isMobile ? 'mr-1.5' : 'mr-2'}`}
           />
-          <div 
+          <div
             className="flex items-center flex-1 cursor-pointer"
             onClick={() => toggleFileExpanded(filePath)}
           >
@@ -565,10 +575,10 @@ function GitPanel({ selectedProject, isMobile }) {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setConfirmAction({ 
-                      type: 'discard', 
+                    setConfirmAction({
+                      type: 'discard',
                       file: filePath,
-                      message: `Discard all changes to "${filePath}"? This action cannot be undone.` 
+                      message: `Discard all changes to "${filePath}"? This action cannot be undone.`
                     });
                   }}
                   className={`${isMobile ? 'px-2 py-1 text-xs' : 'p-1'} hover:bg-red-100 dark:hover:bg-red-900 rounded text-red-600 dark:text-red-400 font-medium flex items-center gap-1`}
@@ -578,7 +588,7 @@ function GitPanel({ selectedProject, isMobile }) {
                   {isMobile && <span>Discard</span>}
                 </button>
               )}
-              <span 
+              <span
                 className={`inline-flex items-center justify-center w-5 h-5 rounded text-xs font-bold border ${
                   status === 'M' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' :
                   status === 'A' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 border-green-200 dark:border-green-800' :
@@ -664,7 +674,7 @@ function GitPanel({ selectedProject, isMobile }) {
                     </span>
                   )}
                   {remoteStatus.behind > 0 && (
-                    <span className="text-blue-600 dark:text-blue-400" title={`${remoteStatus.behind} commit${remoteStatus.behind !== 1 ? 's' : ''} behind`}>
+                    <span className="text-gemini-600 dark:text-gemini-400" title={`${remoteStatus.behind} commit${remoteStatus.behind !== 1 ? 's' : ''} behind`}>
                       ↓{remoteStatus.behind}
                     </span>
                   )}
@@ -678,7 +688,7 @@ function GitPanel({ selectedProject, isMobile }) {
             </div>
             <ChevronDown className={`w-3 h-3 text-gray-500 transition-transform ${showBranchDropdown ? 'rotate-180' : ''}`} />
           </button>
-          
+
           {/* Branch Dropdown */}
           {showBranchDropdown && (
             <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
@@ -713,7 +723,7 @@ function GitPanel({ selectedProject, isMobile }) {
             </div>
           )}
         </div>
-        
+
         <div className={`flex items-center ${isMobile ? 'gap-1' : 'gap-2'}`}>
           {/* Remote action buttons - smart logic based on ahead/behind status */}
           {remoteStatus?.hasRemote && !remoteStatus?.isUpToDate && (
@@ -755,7 +765,7 @@ function GitPanel({ selectedProject, isMobile }) {
                 <button
                   onClick={handleFetch}
                   disabled={isFetching}
-                  className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-1"
+                  className="px-2 py-1 text-xs bg-gemini-500 text-white rounded hover:bg-gemini-600 disabled:opacity-50 flex items-center gap-1"
                   title={`Fetch from ${remoteStatus.remoteName}`}
                 >
                   <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin' : ''}`} />
@@ -787,9 +797,9 @@ function GitPanel({ selectedProject, isMobile }) {
           {gitStatus.details && (
             <p className="text-sm text-center leading-relaxed mb-6 max-w-md">{gitStatus.details}</p>
           )}
-          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 max-w-md">
-            <p className="text-sm text-blue-700 dark:text-blue-300 text-center">
-              <strong>Tip:</strong> Run <code className="bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded font-mono text-xs">git init</code> in your project directory to initialize git source control.
+          <div className="p-4 bg-gemini-50 dark:bg-gemini-900/20 rounded-lg border border-gemini-200 dark:border-gemini-800 max-w-md">
+            <p className="text-sm text-gemini-700 dark:text-gemini-300 text-center">
+              <strong>Tip:</strong> Run <code className="bg-gemini-100 dark:bg-gemini-900 px-2 py-1 rounded font-mono text-xs">git init</code> in your project directory to initialize git source control.
             </p>
           </div>
         </div>
@@ -805,7 +815,7 @@ function GitPanel({ selectedProject, isMobile }) {
               onClick={() => setActiveView('changes')}
               className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
                 activeView === 'changes'
-                  ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                  ? 'text-gemini-500 dark:text-gemini-400 border-b-2 border-gemini-500 dark:border-gemini-400'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
@@ -818,7 +828,7 @@ function GitPanel({ selectedProject, isMobile }) {
               onClick={() => setActiveView('history')}
               className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
                 activeView === 'history'
-                  ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                  ? 'text-gemini-500 dark:text-gemini-400 border-b-2 border-gemini-500 dark:border-gemini-400'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
@@ -834,15 +844,15 @@ function GitPanel({ selectedProject, isMobile }) {
             <>
               {/* Mobile Commit Toggle Button / Desktop Always Visible - Hide when files expanded */}
               <div className={`transition-all duration-300 ease-in-out ${
-                expandedFiles.size === 0 
-                  ? 'max-h-96 opacity-100 translate-y-0' 
+                expandedFiles.size === 0
+                  ? 'max-h-96 opacity-100 translate-y-0'
                   : 'max-h-0 opacity-0 -translate-y-2 overflow-hidden'
               }`}>
                 {isMobile && isCommitAreaCollapsed ? (
                   <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
                       <button
                         onClick={() => setIsCommitAreaCollapsed(false)}
-                        className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm bg-gemini-500 text-white rounded-md hover:bg-gemini-600"
                       >
                         <GitCommit className="w-4 h-4" />
                         <span>Commit {selectedFiles.size} file{selectedFiles.size !== 1 ? 's' : ''}</span>
@@ -912,7 +922,7 @@ function GitPanel({ selectedProject, isMobile }) {
                           message: `Commit ${selectedFiles.size} file${selectedFiles.size !== 1 ? 's' : ''} with message: "${commitMessage.trim()}"?` 
                         })}
                         disabled={!commitMessage.trim() || selectedFiles.size === 0 || isCommitting}
-                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
+                        className="px-3 py-1 text-sm bg-gemini-500 text-white rounded-md hover:bg-gemini-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
                       >
                         <Check className="w-3 h-3" />
                         <span>{isCommitting ? 'Committing...' : 'Commit'}</span>
@@ -946,14 +956,14 @@ function GitPanel({ selectedProject, isMobile }) {
                     ]);
                     setSelectedFiles(allFiles);
                   }}
-                  className={`text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 ${isMobile ? 'text-xs' : 'text-xs'}`}
+                  className={`text-gemini-500 dark:text-gemini-400 hover:text-gemini-600 dark:hover:text-gemini-300 ${isMobile ? 'text-xs' : 'text-xs'}`}
                 >
                   {isMobile ? 'All' : 'Select All'}
                 </button>
                 <span className="text-gray-300 dark:text-gray-600">|</span>
                 <button
                   onClick={() => setSelectedFiles(new Set())}
-                  className={`text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 ${isMobile ? 'text-xs' : 'text-xs'}`}
+                  className={`text-gemini-500 dark:text-gemini-400 hover:text-gemini-600 dark:hover:text-gemini-300 ${isMobile ? 'text-xs' : 'text-xs'}`}
                 >
                   {isMobile ? 'None' : 'Deselect All'}
                 </button>
@@ -1072,7 +1082,7 @@ function GitPanel({ selectedProject, isMobile }) {
                     }
                   }}
                   placeholder="feature/new-feature"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gemini-500"
                   autoFocus
                 />
               </div>
@@ -1092,7 +1102,7 @@ function GitPanel({ selectedProject, isMobile }) {
                 <button
                   onClick={createBranch}
                   disabled={!newBranchName.trim() || isCreatingBranch}
-                  className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  className="px-4 py-2 text-sm bg-gemini-500 text-white rounded-md hover:bg-gemini-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
                 >
                   {isCreatingBranch ? (
                     <>
@@ -1150,7 +1160,7 @@ function GitPanel({ selectedProject, isMobile }) {
                     confirmAction.type === 'discard' 
                       ? 'bg-red-600 hover:bg-red-700' 
                       : confirmAction.type === 'commit'
-                      ? 'bg-blue-600 hover:bg-blue-700'
+                      ? 'bg-gemini-500 hover:bg-gemini-600'
                       : confirmAction.type === 'pull'
                       ? 'bg-green-600 hover:bg-green-700'
                       : 'bg-orange-600 hover:bg-orange-700'

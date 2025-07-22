@@ -17,6 +17,7 @@ import FileTree from './FileTree';
 import CodeEditor from './CodeEditor';
 import Shell from './Shell';
 import GitPanel from './GitPanel';
+import EditorTab from './EditorTab';
 
 function MainContent({ 
   selectedProject, 
@@ -120,8 +121,8 @@ function MainContent({
             <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
               Select a project from the sidebar to start coding with Gemini. Each project contains your chat sessions and file history.
             </p>
-            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-              <p className="text-sm text-blue-700 dark:text-blue-300">
+            <div className="bg-gemini-50 dark:bg-gemini-900/20 rounded-lg p-4 border border-gemini-200 dark:border-gemini-800">
+              <p className="text-sm text-gemini-700 dark:text-gemini-300">
                 💡 <strong>Tip:</strong> {isMobile ? 'Tap the menu button above to access projects' : 'Create a new project by clicking the folder icon in the sidebar'}
               </p>
             </div>
@@ -246,6 +247,21 @@ function MainContent({
                   <span className="hidden sm:inline">Source Control</span>
                 </span>
               </button>
+              <button
+                onClick={() => setActiveTab('editor')}
+                className={`relative px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${
+                  activeTab === 'editor'
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
+                }`}
+              >
+                <span className="flex items-center gap-1 sm:gap-1.5">
+                  <svg className="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z" />
+                  </svg>
+                  <span className="hidden sm:inline">Editor</span>
+                </span>
+              </button>
                {/* <button
                 onClick={() => setActiveTab('preview')}
                 className={`relative px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${
@@ -299,6 +315,22 @@ function MainContent({
         </div>
         <div className={`h-full overflow-hidden ${activeTab === 'git' ? 'block' : 'hidden'}`}>
           <GitPanel selectedProject={selectedProject} isMobile={isMobile} />
+        </div>
+        <div className={`h-full overflow-hidden ${activeTab === 'editor' ? 'block' : 'hidden'}`}>
+          <EditorTab 
+            selectedProject={selectedProject} 
+            ws={ws}
+            sendMessage={sendMessage}
+            messages={messages}
+            onSessionActive={onSessionActive}
+            onSessionInactive={onSessionInactive}
+            onReplaceTemporarySession={onReplaceTemporarySession}
+            onNavigateToSession={onNavigateToSession}
+            onShowSettings={onShowSettings}
+            autoExpandTools={autoExpandTools}
+            showRawParameters={showRawParameters}
+            autoScrollToBottom={autoScrollToBottom}
+          />
         </div>
         <div className={`h-full overflow-hidden ${activeTab === 'preview' ? 'block' : 'hidden'}`}>
           {/* <LivePreviewPanel

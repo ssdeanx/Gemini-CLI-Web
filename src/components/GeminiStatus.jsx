@@ -43,18 +43,18 @@ function GeminiStatus({ status, onAbort, isLoading }) {
   const canInterrupt = status?.can_interrupt !== false;
   
   // Animation characters
-  const spinners = ['✻', '✹', '✸', '✶'];
+  const spinners = ['◴', '◷', '◶', '◵']; // More modern spinners
   const currentSpinner = spinners[animationPhase];
   
   return (
     <div className="w-full mb-6 animate-in slide-in-from-bottom duration-300">
-      <div className="flex items-center justify-between max-w-4xl mx-auto bg-gradient-to-r from-cyan-900 to-blue-900 dark:from-cyan-950 dark:to-blue-950 text-white rounded-lg shadow-lg px-4 py-3">
+      <div className="flex items-center justify-between max-w-4xl mx-auto bg-gradient-to-r from-gemini-900 to-gemini-900 dark:from-gemini-950 dark:to-gemini-950 text-white rounded-lg shadow-lg px-4 py-3 animate-pulse-subtle">
         <div className="flex-1">
           <div className="flex items-center gap-3">
             {/* Animated spinner */}
             <span className={cn(
-              "text-xl transition-all duration-500",
-              animationPhase % 2 === 0 ? "text-cyan-400 scale-110" : "text-cyan-300"
+              "text-2xl transition-all duration-500", // Larger spinner
+              animationPhase % 2 === 0 ? "text-gemini-400 scale-110" : "text-gemini-300"
             )}>
               {currentSpinner}
             </span>

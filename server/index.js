@@ -439,12 +439,12 @@ app.get('/api/projects/:projectName/files', authenticateToken, async (req, res) 
 
 // WebSocket connection handler that routes based on URL path
 wss.on('connection', (ws, request) => {
-  const url = request.url;
+  const {url} = request;
   // console.log('🔗 Client connected to:', url);
   
   // Parse URL to get pathname without query parameters
   const urlObj = new URL(url, 'http://localhost');
-  const pathname = urlObj.pathname;
+  const {pathname} = urlObj;
   
   if (pathname === '/shell') {
     handleShellConnection(ws);
@@ -510,8 +510,7 @@ function handleShellConnection(ws) {
       if (data.type === 'init') {
         // Initialize shell with project path and session info
         const projectPath = data.projectPath || process.cwd();
-        const sessionId = data.sessionId;
-        const hasSession = data.hasSession;
+        const {sessionId, hasSession} = data;
         
         
         // First send a welcome message
@@ -647,13 +646,9 @@ function handleShellConnection(ws) {
         } else {
           // console.warn('No active shell process to send input to');
         }
-      } else if (data.type === 'resize') {
-        // Handle terminal resize
-        if (shellProcess && shellProcess.resize) {
-          // console.log('Terminal resize requested:', data.cols, 'x', data.rows);
-          shellProcess.resize(data.cols, data.rows);
-        }
-      }
+      } else if (data.type === 'resize' && (shellProcess && shellProcess.resize)) {
+                   shellProcess.resize(data.cols, data.rows);
+             }
     } catch (error) {
       // console.error('❌ Shell WebSocket error:', error.message);
       if (ws.readyState === ws.OPEN) {
@@ -927,34 +922,35 @@ function permToRwx(perm) {
 async function getFileTree(dirPath, maxDepth = 3, currentDepth = 0, showHidden = true) {
   // Using fsPromises from import
   const items = [];
-  
+
   try {
     const entries = await fsPromises.readdir(dirPath, { withFileTypes: true });
-    
+
     for (const entry of entries) {
       // Debug: log all entries including hidden files
-   
-      
+
       // Skip only heavy build directories
-      if (entry.name === 'node_modules' || 
-          entry.name === 'dist' || 
-          entry.name === 'build') continue;
-      
+      if (entry.name === 'node_modules' ||
+                entry.name === 'dist' ||
+                entry.name === 'build') {
+        continue;
+      }
+
       const itemPath = path.join(dirPath, entry.name);
       const item = {
         name: entry.name,
         path: itemPath,
         type: entry.isDirectory() ? 'directory' : 'file'
       };
-      
+
       // Get file stats for additional metadata
       try {
         const stats = await fsPromises.stat(itemPath);
         item.size = stats.size;
         item.modified = stats.mtime.toISOString();
-        
+
         // Convert permissions to rwx format
-        const mode = stats.mode;
+        const {mode} = stats;
         const ownerPerm = (mode >> 6) & 7;
         const groupPerm = (mode >> 3) & 7;
         const otherPerm = mode & 7;

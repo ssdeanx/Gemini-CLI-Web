@@ -204,7 +204,7 @@ export function MicButton({ onTranscript, className = '' }) {
       case 'transcribing':
         return {
           icon: <Loader2 className="w-5 h-5 animate-spin" />,
-          className: 'bg-blue-500 hover:bg-blue-600',
+          className: 'bg-gemini-500 hover:bg-gemini-600',
           disabled: true
         };
       case 'processing':
@@ -238,7 +238,7 @@ export function MicButton({ onTranscript, className = '' }) {
           flex items-center justify-center
           w-12 h-12 rounded-full
           text-white transition-all duration-200
-          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gemini-500
           dark:ring-offset-gray-800
           touch-action-manipulation
           ${disabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer'}
@@ -253,7 +253,7 @@ export function MicButton({ onTranscript, className = '' }) {
       </button>
       
       {error && (
-        <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 
+        <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2
                         bg-red-500 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10
                         animate-fade-in">
           {error}
