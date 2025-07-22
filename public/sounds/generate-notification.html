@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Notification Sound</title>
+</head>
+<body>
+    <h1>Notification Sound Generator</h1>
+    <button onclick="playSound()">Play Sound</button>
+    <button onclick="downloadSound()">Download as notification.wav</button>
+    
+    <script>
+        // Create a simple notification sound using Web Audio API
+        function createNotificationSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const duration = 0.3;
+            const sampleRate = audioContext.sampleRate;
+            const numSamples = duration * sampleRate;
+            
+            // Create buffer
+            const buffer = audioContext.createBuffer(1, numSamples, sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            // Generate a pleasant notification sound (two-tone chime)
+            for (let i = 0; i < numSamples; i++) {
+                const t = i / sampleRate;
+                let sample = 0;
+                
+                // First tone (higher pitch)
+                if (t < 0.15) {
+                    const envelope = Math.sin(Math.PI * t / 0.15);
+                    sample += envelope * 0.3 * Math.sin(2 * Math.PI * 880 * t); // A5
+                }
+                
+                // Second tone (lower pitch)
+                if (t >= 0.15 && t < 0.3) {
+                    const envelope = Math.sin(Math.PI * (t - 0.15) / 0.15);
+                    sample += envelope * 0.3 * Math.sin(2 * Math.PI * 659.25 * t); // E5
+                }
+                
+                data[i] = sample;
+            }
+            
+            return buffer;
+        }
+        
+        function playSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const buffer = createNotificationSound();
+            const source = audioContext.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.destination);
+            source.start();
+        }
+        
+        function downloadSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const buffer = createNotificationSound();
+            
+            // Convert to WAV
+            const length = buffer.length;
+            const arrayBuffer = new ArrayBuffer(44 + length * 2);
+            const view = new DataView(arrayBuffer);
+            
+            // WAV header
+            const writeString = (offset, string) => {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            };
+            
+            writeString(0, 'RIFF');
+            view.setUint32(4, 36 + length * 2, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true); // fmt chunk size
+            view.setUint16(20, 1, true); // PCM
+            view.setUint16(22, 1, true); // Mono
+            view.setUint32(24, audioContext.sampleRate, true);
+            view.setUint32(28, audioContext.sampleRate * 2, true); // byte rate
+            view.setUint16(32, 2, true); // block align
+            view.setUint16(34, 16, true); // bits per sample
+            writeString(36, 'data');
+            view.setUint32(40, length * 2, true);
+            
+            // Convert float samples to 16-bit PCM
+            const data = buffer.getChannelData(0);
+            let offset = 44;
+            for (let i = 0; i < length; i++) {
+                const sample = Math.max(-1, Math.min(1, data[i]));
+                view.setInt16(offset, sample * 0x7FFF, true);
+                offset += 2;
+            }
+            
+            // Download
+            const blob = new Blob([arrayBuffer], { type: 'audio/wav' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'notification.wav';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

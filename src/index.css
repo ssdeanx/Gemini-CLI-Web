@@ -1,0 +1,545 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global spinner animation - defined early to ensure it loads */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+/* Gemini pulse animation */
+@keyframes gemini-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Gemini glow animation */
+@keyframes gemini-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5), 0 0 40px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.4);
+  }
+}
+
+/* Chat input alignment fix */
+.chat-input-expanded {
+  position: relative;
+}
+
+.chat-input-expanded textarea {
+  resize: none;
+  overflow-y: auto;
+}
+
+/* Prevent layout shift when textarea expands */
+.chat-input-container {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Fix send button position when textarea expands */
+.chat-input-container button[type="submit"] {
+  position: absolute !important;
+  right: 0.5rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10;
+}
+
+/* Ensure proper padding for textarea to not overlap with button */
+.chat-input-container textarea {
+  padding-right: 4rem !important; /* Make room for send button */
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 192 91% 36%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 192 91% 36%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 217.2 91.2% 8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 217.2 91.2% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 192 91% 46%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 192 91% 46%;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Prevent layout shift during font loading */
+    font-display: swap;
+    /* Ensure consistent rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* Prevent layout jumps */
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* Global transition defaults */
+  button, 
+  a, 
+  input, 
+  textarea, 
+  select,
+  [role="button"],
+  .transition-all {
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Color transitions for theme switching - exclude interactive elements */
+  body, div, section, article, aside, header, footer, nav, main,
+  h1, h2, h3, h4, h5, h6, p, span, blockquote,
+  ul, ol, li, dl, dt, dd,
+  table, thead, tbody, tfoot, tr, td, th,
+  form, fieldset, legend, label {
+    transition: background-color 200ms ease-in-out, 
+                border-color 200ms ease-in-out,
+                color 200ms ease-in-out;
+  }
+  
+  /* Transform transitions */
+  .transition-transform {
+    transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Opacity transitions */
+  .transition-opacity {
+    transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Scale transitions */
+  .transition-scale {
+    transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Base button styles with hover state */
+  button:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+  
+  button:not(:disabled):active {
+    transform: translateY(0);
+  }
+  
+  /* Smooth focus states */
+  *:focus {
+    outline: none;
+  }
+  
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  
+  /* Remove spinner in webkit browsers */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  /* Remove spinner in Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  
+  /* Prevent overscroll on iOS */
+  body {
+    overscroll-behavior-y: none;
+  }
+  
+  /* xterm.js styles */
+  .xterm {
+    height: 100%;
+    padding: 8px;
+  }
+  
+  .xterm-viewport {
+    overflow-y: auto !important;
+  }
+  
+  /* Custom animation classes */
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  
+  .animate-slideInRight {
+    animation: slideInRight 0.3s ease-out;
+  }
+  
+  .animate-slideOutRight {
+    animation: slideOutRight 0.3s ease-out;
+  }
+  
+  /* Custom scrollbar styles */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground)) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground));
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.8);
+  }
+  
+  /* Dark mode scrollbar styles */
+  .dark .scrollbar-thin {
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  }
+  
+  .dark .scrollbar-thin::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.3);
+  }
+  
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+  }
+  
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+  
+  /* Global scrollbar styles for main content areas */
+  .dark::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .dark::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.5);
+  }
+  
+  .dark::-webkit-scrollbar-thumb {
+    background-color: rgba(107, 114, 128, 0.5);
+    border-radius: 4px;
+  }
+  
+  .dark::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.7);
+  }
+  
+  /* Prevent text selection during drag operations */
+  .dragging * {
+    user-select: none !important;
+  }
+  
+  /* Prevent layout shift on content changes */
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Stabilize flex containers */
+  .flex {
+    flex-shrink: 0;
+  }
+  
+  /* Prevent collapsing margins */
+  .chat-message {
+    display: block;
+    overflow: hidden;
+  }
+  
+  /* Ensure consistent line heights */
+  p, div, span {
+    line-height: 1.5;
+  }
+  
+  /* Prevent layout shift from images */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    /* Prevent pull-to-refresh on mobile */
+    body {
+      overscroll-behavior-y: contain;
+    }
+    
+    /* Ensure proper viewport height on mobile browsers */
+    #root {
+      height: 100vh;
+      height: 100dvh; /* Dynamic viewport height */
+    }
+  }
+  
+  /* Advanced selectors for preventing transitions on specific elements */
+  /* Prevent transitions on code blocks during syntax highlighting updates */
+  pre code,
+  pre code *,
+  .cm-editor,
+  .cm-editor * {
+    transition: none !important;
+  }
+  
+  /* File explorer hover states should not transition colors */
+  .file-tree-item:hover {
+    transition: background-color 100ms ease-in-out !important;
+  }
+  
+  /* Gemini-specific styles */
+  .gemini-gradient {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);
+  }
+  
+  .gemini-gradient-text {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .gemini-shadow {
+    box-shadow: 0 4px 6px -1px rgba(6, 182, 212, 0.1), 0 2px 4px -1px rgba(6, 182, 212, 0.06);
+  }
+  
+  .gemini-shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.1), 0 4px 6px -2px rgba(6, 182, 212, 0.05);
+  }
+  
+  .gemini-border {
+    border: 1px solid rgba(6, 182, 212, 0.2);
+  }
+  
+  .gemini-hover:hover {
+    background-color: rgba(6, 182, 212, 0.05);
+    border-color: rgba(6, 182, 212, 0.3);
+  }
+  
+  .dark .gemini-hover:hover {
+    background-color: rgba(6, 182, 212, 0.1);
+    border-color: rgba(6, 182, 212, 0.4);
+  }
+  
+  /* Enhanced button styles */
+  .gemini-button {
+    @apply relative overflow-hidden;
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+    transition: all 0.3s ease;
+  }
+  
+  .gemini-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(6, 182, 212, 0.3);
+  }
+  
+  .gemini-button:active {
+    transform: translateY(0);
+  }
+  
+  .gemini-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .gemini-button:active::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  /* Glass morphism effect */
+  .gemini-glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .dark .gemini-glass {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Animated background pattern */
+  .gemini-pattern {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(14, 116, 144, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(8, 145, 178, 0.1) 0%, transparent 50%);
+    background-size: 100% 100%;
+    animation: gemini-float 20s ease-in-out infinite;
+  }
+  
+  @keyframes gemini-float {
+    0%, 100% {
+      background-position: 0% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+  }
+  
+  /* Loading animation */
+  .gemini-loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(6, 182, 212, 0.3);
+    border-radius: 50%;
+    border-top-color: #06b6d4;
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  /* Enhanced focus styles */
+  .gemini-focus:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+  }
+  
+  .gemini-focus:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
+  }
+
+  /* Message layout stability */
+  .chat-message {
+    contain: layout style;
+    will-change: auto;
+  }
+
+  /* Prevent layout shift on initial render */
+  .chat-message .prose {
+    min-height: 1.5rem;
+  }
+
+  /* Stable rendering for markdown content */
+  .chat-message .prose p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .chat-message .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Prevent code block layout shift */
+  .chat-message .prose pre {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Disable transitions on initial load */
+  .chat-message:first-child,
+  .chat-message:first-child * {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
+
+  /* Smooth scroll behavior */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+
+  /* But instant for programmatic scrolls */
+  .scroll-instant {
+    scroll-behavior: auto !important;
+  }
+}

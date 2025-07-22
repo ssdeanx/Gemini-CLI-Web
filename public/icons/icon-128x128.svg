@@ -1,0 +1,31 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="geminiGrad128" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0891b2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0e7490;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow128">
+      <feGaussianBlur stdDeviation="6.4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background with gradient -->
+  <rect x="0" y="0" width="128" height="128" rx="24" fill="url(#geminiGrad128)"/>
+  
+  <!-- Gemini constellation symbol -->
+  <g transform="translate(64,64)" filter="url(#glow128)">
+    <!-- Top star shape -->
+    <path d="M0,-40 L10,0 L-10,0 Z" fill="white" opacity="0.95"/>
+    <!-- Bottom star shape -->
+    <path d="M0,40 L-10,0 L10,0 Z" fill="white" opacity="0.85"/>
+    <!-- Connecting elements -->
+    <circle cx="0" cy="-20" r="6" fill="white" opacity="0.9"/>
+    <circle cx="0" cy="20" r="6" fill="white" opacity="0.9"/>
+    <line x1="0" y1="-20" x2="0" y2="20" stroke="white" stroke-width="4" opacity="0.7"/>
+  </g>
+</svg>

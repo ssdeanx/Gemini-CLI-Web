@@ -1,0 +1,27 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0891b2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0e7490;stop-opacity:1" />
+    </linearGradient>
+    <filter id="logoGlow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="32" height="32" rx="8" fill="url(#logoGrad)"/>
+  
+  <g transform="translate(16,16)" filter="url(#logoGlow)">
+    <!-- Top diamond -->
+    <path d="M0,-10 L3,-5 L0,0 L-3,-5 Z" fill="white" opacity="0.95"/>
+    <!-- Bottom diamond -->
+    <path d="M0,10 L-3,5 L0,0 L3,5 Z" fill="white" opacity="0.85"/>
+    <!-- Center circle -->
+    <circle cx="0" cy="0" r="2" fill="white" opacity="0.9"/>
+  </g>
+</svg>
