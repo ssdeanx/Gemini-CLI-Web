@@ -35,8 +35,13 @@ A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini
 </table>
 </div align="center">
 
-![Monaco Editor](<public/screenshots/Screenshot from 2025-07-23 11-23-30.png>)
-![Spec File Generation](<public/screenshots/Screenshot from 2025-07-23 11-22-18.png>)
+<img src="public/screenshots/Screenshot from 2025-07-23 11-23-30.png" alt="Gemini CLI Monaco Code Editor" width="800">
+<br>
+<em>Monaco Code Editor for editing files in Gemini CLI UI</em>)
+
+<img src="public/screenshots/Screenshot from 2025-07-23 11-22-18.png" alt="Gemini CLI Monaco Code Editor" width="800">
+<br>
+<em>Spec File Generation</em>)
 
 ## Features
 
