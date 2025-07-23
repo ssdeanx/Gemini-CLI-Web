@@ -10,7 +10,7 @@ const validateApiKey = (req, res, next) => {
   if (!process.env.API_KEY) {
     return next();
   }
-  
+
   const apiKey = req.headers['x-api-key'];
   if (apiKey !== process.env.API_KEY) {
     return res.status(401).json({ error: 'Invalid API key' });
@@ -29,13 +29,13 @@ const authenticateToken = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    
+
     // Verify user still exists and is active
     const user = userDb.getUserById(decoded.userId);
     if (!user) {
       return res.status(401).json({ error: 'Invalid token. User not found.' });
     }
-    
+
     req.user = user;
     next();
   } catch (error) {
@@ -47,9 +47,9 @@ const authenticateToken = async (req, res, next) => {
 // Generate JWT token (never expires)
 const generateToken = (user) => {
   return jwt.sign(
-    { 
-      userId: user.id, 
-      username: user.username 
+    {
+      userId: user.id,
+      username: user.username
     },
     JWT_SECRET
     // No expiration - token lasts forever
@@ -61,10 +61,9 @@ const authenticateWebSocket = (token) => {
   if (!token) {
     return null;
   }
-  
+
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    return decoded;
+    return jwt.verify(token, JWT_SECRET);
   } catch (error) {
     console.error('WebSocket token verification error:', error);
     return null;

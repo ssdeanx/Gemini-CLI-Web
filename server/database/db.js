@@ -52,8 +52,7 @@ const userDb = {
   // Get user by username
   getUserByUsername: (username) => {
     try {
-      const row = db.prepare('SELECT * FROM geminicliui_users WHERE username = ? AND is_active = 1').get(username);
-      return row;
+      return db.prepare('SELECT * FROM geminicliui_users WHERE username = ? AND is_active = 1').get(username);
     } catch (err) {
       throw err;
     }
@@ -71,8 +70,7 @@ const userDb = {
   // Get user by ID
   getUserById: (userId) => {
     try {
-      const row = db.prepare('SELECT id, username, created_at, last_login FROM geminicliui_users WHERE id = ? AND is_active = 1').get(userId);
-      return row;
+      return db.prepare('SELECT id, username, created_at, last_login FROM geminicliui_users WHERE id = ? AND is_active = 1').get(userId);
     } catch (err) {
       throw err;
     }

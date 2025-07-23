@@ -19,8 +19,14 @@ out/
 .env.test.local
 .env.production.local
 *.specstory
-*.github
+*.specstory/
+*.specstory/**/*.md
 
+*.augment/
+*.augment
+*.augment/**/*.md
+*.github
+.gemini/settings.json
 
 # IDE and editor files
 .vscode/
@@ -138,3 +144,4 @@ user_uploads/
 
 #Ignore vscode AI rules
 .github/copilot-instructions.md
+TAILWIND_V4_MIGRATION_SPEC.md
