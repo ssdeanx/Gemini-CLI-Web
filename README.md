@@ -5,7 +5,6 @@
 
 A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini-cli), Google's official CLI for AI-assisted coding. You can use it locally or remotely to view your active projects and sessions in Gemini CLI and make changes to them the same way you would do it in Gemini CLI. This gives you a proper interface that works everywhere.
 
-
 ## Screenshots
 
 <div align="center">
@@ -57,17 +56,20 @@ A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini
 ### Installation
 
 1. **Clone the repository:**
+
 ```bash
 git clone git@github.com:cruzyjapan/Gemini-CLI-UI.git
 cd geminicliui
 ```
 
 2. **Install dependencies:**
+
 ```bash
 npm install
 ```
 
 3. **Configure environment:**
+
 ```bash
 cp .env.example .env
 # Edit .env with your preferred settings
@@ -76,10 +78,12 @@ cp .env.example .env
 **Note**: The `.env` file has been removed for security. Always copy `.env.example` to `.env` when using and modify settings as needed.
 
 4. **Start the application:**
+
 ```bash
 # Development mode (with hot reload)
 npm run dev
 ```
+
 The application will start at the port you specified in your .env
 
 5. **Open your browser:**
@@ -108,12 +112,15 @@ YOLO mode ("You Only Live Once") is equivalent to Gemini CLI's `--yolo` flag, sk
 ### Core Features
 
 #### Project Management
+
 The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` and provides:
+
 - **Visual Project Browser** - All available projects with metadata and session counts
 - **Project Actions** - Rename, delete, and organize projects
 - **Smart Navigation** - Quick access to recent projects and sessions
 
 #### Chat Interface
+
 - **Use responsive chat or Gemini CLI** - You can either use the adapted chat interface or use the shell button to connect to Gemini CLI
 - **Real-time Communication** - Stream responses from Gemini with WebSocket connection
 - **Session Management** - Resume previous conversations or start fresh sessions
@@ -122,23 +129,27 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 - **Image Upload** - Upload and ask questions about images in chat
 
 #### File Explorer & Editor
+
 - **Interactive File Tree** - Browse project structure with expand/collapse navigation
 - **Live File Editing** - Read, modify, and save files directly in the interface
 - **Syntax Highlighting** - Support for multiple programming languages
 - **File Operations** - Create, rename, delete files and directories
 
 #### Git Explorer
+
 - **Visualize Changes** - See current changes in real-time
 - **Stage and Commit** - Create Git commits directly from the UI
 - **Branch Management** - Switch and manage branches
 
 #### Session Management
+
 - **Session Persistence** - All conversations automatically saved
 - **Session Organization** - Group sessions by project and timestamp
 - **Session Actions** - Rename, delete, and export conversation history
 - **Cross-device Sync** - Access sessions from any device
 
 ### Mobile App
+
 - **Responsive Design** - Optimized for all screen sizes
 - **Touch-friendly Interface** - Swipe gestures and touch navigation
 - **Mobile Navigation** - Bottom tab bar for easy thumb navigation
@@ -149,7 +160,7 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 
 ### System Overview
 
-```
+```bash
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   Backend       │    │  Gemini CLI     │
 │   (React/Vite)  │◄──►│ (Express/WS)    │◄──►│  Integration    │
@@ -157,6 +168,7 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 ```
 
 ### Backend (Node.js + Express)
+
 - **Express Server** - RESTful API with static file serving (Port: 4008)
 - **WebSocket Server** - Communication for chats and project refresh
 - **Gemini CLI Integration** - Process spawning and management
@@ -165,6 +177,7 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 - **Authentication System** - Secure login and session management (SQLite database: geminicliui_auth.db)
 
 ### Frontend (React + Vite)
+
 - **React 18** - Modern component architecture with hooks
 - **CodeMirror** - Advanced code editor with syntax highlighting
 - **Tailwind CSS** - Utility-first CSS framework
@@ -173,6 +186,7 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 ## Configuration Details
 
 ### Port Settings
+
 - **API Server**: Port 4008 (default)
 - **Frontend Dev Server**: Port 4009 (default)
 - These ports can be changed in the `.env` file
@@ -180,6 +194,7 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 ### Database Configuration
 
 #### Initial Setup and Table Structure
+
 - **Database File**: `server/database/geminicliui_auth.db`
 - **Database Type**: SQLite 3
 - **Initialization**: Automatically created and initialized on server startup
@@ -198,16 +213,19 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 | `is_active` | BOOLEAN | DEFAULT 1 | Account active/inactive status |
 
 **Indexes**:
+
 - `idx_geminicliui_users_username`: For fast username lookups
 - `idx_geminicliui_users_active`: For filtering active users
 
 #### First Run Setup
+
 1. On first server startup, database file is automatically created if it doesn't exist
 2. Table structure is loaded from `server/database/init.sql`
 3. First access displays user registration screen
 4. First user is registered as administrator
 
 #### Security Features
+
 - Passwords are hashed with bcrypt before storage
 - JWT token-based authentication system
 - Session management with timeout functionality
@@ -218,23 +236,29 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 ### Common Issues & Solutions
 
 #### "No Gemini projects found"
+
 **Problem**: The UI shows no projects or empty project list
 **Solutions**:
+
 - Ensure Gemini CLI is properly installed
 - Run `gemini` command in at least one project directory to initialize
 - Verify `~/.gemini/projects/` directory exists and has proper permissions
 
 #### File Explorer Issues
+
 **Problem**: Files not loading, permission errors, empty directories
 **Solutions**:
+
 - Check project directory permissions (`ls -la` in terminal)
 - Verify the project path exists and is accessible
 - Review server console logs for detailed error messages
 - Ensure you're not trying to access system directories outside project scope
 
 #### Model Selection Not Working
+
 **Problem**: Selected model is not being used
 **Solutions**:
+
 - After selecting a model in settings, make sure to click "Save Settings"
 - Clear browser local storage and reconfigure
 - Verify the model name is displayed correctly in the chat interface
@@ -249,7 +273,57 @@ This project is open source and free to use, modify, and distribute under the GP
 
 This project is based on [Claude Code UI](https://github.com/siteboon/claudecodeui) (GPL v3.0) with customizations.
 
+### Graph
+
+```mermaid
+graph TD
+
+    19["Database<br>SQL"]
+    4["User<br>External Actor"]
+    subgraph 1["Public Assets System<br>Static Files"]
+        15["Web Entry Assets<br>HTML, JSON, JS"]
+        16["Icons<br>SVG, PNG"]
+        17["Screenshots<br>PNG"]
+        18["Sounds<br>HTML"]
+    end
+    subgraph 2["Backend System<br>Node.js, Express"]
+        10["Server Entry Point<br>Node.js"]
+        11["Core Logic Modules<br>Node.js"]
+        12["Database Access<br>Node.js, SQL"]
+        13["Auth Middleware<br>Node.js"]
+        14["API Routes<br>Express"]
+        %% Edges at this level (grouped by source)
+        10["Server Entry Point<br>Node.js"] -->|Initializes| 11["Core Logic Modules<br>Node.js"]
+        10["Server Entry Point<br>Node.js"] -->|Applies| 13["Auth Middleware<br>Node.js"]
+        10["Server Entry Point<br>Node.js"] -->|Registers| 14["API Routes<br>Express"]
+        13["Auth Middleware<br>Node.js"] -->|Uses| 11["Core Logic Modules<br>Node.js"]
+        14["API Routes<br>Express"] -->|Invokes| 11["Core Logic Modules<br>Node.js"]
+        14["API Routes<br>Express"] -->|Accesses| 12["Database Access<br>Node.js, SQL"]
+        11["Core Logic Modules<br>Node.js"] -->|Interacts with| 12["Database Access<br>Node.js, SQL"]
+    end
+    subgraph 3["Frontend System<br>React, Vite, Tailwind CSS"]
+        5["Core Application<br>React"]
+        6["UI Components<br>React"]
+        7["State Management &amp; Contexts<br>React Context"]
+        8["Hooks<br>JavaScript"]
+        9["Utilities<br>JavaScript"]
+        %% Edges at this level (grouped by source)
+        5["Core Application<br>React"] -->|Uses| 6["UI Components<br>React"]
+        5["Core Application<br>React"] -->|Uses| 7["State Management &amp; Contexts<br>React Context"]
+        5["Core Application<br>React"] -->|Uses| 8["Hooks<br>JavaScript"]
+        5["Core Application<br>React"] -->|Uses| 9["Utilities<br>JavaScript"]
+        6["UI Components<br>React"] -->|Uses| 7["State Management &amp; Contexts<br>React Context"]
+        6["UI Components<br>React"] -->|Uses| 9["Utilities<br>JavaScript"]
+    end
+    %% Edges at this level (grouped by source)
+    3["Frontend System<br>React, Vite, Tailwind CSS"] -->|Makes REST API calls| 2["Backend System<br>Node.js, Express"]
+    1["Public Assets System<br>Static Files"] -->|Serves static files to| 3["Frontend System<br>React, Vite, Tailwind CSS"]
+    4["User<br>External Actor"] -->|Interacts with| 3["Frontend System<br>React, Vite, Tailwind CSS"]
+    2["Backend System<br>Node.js, Express"] -->|Queries & Persists Data| 19["Database<br>SQL"]
+```
+
 **Major Changes:**
+
 - Adapted from Claude CLI to Gemini CLI
 - Added authentication system (SQLite-based)
 - Gemini-specific model selection feature
@@ -261,6 +335,7 @@ Thanks to the original Claude Code UI project.
 ## Acknowledgments
 
 ### Built With
+
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** - Google's official CLI
 - **[React](https://react.dev/)** - User interface library
 - **[Vite](https://vitejs.dev/)** - Fast build tool and dev server
@@ -270,6 +345,7 @@ Thanks to the original Claude Code UI project.
 ## Support & Community
 
 ### Stay Updated
+
 - **Star** this repository to show support
 - **Watch** for updates and new releases
 - **Follow** the project for announcements

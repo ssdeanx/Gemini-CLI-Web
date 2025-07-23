@@ -5,7 +5,6 @@
 
 [Gemini CLI](https://github.com/google-gemini/gemini-cli) GoogleのAI支援コーディング用公式CLIのデスクトップ・モバイル対応UIです。ローカルまたはリモートで使用でき、Gemini CLIのアクティブなプロジェクトとセッションを表示し、CLIと同じように変更を加えることができます。どこでも動作する適切なインターフェースを提供します。
 
-
 ## Screenshots
 
 <div align="center">
@@ -57,17 +56,20 @@
 ### インストール
 
 1. **リポジトリをクローン：**
+
 ```bash
 git clone git@github.com:cruzyjapan/Gemini-CLI-UI.git
 cd geminicliui
 ```
 
 2. **依存関係をインストール：**
+
 ```bash
 npm install
 ```
 
 3. **環境設定：**
+
 ```bash
 cp .env.example .env
 # お好みの設定で.envを編集
@@ -76,6 +78,7 @@ cp .env.example .env
 **注意**: `.env`ファイルはセキュリティのため削除されています。使用時は必ず`.env.example`をコピーして`.env`を作成し、必要に応じて設定を変更してください。
 
 4. **アプリケーションを起動：**
+
 ```bash
 # 開発モード（ホットリロード付き）
 npm run dev
