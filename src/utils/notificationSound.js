@@ -3,7 +3,7 @@ let audioContext = null;
 // Create a simple notification sound using Web Audio API
 function createNotificationSound(context) {
   const duration = 0.3;
-  const sampleRate = context.sampleRate;
+  const {sampleRate} = context;
   const numSamples = duration * sampleRate;
   
   // Create buffer

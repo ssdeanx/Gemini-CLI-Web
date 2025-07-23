@@ -62,7 +62,9 @@ export const ThemeProvider = ({ children }) => {
 
   // Listen for system theme changes
   useEffect(() => {
-    if (!window.matchMedia) return;
+    if (!window.matchMedia) {
+      return;
+    }
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e) => {

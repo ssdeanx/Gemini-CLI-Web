@@ -1,13 +1,13 @@
 /*
  * MainContent.jsx - Main Content Area with Session Protection Props Passthrough
- * 
+ *
  * SESSION PROTECTION PASSTHROUGH:
  * ===============================
- * 
+ *
  * This component serves as a passthrough layer for Session Protection functions:
  * - Receives session management functions from App.jsx
  * - Passes them down to ChatInterface.jsx
- * 
+ *
  * No session protection logic is implemented here - it's purely a props bridge.
  */
 
@@ -19,13 +19,13 @@ import Shell from './Shell';
 import GitPanel from './GitPanel';
 import EditorTab from './EditorTab';
 
-function MainContent({ 
-  selectedProject, 
-  selectedSession, 
-  activeTab, 
-  setActiveTab, 
-  ws, 
-  sendMessage, 
+function MainContent({
+  selectedProject,
+  selectedSession,
+  activeTab,
+  setActiveTab,
+  ws,
+  sendMessage,
   messages,
   isMobile,
   onMenuClick,
@@ -34,7 +34,7 @@ function MainContent({
   // Session Protection Props: Functions passed down from App.jsx to manage active session state
   // These functions control when project updates are paused during active conversations
   onSessionActive,        // Mark session as active when user sends message
-  onSessionInactive,      // Mark session as inactive when conversation completes/aborts  
+  onSessionInactive,      // Mark session as inactive when conversation completes/aborts
   onReplaceTemporarySession, // Replace temporary session ID with real session ID from WebSocket
   onNavigateToSession,    // Navigate to a specific session (for Gemini CLI session duplication workaround)
   onShowSettings,         // Show tools settings panel
@@ -77,13 +77,13 @@ function MainContent({
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center text-gray-500 dark:text-gray-400">
             <div className="w-12 h-12 mx-auto mb-4">
-              <div 
-                className="w-full h-full rounded-full border-4 border-gray-200 dark:border-gray-300 border-t-cyan-500 dark:border-t-cyan-400" 
-                style={{ 
+              <div
+                className="w-full h-full rounded-full border-4 border-gray-200 dark:border-gray-300 border-t-cyan-500 dark:border-t-cyan-400"
+                style={{
                   animation: 'spin 1s linear infinite',
                   WebkitAnimation: 'spin 1s linear infinite',
                   MozAnimation: 'spin 1s linear infinite'
-                }} 
+                }}
               />
             </div>
             <h2 className="text-xl font-semibold mb-2">Loading Gemini CLI UI</h2>
@@ -183,7 +183,7 @@ function MainContent({
               )}
             </div>
           </div>
-          
+
           {/* Modern Tab Navigation - Right Side */}
           <div className="flex-shrink-0 hidden sm:block">
             <div className="relative flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
@@ -262,14 +262,14 @@ function MainContent({
                   <span className="hidden sm:inline">Editor</span>
                 </span>
               </button>
-               {/* <button
+              {/* <button
                 onClick={() => setActiveTab('preview')}
                 className={`relative px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${
                   activeTab === 'preview'
                     ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
                 }`}
-              > 
+              >
                 <span className="flex items-center gap-1 sm:gap-1.5">
                   <svg className="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
@@ -307,8 +307,8 @@ function MainContent({
           <FileTree selectedProject={selectedProject} />
         </div>
         <div className={`h-full overflow-hidden ${activeTab === 'shell' ? 'block' : 'hidden'}`}>
-          <Shell 
-            selectedProject={selectedProject} 
+          <Shell
+            selectedProject={selectedProject}
             selectedSession={selectedSession}
             isActive={activeTab === 'shell'}
           />
@@ -317,8 +317,8 @@ function MainContent({
           <GitPanel selectedProject={selectedProject} isMobile={isMobile} />
         </div>
         <div className={`h-full overflow-hidden ${activeTab === 'editor' ? 'block' : 'hidden'}`}>
-          <EditorTab 
-            selectedProject={selectedProject} 
+          <EditorTab
+            selectedProject={selectedProject}
             ws={ws}
             sendMessage={sendMessage}
             messages={messages}
