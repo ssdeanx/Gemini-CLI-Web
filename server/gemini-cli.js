@@ -448,5 +448,45 @@ function abortGeminiSession(sessionId) {
 
 export {
   spawnGemini,
-  abortGeminiSession
+  abortGeminiSession,
+  getGeminiSpec
 };
+
+async function getGeminiSpec(type, context) {
+  return new Promise(async (resolve, reject) => {
+    let fullResponse = '';
+    const args = [];
+
+    const prompt = `Generate a ${type} for a new feature. Here is the context:\n\n${context}`;
+    args.push('--prompt', prompt);
+
+    const geminiPath = process.env.GEMINI_PATH || 'gemini';
+    const geminiProcess = spawn(geminiPath, args, {
+      cwd: process.cwd(),
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: { ...process.env }
+    });
+
+    geminiProcess.stdin.end();
+
+    geminiProcess.stdout.on('data', (data) => {
+      fullResponse += data.toString();
+    });
+
+    geminiProcess.stderr.on('data', (data) => {
+      console.error(`Gemini CLI stderr: ${data}`);
+    });
+
+    geminiProcess.on('close', (code) => {
+      if (code === 0) {
+        resolve(fullResponse);
+      } else {
+        reject(new Error(`Gemini CLI exited with code ${code}`));
+      }
+    });
+
+    geminiProcess.on('error', (error) => {
+      reject(error);
+    });
+  });
+}

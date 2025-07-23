@@ -42,6 +42,7 @@ import sessionManager from './sessionManager.js';
 import gitRoutes from './routes/git.js';
 import authRoutes from './routes/auth.js';
 import mcpRoutes from './routes/mcp.js';
+import specRoutes from './routes/spec.js';
 import { initializeDatabase } from './database/db.js';
 import { validateApiKey, authenticateToken, authenticateWebSocket } from './middleware/auth.js';
 
@@ -175,6 +176,9 @@ app.use('/api/git', authenticateToken, gitRoutes);
 
 // MCP API Routes (protected)
 app.use('/api/mcp', authenticateToken, mcpRoutes);
+
+// Spec API Routes (protected)
+app.use('/api/spec', authenticateToken, specRoutes);
 
 // Static files served after API routes
 app.use(express.static(path.join(__dirname, '../dist')));

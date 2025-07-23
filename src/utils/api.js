@@ -1,15 +1,15 @@
 // Utility function for authenticated API calls
 export const authenticatedFetch = (url, options = {}) => {
   const token = localStorage.getItem('auth-token');
-  
+
   const defaultHeaders = {
     'Content-Type': 'application/json',
   };
-  
+
   if (token) {
     defaultHeaders['Authorization'] = `Bearer ${token}`;
   }
-  
+
   return fetch(url, {
     ...options,
     headers: {
@@ -37,11 +37,11 @@ export const api = {
     user: () => authenticatedFetch('/api/auth/user'),
     logout: () => authenticatedFetch('/api/auth/logout', { method: 'POST' }),
   },
-  
+
   // Protected endpoints
   config: () => authenticatedFetch('/api/config'),
   projects: () => authenticatedFetch('/api/projects'),
-  sessions: (projectName, limit = 5, offset = 0) => 
+  sessions: (projectName, limit = 5, offset = 0) =>
     authenticatedFetch(`/api/projects/${projectName}/sessions?limit=${limit}&offset=${offset}`),
   sessionMessages: (projectName, sessionId) =>
     authenticatedFetch(`/api/projects/${projectName}/sessions/${sessionId}/messages`),
@@ -77,5 +77,10 @@ export const api = {
       method: 'POST',
       body: formData,
       headers: {}, // Let browser set Content-Type for FormData
+    }),
+  generateSpec: (type, context) =>
+    authenticatedFetch('/api/spec/generate', {
+      method: 'POST',
+      body: JSON.stringify({ type, context }),
     }),
 };
