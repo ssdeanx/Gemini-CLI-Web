@@ -78,9 +78,4 @@ export const api = {
       body: formData,
       headers: {}, // Let browser set Content-Type for FormData
     }),
-  generateSpec: (type, context) =>
-    authenticatedFetch('/api/spec/generate', {
-      method: 'POST',
-      body: JSON.stringify({ type, context }),
-    }),
 };
