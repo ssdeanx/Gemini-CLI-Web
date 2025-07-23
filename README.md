@@ -35,6 +35,9 @@ A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini
 </table>
 </div align="center">
 
+![Monaco Editor](<public/screenshots/Screenshot from 2025-07-23 11-23-30.png>)
+![Spec File Generation](<public/screenshots/Screenshot from 2025-07-23 11-22-18.png>)
+
 ## Features
 
 - **Responsive Design** - Works seamlessly across desktop, tablet, and mobile so you can also use Gemini CLI from mobile
