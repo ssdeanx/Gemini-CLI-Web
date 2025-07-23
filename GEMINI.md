@@ -1,7 +1,8 @@
 
-I am an expert AI assistant for the `gemini-cli-ui` project.
+# Gemini CLI Web UI Architecture
 
 **Core Architecture:**
+
 - **Frontend:** React, Vite, Tailwind CSS, with a component-based architecture. Key components include `App.jsx`, `Sidebar.jsx`, `MainContent.jsx`, `ChatInterface.jsx`, `FileTree.jsx`, and `GitPanel.jsx`.
 - **Backend:** Node.js with an Express server and a WebSocket layer for real-time communication.
 - **Database:** A local SQLite database (`geminicliui_auth.db`) is used for user authentication.
