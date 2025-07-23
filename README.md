@@ -1,6 +1,6 @@
 <div align="center">
   <img src="public/logo.svg" alt="Gemini CLI UI" width="64" height="64">
-  <h1>Gemini CLI UI</h1>
+  <h1>Gemini CLI Web UI</h1>
 </div>
 
 A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini-cli), Google's official CLI for AI-assisted coding. You can use it locally or remotely to view your active projects and sessions in Gemini CLI and make changes to them the same way you would do it in Gemini CLI. This gives you a proper interface that works everywhere.
@@ -35,13 +35,16 @@ A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini
 </table>
 </div align="center">
 
+<div align="center">
+<h3>Updates to Gemini CLI Web UI</h3>
 <img src="public/screenshots/Screenshot from 2025-07-23 11-23-30.png" alt="Gemini CLI Monaco Code Editor" width="800">
+<em>Monaco Code Editor for editing files in Gemini CLI UI</em>
 <br>
-<em>Monaco Code Editor for editing files in Gemini CLI UI</em>)
 
 <img src="public/screenshots/Screenshot from 2025-07-23 11-22-18.png" alt="Gemini CLI Monaco Code Editor" width="800">
+<em>Spec File Generation</em>
 <br>
-<em>Spec File Generation</em>)
+</div align="center">
 
 ## Features
 
@@ -163,6 +166,26 @@ The UI automatically discovers Gemini CLI projects from `~/.gemini/projects/` an
 - **Mobile Navigation** - Bottom tab bar for easy thumb navigation
 - **Adaptive Layout** - Collapsible sidebar and smart content prioritization
 - **Add to Home Screen** - Add a shortcut to your home screen and the app will behave like a PWA
+
+### Monaco Editor
+
+- **Monaco Editor** - Advanced code editor with syntax highlighting and live editing
+- **Code Completion** - Autocomplete features for code snippets and functions
+- **Syntax Highlighting** - Highlighting of different programming languages
+- **Live Editing** - Edit code directly in the editor
+- **Code Folding** - Collapse and expand code blocks for better readability
+- **Chat Modal** - Chat mode that can interact with the Monaco Editor
+
+### Spec File Generation
+
+- **Spec File Generation** - Generate design, requirements, and tasks files
+- **Design File Generation** - Generate design files for UI
+- **Requirements File Generation** - Generate requirements files for testing
+- **Tasks File Generation** - Generate tasks files for automation
+- **User Input** - User input is used to generate the spec files
+- **Retry and Save** - Retry and save the generated spec files
+- **Save Spec Files** - Save the generated spec files, in the project spec folder
+- **Use Spec Files** - Use the generated spec files in Gemini CLI for further development, features, and more.
 
 ## Architecture
 
