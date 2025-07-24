@@ -21,6 +21,7 @@ import ReactMarkdown from 'react-markdown';
 import { useDropzone } from 'react-dropzone';
 import TodoList from './TodoList';
 import GeminiLogo from './GeminiLogo.jsx';
+import ThinkingIndicator from './SpecDesign/ThinkingIndicator';
 
 import CommandMenu from './CommandMenu';
 import GeminiStatus from './GeminiStatus';
@@ -1117,6 +1118,12 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
   const [selectedCommandIndex, setSelectedCommandIndex] = useState(-1);
   const [slashPosition, setSlashPosition] = useState(-1);
   const [visibleMessageCount, setVisibleMessageCount] = useState(100);
+  
+  // State for ThinkingIndicator
+  const [isThinking, setIsThinking] = useState(false);
+  const [currentThought, setCurrentThought] = useState('');
+  const [toolCalls, setToolCalls] = useState([]);
+  const [thoughts, setThoughts] = useState([]);
   const [geminiStatus, setGeminiStatus] = useState(null);
 
 
@@ -1559,6 +1566,16 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
                   toolId: part.id,
                   toolResult: null // Will be updated when result comes in
                 }]);
+                
+                // Update thinking indicator with tool call
+                setToolCalls(prev => [...prev, {
+                  name: part.name,
+                  status: 'running',
+                  parameters: part.input,
+                  id: part.id
+                }]);
+                setCurrentThought(`Executing ${part.name} tool...`);
+                
               } else if (part.type === 'text' && part.text?.trim()) {
                 // Add regular text message
                 setChatMessages(prev => [...prev, {
@@ -1566,6 +1583,9 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
                   content: part.text,
                   timestamp: new Date()
                 }]);
+                
+                // Add to thoughts for thinking indicator
+                setThoughts(prev => [...prev, part.text]);
               }
             }
           } else if (typeof messageData.content === 'string' && messageData.content.trim()) {
@@ -1575,6 +1595,9 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
               content: messageData.content,
               timestamp: new Date()
             }]);
+            
+            // Add to thoughts for thinking indicator
+            setThoughts(prev => [...prev, messageData.content]);
           }
           
           // Handle tool results from user messages (these come separately)
@@ -1595,6 +1618,17 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
                   }
                   return msg;
                 }));
+                
+                // Update thinking indicator tool call status
+                setToolCalls(prev => prev.map(tool => 
+                  tool.id === part.tool_use_id 
+                    ? { 
+                        ...tool, 
+                        status: part.is_error ? 'error' : 'completed',
+                        result: part.content
+                      }
+                    : tool
+                ));
               }
             }
           }
@@ -1638,6 +1672,10 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           // Play notification sound when response is complete
           playNotificationSound();
           
+          // Stop thinking indicator
+          setIsThinking(false);
+          setCurrentThought('');
+          
           // Session Protection: Mark session as inactive to re-enable automatic project updates
           // Conversation is complete, safe to allow project updates again
           // Use real session ID if available, otherwise use pending session ID
@@ -1663,6 +1701,10 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           setIsLoading(false);
           setCanAbortSession(false);
           setGeminiStatus(null);
+          
+          // Stop thinking indicator
+          setIsThinking(false);
+          setCurrentThought('');
           
           // Session Protection: Mark session as inactive when aborted
           // User or system aborted the conversation, re-enable project updates
@@ -1714,6 +1756,12 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             setGeminiStatus(statusInfo);
             setIsLoading(true);
             setCanAbortSession(statusInfo.can_interrupt);
+            
+            // Start thinking indicator
+            setIsThinking(true);
+            setCurrentThought('Starting to analyze your request...');
+            setToolCalls([]);
+            setThoughts([]);
           }
           break;
   
@@ -2020,6 +2068,12 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     if (!input.trim() || isLoading || !selectedProject) {
       return;
     }
+
+    // Reset thinking indicator for new conversation
+    setIsThinking(false);
+    setCurrentThought('');
+    setToolCalls([]);
+    setThoughts([]);
 
     // Upload images first if any
     let uploadedImages = [];
@@ -2457,6 +2511,19 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ThinkingIndicator for transparency into AI reasoning */}
+        {(isThinking || toolCalls.length > 0 || thoughts.length > 0) && (
+          <div className="px-4 mb-4">
+            <ThinkingIndicator
+              isThinking={isThinking}
+              currentThought={currentThought}
+              toolCalls={toolCalls}
+              thoughts={thoughts}
+              className="max-w-4xl mx-auto"
+            />
           </div>
         )}
 

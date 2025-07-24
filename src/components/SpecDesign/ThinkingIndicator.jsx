@@ -72,16 +72,16 @@ const ThinkingIndicator = ({
   }
 
   return (
-    <div className={`bg-linear-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900/20 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-lg ${className}`}>
+    <div className={`bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900/20 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-lg ${className}`}>
       {/* Header */}
       <div className="px-6 py-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className={`w-10 h-10 bg-linear-to-br from-gemini-500 to-gemini-800 rounded-xl flex items-center justify-center shadow-lg transition-transform duration-300 ${isThinking ? 'scale-110' : ''}`}>
+            <div className={`w-10 h-10 bg-gradient-to-br from-gemini-500 to-gemini-800 rounded-xl flex items-center justify-center shadow-lg transition-transform duration-300 ${isThinking ? 'scale-110' : ''}`}>
               <Brain className={`w-5 h-5 text-white ${isThinking ? 'animate-pulse' : ''}`} />
             </div>
             {isThinking && (
-              <div className="absolute -inset-1 bg-linear-to-br from-gemini-500 to-gemini-800 rounded-xl opacity-20 animate-ping" />
+              <div className="absolute -inset-1 bg-gradient-to-br from-gemini-500 to-gemini-800 rounded-xl opacity-20 animate-ping" />
             )}
           </div>
           
@@ -111,7 +111,7 @@ const ThinkingIndicator = ({
 
       {/* Current Thinking */}
       {isThinking && currentThought && (
-        <div className="px-6 py-4 bg-linear-to-r from-gemini-500 to-gemini-800 dark:from-gemini-900/20 dark:to-gemini-900/20 border-b border-slate-200 dark:border-slate-700">
+        <div className="px-6 py-4 bg-gradient-to-r from-gemini-500 to-gemini-800 dark:from-gemini-900/20 dark:to-gemini-900/20 border-b border-slate-200 dark:border-slate-700">
           <div className="flex items-start gap-3">
             <Lightbulb className="w-5 h-5 text-amber-500 mt-0.5 animate-pulse" />
             <div className="flex-1">
