@@ -1,6 +1,6 @@
 {
   "name": "gemini-cli-web",
-  "version": "1.5.1",
+  "version": "1.5.0",
   "description": "A stylish web-based UI for Gemini CLI",
   "type": "module",
   "main": "server/index.js",
@@ -76,6 +76,6 @@
     "eslint-plugin-react": "^7.37.5",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.1.11",
-    "vite": "^7.0.5"
+    "vite": "^7.0.6"
   }
 }

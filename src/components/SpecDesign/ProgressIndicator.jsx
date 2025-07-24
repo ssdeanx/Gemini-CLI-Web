@@ -98,19 +98,19 @@ const ProgressIndicator = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="w-12 h-12 bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg transform transition-all duration-300 hover:scale-105">
+              <div className="w-12 h-12 bg-linear-to-br from-gemini-400 via-gemini-600 to-gemini-800 rounded-2xl flex items-center justify-center shadow-lg transform transition-all duration-300 hover:scale-105">
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               {isLoading && (
                 <>
-                  <div className="absolute -inset-2 bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-2xl opacity-20 animate-ping" />
-                  <div className="absolute -inset-1 bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-2xl opacity-40 animate-pulse" />
+                  <div className="absolute -inset-2 bg-linear-to-br from-gemini-400 via-gemini-600 to-gemini-800 rounded-2xl opacity-20 animate-ping" />
+                  <div className="absolute -inset-1 bg-linear-to-br from-gemini-400 via-gemini-600 to-gemini-800 rounded-2xl opacity-40 animate-pulse" />
                 </>
               )}
             </div>
 
             <div>
-              <h3 className="text-xl font-bold bg-linear-to-r from-slate-900 via-purple-900 to-slate-900 dark:from-white dark:via-purple-100 dark:to-white bg-clip-text text-transparent">
+              <h3 className="text-xl font-bold bg-linear-to-r from-slate-900 via-gemini-700 to-slate-900 dark:from-white dark:via-gemini-300 dark:to-white bg-clip-text text-transparent">
                 Specification Generator
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">
@@ -120,9 +120,9 @@ const ProgressIndicator = ({
           </div>
 
           {isLoading && (
-            <div className="flex items-center gap-3 bg-linear-to-r from-violet-50 to-purple-50 dark:from-violet-900/30 dark:to-purple-900/30 px-4 py-2 rounded-xl border border-violet-200 dark:border-violet-800">
-              <Clock className="w-4 h-4 text-violet-600 dark:text-violet-400" />
-              <span className="text-sm font-mono font-semibold text-violet-700 dark:text-violet-300">
+            <div className="flex items-center gap-3 bg-linear-to-r from-gemini-400 to-gemini-600 dark:from-gemini-900/30 dark:to-gemini-900/30 px-4 py-2 rounded-xl border border-gemini-200 dark:border-gemini-800">
+              <Clock className="w-4 h-4 text-gemini-600 dark:text-gemini-400" />
+              <span className="text-sm font-mono font-semibold text-gemini-700 dark:text-gemini-300">
                 {formatTime(elapsedTime)}
               </span>
             </div>
@@ -134,19 +134,19 @@ const ProgressIndicator = ({
       <div className="relative px-8 py-6">
         <div className="flex justify-between text-sm font-medium text-slate-600 dark:text-slate-400 mb-4">
           <span>Overall Progress</span>
-          <span className="text-violet-600 dark:text-violet-400">{Math.round(progress)}%</span>
+          <span className="text-gemini-600 dark:text-gemini-400">{Math.round(progress)}%</span>
         </div>
 
         <div className="relative">
           <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden shadow-inner">
             <div
-              className="h-full bg-linear-to-r from-violet-500 via-purple-500 to-indigo-600 rounded-full transition-all duration-1000 ease-out relative shadow-lg"
+              className="h-full bg-linear-to-r from-gemini-400 via-gemini-600 to-gemini-800 rounded-full transition-all duration-1000 ease-out relative shadow-lg"
               style={{ width: `${progress}%` }}
             >
               {isLoading && (
                 <>
                   <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent animate-pulse rounded-full" />
-                  <div className="absolute inset-0 bg-linear-to-r from-violet-400 to-indigo-500 rounded-full animate-pulse opacity-60" />
+                  <div className="absolute inset-0 bg-linear-to-r from-gemini-400 to-gemini-600 rounded-full animate-pulse opacity-60" />
                 </>
               )}
             </div>
@@ -155,7 +155,7 @@ const ProgressIndicator = ({
           {/* Progress glow effect */}
           {progress > 0 && (
             <div
-              className="absolute top-0 h-3 bg-linear-to-r from-violet-500 via-purple-500 to-indigo-600 rounded-full opacity-30 blur-sm transition-all duration-1000 ease-out"
+              className="absolute top-0 h-3 bg-linear-to-r from-gemini-400 via-gemini-600 to-gemini-800 rounded-full opacity-30 blur-sm transition-all duration-1000 ease-out"
               style={{ width: `${progress}%` }}
             />
           )}
@@ -178,7 +178,7 @@ const ProgressIndicator = ({
                   <div className="absolute top-8 left-1/2 w-full h-0.5 -translate-y-1/2 z-0">
                     <div className="w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full">
                       <div
-                        className={`h-full bg-linear-to-r from-violet-500 to-purple-500 rounded-full transition-all duration-1000 ease-out ${
+                        className={`h-full bg-linear-to-r from-gemini-400 to-gemini-600 rounded-full transition-all duration-1000 ease-out ${
                           isCompleted ? 'w-full' : 'w-0'
                         }`}
                       />
@@ -192,7 +192,7 @@ const ProgressIndicator = ({
                   className={`
                     relative w-full p-6 rounded-2xl border transition-all duration-500 group z-10
                     ${isActive
-                      ? 'border-violet-300 dark:border-violet-600 bg-linear-to-br from-violet-50 via-purple-50 to-indigo-50 dark:from-violet-900/30 dark:via-purple-900/30 dark:to-indigo-900/30 shadow-xl shadow-violet-500/20'
+                      ? 'border-gemini-300 dark:border-gemini-600 bg-linear-to-br from-gemini-400 via-gemini-600 to-gemini-800 dark:from-gemini-900/30 dark:via-gemini-900/30 dark:to-gemini-900/30 shadow-xl shadow-gemini-500/20'
                       : isCompleted
                       ? 'border-emerald-300 dark:border-emerald-600 bg-linear-to-br from-emerald-50 to-green-50 dark:from-emerald-900/30 dark:to-green-900/30 shadow-lg shadow-emerald-500/10'
                       : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600'
@@ -202,7 +202,7 @@ const ProgressIndicator = ({
                 >
                   {/* Animated background for active state */}
                   {isActive && (
-                    <div className="absolute inset-0 bg-linear-to-br from-violet-500/5 via-purple-500/5 to-indigo-500/5 rounded-2xl animate-pulse" />
+                    <div className="absolute inset-0 bg-linear-to-br from-gemini-400/5 via-gemini-600/5 to-gemini-800/5 rounded-2xl animate-pulse" />
                   )}
 
                   {/* Icon container */}
@@ -210,7 +210,7 @@ const ProgressIndicator = ({
                     <div className={`
                       relative w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 mb-4
                       ${isActive
-                        ? `bg-linear-to-br ${stage.color} text-white shadow-lg shadow-violet-500/30`
+                        ? `bg-linear-to-br ${stage.color} text-white shadow-lg shadow-gemini-500/30`
                         : isCompleted
                         ? 'bg-linear-to-br from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/30'
                         : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
@@ -219,7 +219,7 @@ const ProgressIndicator = ({
                     `}>
                       {/* Glow effect for active state */}
                       {isActive && (
-                        <div className="absolute -inset-2 bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-2xl opacity-20 animate-ping" />
+                        <div className="absolute -inset-2 bg-linear-to-br from-gemini-400 via-gemini-600 to-gemini-800 rounded-2xl opacity-20 animate-ping" />
                       )}
 
                       <Icon className={`w-8 h-8 ${isCurrentlyLoading ? 'animate-spin' : ''}`} />
@@ -237,7 +237,7 @@ const ProgressIndicator = ({
                       <h4 className={`
                         text-lg font-bold transition-colors duration-300 mb-1
                         ${isActive
-                          ? 'text-violet-700 dark:text-violet-300'
+                          ? 'text-gemini-700 dark:text-gemini-300'
                           : isCompleted
                           ? 'text-emerald-700 dark:text-emerald-300'
                           : 'text-slate-600 dark:text-slate-400'
@@ -249,7 +249,7 @@ const ProgressIndicator = ({
                       <p className={`
                         text-sm transition-colors duration-300
                         ${isActive
-                          ? 'text-violet-600 dark:text-violet-400'
+                          ? 'text-gemini-800 dark:text-gemini-200'
                           : isCompleted
                           ? 'text-emerald-600 dark:text-emerald-400'
                           : 'text-slate-500 dark:text-slate-500'
@@ -265,7 +265,7 @@ const ProgressIndicator = ({
                             {[0, 1, 2].map((i) => (
                               <div
                                 key={i}
-                                className={`w-2 h-2 bg-violet-500 rounded-full transition-all duration-300 ${
+                                className={`w-2 h-2 bg-gemini-500 rounded-full transition-all duration-300 ${
                                   pulsePhase === i ? 'opacity-100 scale-125' : 'opacity-40 scale-75'
                                 }`}
                               />
@@ -274,7 +274,7 @@ const ProgressIndicator = ({
                         ) : isCompleted ? (
                           <div className="w-3 h-3 bg-emerald-500 rounded-full shadow-lg shadow-emerald-500/50" />
                         ) : isActive ? (
-                          <div className="w-3 h-3 bg-violet-500 rounded-full animate-pulse shadow-lg shadow-violet-500/50" />
+                          <div className="w-3 h-3 bg-gemini-500 rounded-full animate-pulse shadow-lg shadow-gemini-500/50" />
                         ) : (
                           <div className="w-3 h-3 bg-slate-300 dark:bg-slate-600 rounded-full" />
                         )}

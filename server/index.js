@@ -53,11 +53,11 @@ const connectedClients = new Set();
 async function setupProjectsWatcher() {
   const chokidar = (await import('chokidar')).default;
   const geminiProjectsPath = path.join(process.env.HOME, '.gemini', 'projects');
-  
+
   if (projectsWatcher) {
     projectsWatcher.close();
   }
-  
+
   try {
     // Initialize chokidar watcher with optimized settings
     projectsWatcher = chokidar.watch(geminiProjectsPath, {
@@ -92,7 +92,7 @@ async function setupProjectsWatcher() {
 
           // Get updated projects list
           const updatedProjects = await getProjects();
-          
+
           // Notify all connected clients about the project changes
           const updateMessage = JSON.stringify({
             type: 'projects_updated',
@@ -101,19 +101,19 @@ async function setupProjectsWatcher() {
             changeType: eventType,
             changedFile: path.relative(geminiProjectsPath, filePath)
           });
-          
+
           connectedClients.forEach(client => {
             if (client.readyState === client.OPEN) {
               client.send(updateMessage);
             }
           });
-          
+
         } catch (error) {
           // console.error('❌ Error handling project changes:', error);
         }
       }, 300); // 300ms debounce (slightly faster than before)
     };
-    
+
     // Set up event listeners
     projectsWatcher
       .on('add', (filePath) => debouncedUpdate('add', filePath))
@@ -126,7 +126,7 @@ async function setupProjectsWatcher() {
       })
       .on('ready', () => {
       });
-    
+
   } catch (error) {
     // console.error('❌ Failed to setup projects watcher:', error);
   }
@@ -137,23 +137,23 @@ const app = express();
 const server = http.createServer(app);
 
 // Single WebSocket server that handles both paths
-const wss = new WebSocketServer({ 
+const wss = new WebSocketServer({
   server,
   verifyClient: (info) => {
     // console.log('WebSocket connection attempt to:', info.req.url);
-    
+
     // Extract token from query parameters or headers
     const url = new URL(info.req.url, 'http://localhost');
-    const token = url.searchParams.get('token') || 
+    const token = url.searchParams.get('token') ||
                   info.req.headers.authorization?.split(' ')[1];
-    
+
     // Verify token
     const user = authenticateWebSocket(token);
     if (!user) {
       // console.log('❌ WebSocket authentication failed');
       return false;
     }
-    
+
     // Store user info in the request for later use
     info.req.user = user;
     // console.log('✅ WebSocket authenticated for user:', user.username);
@@ -175,6 +175,8 @@ app.use('/api/git', authenticateToken, gitRoutes);
 
 // MCP API Routes (protected)
 app.use('/api/mcp', authenticateToken, mcpRoutes);
+
+
 
 
 // Static files served after API routes

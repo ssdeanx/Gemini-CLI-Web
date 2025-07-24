@@ -19,6 +19,7 @@ import Shell from './Shell';
 import GitPanel from './GitPanel';
 import EditorTab from './EditorTab';
 import SpecDesign from './SpecDesign/SpecDesign';
+import CodeGraph from './CodeGraph';
 
 function MainContent({
   selectedProject,
@@ -123,7 +124,7 @@ function MainContent({
               Select a project from the sidebar to start coding with Gemini. Each project contains your chat sessions and file history.
             </p>
             <div className="bg-gemini-50 dark:bg-gemini-900/20 rounded-lg p-4 border border-gemini-200 dark:border-gemini-800">
-              <p className="text-sm text-gemini-700 dark:text-gemini-300">
+              <p className="text-sm text-gemini-700 dark:text-gemini-200">
                 💡 <strong>Tip:</strong> {isMobile ? 'Tap the menu button above to access projects' : 'Create a new project by clicking the folder icon in the sidebar'}
               </p>
             </div>
@@ -278,6 +279,21 @@ function MainContent({
                   <span className="hidden sm:inline">Spec Design</span>
                 </span>
               </button>
+              {/* <button
+                onClick={() => setActiveTab('graph')}
+                className={`relative px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${
+                  activeTab === 'graph'
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
+                }`}
+              >
+                <span className="flex items-center gap-1 sm:gap-1.5">
+                  <svg className="w-3 sm:w-3.5 h-3 sm:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span className="hidden sm:inline">Code Graph</span>
+                </span>
+              </button>*/}
               {/* <button
                 onClick={() => setActiveTab('preview')}
                 className={`relative px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 ${

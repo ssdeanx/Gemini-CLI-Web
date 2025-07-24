@@ -22,6 +22,7 @@ import { useDropzone } from 'react-dropzone';
 import TodoList from './TodoList';
 import GeminiLogo from './GeminiLogo.jsx';
 
+import CommandMenu from './CommandMenu';
 import GeminiStatus from './GeminiStatus';
 import { MicButton } from './MicButton.jsx';
 import { api } from '../utils/api';
@@ -188,7 +189,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </button>
                           </summary>
                           <div className="mt-3">
-                            <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden neumorphic-inset dark:neumorphic-inset-dark">
+                            <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden">
                               <div className="flex items-center justify-between px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700">
                                 <button
                                   onClick={() => onFileOpen && onFileOpen(input.file_path, {
@@ -456,7 +457,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       const input = JSON.parse(message.toolInput);
                       if (input.plan) {
                         // Replace escaped newlines with actual newlines
-                        const planContent = input.plan.replace(/\\n/g, '\n');
+                        const planContent = input.plan.replace(/\n/g, '\n');
                         return (
                           <details className="mt-2" open={autoExpandTools}>
                             <summary className="text-sm text-gemini-700 dark:text-gemini-300 cursor-pointer hover:text-gemini-800 dark:hover:text-gemini-200 flex items-center gap-2">
@@ -569,7 +570,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             const parsed = JSON.parse(content);
                             if (parsed.plan) {
                               // Replace escaped newlines with actual newlines
-                              const planContent = parsed.plan.replace(/\\n/g, '\n');
+                              const planContent = parsed.plan.replace(/\n/g, '\n');
                               return (
                                 <div>
                                   <div className="flex items-center gap-2 mb-3">
@@ -1091,7 +1092,26 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
   const [isUserScrolledUp, setIsUserScrolledUp] = useState(false);
   const scrollPositionRef = useRef({ height: 0, top: 0 });
   const [showCommandMenu, setShowCommandMenu] = useState(false);
-  const [slashCommands, setSlashCommands] = useState([]);
+  const [dropdownViewMode, setDropdownViewMode] = useState('categories'); // 'categories', 'folders', 'files'
+  const [allMatchingFolders, setAllMatchingFolders] = useState([]);
+  const [allMatchingFiles, setAllMatchingFiles] = useState([]);
+  const [slashCommands, setSlashCommands] = useState([
+    { command: '/about', description: 'Show version information' },
+    { command: '/auth', description: 'Change authentication method' },
+    { command: '/bug', description: 'File a bug report' },
+    { command: '/chat', description: 'Save, resume, or list conversations' },
+    { command: '/clear', description: 'Clear the terminal' },
+    { command: '/compress', description: 'Compress chat context' },
+    { command: '/editor', description: 'Change your preferred editor' },
+    { command: '/exit', description: 'Exit the CLI' },
+    { command: '/help', description: 'Show available commands' },
+    { command: '/mcp', description: 'Show configured MCP servers' },
+    { command: '/memory', description: 'Manage instructional context' },
+    { command: '/quit', description: 'Exit the CLI' },
+    { command: '/stats', description: 'Show session statistics' },
+    { command: '/theme', description: 'Change the visual theme' },
+    { command: '/tools', description: 'List available tools' },
+  ]);
   const [filteredCommands, setFilteredCommands] = useState([]);
   const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
   const [selectedCommandIndex, setSelectedCommandIndex] = useState(-1);
@@ -1726,13 +1746,17 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     let result = [];
     for (const file of files) {
       const fullPath = basePath ? `${basePath}/${file.name}` : file.name;
-      if (file.type === 'directory' && file.children) {
-        result = result.concat(flattenFileTree(file.children, fullPath));
+      if (file.type === 'directory') {
+        result.push({ name: file.name, path: fullPath, type: 'directory', relativePath: fullPath });
+        if (file.children) {
+          result = result.concat(flattenFileTree(file.children, fullPath));
+        }
       } else if (file.type === 'file') {
         result.push({
           name: file.name,
           path: fullPath,
-          relativePath: file.path
+          relativePath: file.path,
+          type: 'file'
         });
       }
     }
@@ -1752,12 +1776,34 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         setShowFileDropdown(true);
         
         // Filter files based on the text after @
-        const filtered = fileList.filter(file => 
+        const matchingFiles = fileList.filter(file => 
           file.name.toLowerCase().includes(textAfterAt.toLowerCase()) ||
           file.path.toLowerCase().includes(textAfterAt.toLowerCase())
-        ).slice(0, 10); // Limit to 10 results
-        
-        setFilteredFiles(filtered);
+        );
+
+        const folders = matchingFiles.filter(file => file.type === 'directory')
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        const files = matchingFiles.filter(file => file.type === 'file')
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        setAllMatchingFolders(folders);
+        setAllMatchingFiles(files);
+
+        if (dropdownViewMode === 'categories') {
+          const categoriesAndFiles = [];
+          if (folders.length > 0) {
+            categoriesAndFiles.push({ name: `Folders (${folders.length})`, type: 'category', category: 'folders', path: '' });
+          }
+          if (files.length > 0) {
+            categoriesAndFiles.push({ name: `Files (${files.length})`, type: 'category', category: 'files', path: '' });
+          }
+          setFilteredFiles([...categoriesAndFiles, ...folders.slice(0, 5), ...files.slice(0, 5)]);
+        } else if (dropdownViewMode === 'folders') {
+          setFilteredFiles([{ name: '< Back to Categories', type: 'back-to-categories', path: '' }, ...folders]);
+        } else if (dropdownViewMode === 'files') {
+          setFilteredFiles([{ name: '< Back to Categories', type: 'back-to-categories', path: '' }, ...files]);
+        }
         setSelectedFileIndex(-1);
       } else {
         setShowFileDropdown(false);
@@ -1767,7 +1813,34 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
       setShowFileDropdown(false);
       setAtSymbolPosition(-1);
     }
-  }, [input, cursorPosition, fileList]);
+  }, [input, cursorPosition, fileList, dropdownViewMode, allMatchingFolders, allMatchingFiles]);
+
+  // Handle / symbol detection and command filtering
+  useEffect(() => {
+    const textBeforeCursor = input.slice(0, cursorPosition);
+    const lastSlashIndex = textBeforeCursor.lastIndexOf('/');
+
+    if (lastSlashIndex === 0) {
+      const textAfterSlash = textBeforeCursor.slice(lastSlashIndex + 1);
+      if (!textAfterSlash.includes(' ')) {
+        setSlashPosition(lastSlashIndex);
+        setShowCommandMenu(true);
+
+        const filtered = slashCommands.filter(cmd =>
+          cmd.command.toLowerCase().includes(textAfterSlash.toLowerCase())
+        ).slice(0, 10);
+
+        setFilteredCommands(filtered);
+        setSelectedCommandIndex(-1);
+      } else {
+        setShowCommandMenu(false);
+        setSlashPosition(-1);
+      }
+    } else {
+      setShowCommandMenu(false);
+      setSlashPosition(-1);
+    }
+  }, [input, cursorPosition, slashCommands]);
 
   // Debounced input handling
   useEffect(() => {
@@ -2080,6 +2153,37 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
   };
 
   const handleKeyDown = (e) => {
+    if (showCommandMenu && filteredCommands.length > 0) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setSelectedCommandIndex(prev =>
+          prev < filteredCommands.length - 1 ? prev + 1 : 0
+        );
+        return;
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setSelectedCommandIndex(prev =>
+          prev > 0 ? prev - 1 : filteredCommands.length - 1
+        );
+        return;
+      }
+      if (e.key === 'Tab' || e.key === 'Enter') {
+        e.preventDefault();
+        if (selectedCommandIndex >= 0) {
+          selectCommand(filteredCommands[selectedCommandIndex]);
+        } else if (filteredCommands.length > 0) {
+          selectCommand(filteredCommands[0]);
+        }
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setShowCommandMenu(false);
+        return;
+      }
+    }
+
     // Handle file dropdown navigation
     if (showFileDropdown && filteredFiles.length > 0) {
       if (e.key === 'ArrowDown') {
@@ -2141,6 +2245,12 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
   };
 
   const selectFile = (file) => {
+    if (file.type === 'category') {
+      setDropdownViewMode(file.category);
+      setSelectedFileIndex(-1); // Reset selection when changing view mode
+      return;
+    }
+
     const textBeforeAt = input.slice(0, atSymbolPosition);
     const textAfterAtQuery = input.slice(atSymbolPosition);
     const spaceIndex = textAfterAtQuery.indexOf(' ');
@@ -2169,6 +2279,33 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         if (textareaRef.current) {
           textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
           // Ensure focus is maintained
+          if (!textareaRef.current.matches(':focus')) {
+            textareaRef.current.focus();
+          }
+        }
+      });
+    }
+  };
+
+  const selectCommand = (command) => {
+    const textBeforeSlash = input.slice(0, slashPosition);
+    const newInput = textBeforeSlash + command.command + ' ';
+    const newCursorPos = newInput.length;
+
+    if (textareaRef.current && !textareaRef.current.matches(':focus')) {
+      textareaRef.current.focus();
+    }
+
+    setInput(newInput);
+    setCursorPosition(newCursorPos);
+
+    setShowCommandMenu(false);
+    setSlashPosition(-1);
+
+    if (textareaRef.current) {
+      requestAnimationFrame(() => {
+        if (textareaRef.current) {
+          textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
           if (!textareaRef.current.matches(':focus')) {
             textareaRef.current.focus();
           }
@@ -2405,7 +2542,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             <div className="absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 backdrop-blur-sm">
               {filteredFiles.map((file, index) => (
                 <div
-                  key={file.path}
+                  key={file.type === 'category' ? file.category : file.path}
                   className={`px-4 py-3 cursor-pointer border-b border-zinc-100 dark:border-zinc-700 last:border-b-0 touch-manipulation ${
                     index === selectedFileIndex
                       ? 'bg-gemini-50 dark:bg-gemini-900/20 text-gemini-700 dark:text-gemini-300'
@@ -2429,6 +2566,14 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
                 </div>
               ))}
             </div>
+          )}
+
+          {showCommandMenu && filteredCommands.length > 0 && (
+            <CommandMenu
+              commands={filteredCommands}
+              onSelect={selectCommand}
+              selectedIndex={selectedCommandIndex}
+            />
           )}
 
           <div {...getRootProps()} className={`chat-input-container relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-gemini-500 dark:focus-within:ring-gemini-500 focus-within:border-gemini-500 transition-all duration-200 ${isTextareaExpanded ? 'chat-input-expanded' : ''}`}>

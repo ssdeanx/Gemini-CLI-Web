@@ -77,11 +77,11 @@ const ThinkingIndicator = ({
       <div className="px-6 py-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className={`w-10 h-10 bg-linear-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg transition-transform duration-300 ${isThinking ? 'scale-110' : ''}`}>
+            <div className={`w-10 h-10 bg-linear-to-br from-gemini-500 to-gemini-800 rounded-xl flex items-center justify-center shadow-lg transition-transform duration-300 ${isThinking ? 'scale-110' : ''}`}>
               <Brain className={`w-5 h-5 text-white ${isThinking ? 'animate-pulse' : ''}`} />
             </div>
             {isThinking && (
-              <div className="absolute -inset-1 bg-linear-to-br from-blue-500 to-purple-600 rounded-xl opacity-20 animate-ping" />
+              <div className="absolute -inset-1 bg-linear-to-br from-gemini-500 to-gemini-800 rounded-xl opacity-20 animate-ping" />
             )}
           </div>
           
@@ -99,7 +99,7 @@ const ThinkingIndicator = ({
               {[0, 1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className={`w-2 h-2 bg-blue-500 rounded-full transition-all duration-300 ${
+                  className={`w-2 h-2 bg-gemini-500 rounded-full transition-all duration-300 ${
                     animationPhase === i ? 'scale-125 opacity-100' : 'scale-75 opacity-40'
                   }`}
                 />
@@ -111,7 +111,7 @@ const ThinkingIndicator = ({
 
       {/* Current Thinking */}
       {isThinking && currentThought && (
-        <div className="px-6 py-4 bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-slate-200 dark:border-slate-700">
+        <div className="px-6 py-4 bg-linear-to-r from-gemini-500 to-gemini-800 dark:from-gemini-900/20 dark:to-gemini-900/20 border-b border-slate-200 dark:border-slate-700">
           <div className="flex items-start gap-3">
             <Lightbulb className="w-5 h-5 text-amber-500 mt-0.5 animate-pulse" />
             <div className="flex-1">
@@ -218,7 +218,7 @@ const ThinkingIndicator = ({
               className="flex items-center justify-between w-full text-left group"
             >
               <div className="flex items-center gap-2">
-                <Brain className="w-4 h-4 text-purple-500" />
+                <Brain className="w-4 h-4 text-gemini-500" />
                 <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   Reasoning Steps ({thoughts.length})
                 </span>
@@ -238,7 +238,7 @@ const ThinkingIndicator = ({
                     className="bg-white dark:bg-slate-800 rounded-lg p-3 border border-slate-200 dark:border-slate-700 shadow-sm"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full flex items-center justify-center text-xs font-medium mt-0.5">
+                      <div className="w-6 h-6 bg-gemini-100 dark:bg-gemini-900/30 text-gemini-600 dark:text-gemini-400 rounded-full flex items-center justify-center text-xs font-medium mt-0.5">
                         {index + 1}
                       </div>
                       <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed flex-1">
