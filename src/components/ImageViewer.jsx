@@ -6,10 +6,10 @@ function ImageViewer({ file, onClose }) {
   const imagePath = `/api/projects/${file.projectName}/files/content?path=${encodeURIComponent(file.path)}`;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl max-h-[90vh] w-full mx-4 overflow-hidden">
+    <div className="fixed inset-0 bg-zinc-950 bg-opacity-50 flex items-center justify-center z-50 glass-morphism-dark">
+      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-elevated max-w-4xl max-h-[90vh] w-full mx-4 overflow-hidden glass-morphism dark:glass-morphism-dark">
         <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
             {file.name}
           </h3>
           <Button
@@ -22,18 +22,18 @@ function ImageViewer({ file, onClose }) {
           </Button>
         </div>
 
-        <div className="p-4 flex justify-center items-center bg-gray-50 dark:bg-gray-900 min-h-[400px]">
+        <div className="p-4 flex justify-center items-center bg-zinc-50 dark:bg-zinc-900 min-h-[400px] neumorphic-inset dark:neumorphic-inset-dark">
           <img
             src={imagePath}
             alt={file.name}
-            className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md"
+            className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-layered glow-soft"
             onError={(e) => {
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'block';
             }}
           />
           <div
-            className="text-center text-gray-500 dark:text-gray-400"
+            className="text-center text-zinc-500 dark:text-zinc-400"
             style={{ display: 'none' }}
           >
             <p>Unable to load image</p>
@@ -41,8 +41,8 @@ function ImageViewer({ file, onClose }) {
           </div>
         </div>
 
-        <div className="p-4 border-t bg-gray-50 dark:bg-gray-800">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div className="p-4 border-t bg-zinc-50 dark:bg-zinc-800">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
             {file.path}
           </p>
         </div>

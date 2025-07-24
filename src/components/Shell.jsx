@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { ClipboardAddon } from '@xterm/addon-clipboard';
@@ -43,7 +43,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
   // Connect to shell function
   const connectToShell = () => {
     console.log('Connect to shell clicked');
-    
+
     // Check auth token first
     const token = localStorage.getItem('auth-token');
     if (!token) {
@@ -53,32 +53,32 @@ function Shell({ selectedProject, selectedSession, isActive }) {
       }
       return;
     }
-    
+
     if (!isInitialized || isConnected || isConnecting) {
       console.log('Cannot connect:', { isInitialized, isConnected, isConnecting });
       return;
     }
-    
+
     setIsConnecting(true);
-    
+
     // Start the WebSocket connection
     connectWebSocket();
   };
 
   // Disconnect from shell function
   const disconnectFromShell = () => {
-    
+
     if (ws.current) {
       ws.current.close();
       ws.current = null;
     }
-    
+
     // Clear terminal content completely
     if (terminal.current) {
       terminal.current.clear();
       terminal.current.write('\x1b[2J\x1b[H'); // Clear screen and move cursor to home
     }
-    
+
     setIsConnected(false);
     setIsConnecting(false);
   };
@@ -86,34 +86,33 @@ function Shell({ selectedProject, selectedSession, isActive }) {
   // Restart shell function
   const restartShell = () => {
     setIsRestarting(true);
-    
+
     // Clear ALL session storage for this project to force fresh start
-    const sessionKeys = Array.from(shellSessions.keys()).filter(key => 
+    const sessionKeys = Array.from(shellSessions.keys()).filter(key =>
       key.includes(selectedProject.name)
     );
     sessionKeys.forEach(key => shellSessions.delete(key));
-    
-    
+
     // Close existing WebSocket
     if (ws.current) {
       ws.current.close();
       ws.current = null;
     }
-    
+
     // Clear and dispose existing terminal
     if (terminal.current) {
-      
+
       // Dispose terminal immediately without writing text
       terminal.current.dispose();
       terminal.current = null;
       fitAddon.current = null;
     }
-    
+
     // Reset states
     setIsConnected(false);
     setIsInitialized(false);
-    
-    
+
+
     // Force re-initialization after cleanup
     setTimeout(() => {
       setIsRestarting(false);
@@ -123,14 +122,13 @@ function Shell({ selectedProject, selectedSession, isActive }) {
   // Watch for session changes and restart shell
   useEffect(() => {
     const currentSessionId = selectedSession?.id || null;
-    
-    
+
     // Disconnect when session changes (user will need to manually reconnect)
     if (lastSessionId !== null && lastSessionId !== currentSessionId && isInitialized) {
-      
+
       // Disconnect from current shell
       disconnectFromShell();
-      
+
       // Clear stored sessions for this project
       const allKeys = Array.from(shellSessions.keys());
       allKeys.forEach(key => {
@@ -139,38 +137,38 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         }
       });
     }
-    
+
     setLastSessionId(currentSessionId);
   }, [selectedSession?.id, isInitialized]);
 
   // Initialize terminal when component mounts
   useEffect(() => {
-    
+
     if (!terminalRef.current || !selectedProject || isRestarting) {
       return;
     }
 
     // Create session key for this project/session combination
     const sessionKey = selectedSession?.id || `project-${selectedProject.name}`;
-    
+
     // Check if we have an existing session
     const existingSession = shellSessions.get(sessionKey);
     if (existingSession && !terminal.current) {
-      
+
       try {
         // Reuse existing terminal
         terminal.current = existingSession.terminal;
         fitAddon.current = existingSession.fitAddon;
         ws.current = existingSession.ws;
         setIsConnected(existingSession.isConnected);
-        
+
         // Reattach to DOM - dispose existing element first if needed
         if (terminal.current.element && terminal.current.element.parentNode) {
           terminal.current.element.parentNode.removeChild(terminal.current.element);
         }
-        
+
         terminal.current.open(terminalRef.current);
-        
+
         setTimeout(() => {
           if (fitAddon.current) {
             fitAddon.current.fit();
@@ -184,7 +182,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
             }
           }
         }, 100);
-        
+
         setIsInitialized(true);
         return;
       } catch (error) {
@@ -224,7 +222,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         cursorAccent: '#1e1e1e',
         selection: '#264f78',
         selectionForeground: '#ffffff',
-        
+
         // Standard ANSI colors (0-7)
         black: '#000000',
         red: '#cd3131',
@@ -234,7 +232,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         magenta: '#bc3fbc',
         cyan: '#11a8cd',
         white: '#e5e5e5',
-        
+
         // Bright ANSI colors (8-15)
         brightBlack: '#666666',
         brightRed: '#f14c4c',
@@ -244,7 +242,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         brightMagenta: '#d670d6',
         brightCyan: '#29b8db',
         brightWhite: '#ffffff',
-        
+
         // Extended colors for better Gemini output
         extendedAnsi: [
           // 16-color palette extension for 256-color support
@@ -259,15 +257,15 @@ function Shell({ selectedProject, selectedSession, isActive }) {
     fitAddon.current = new FitAddon();
     const clipboardAddon = new ClipboardAddon();
     const webglAddon = new WebglAddon();
-    
+
     terminal.current.loadAddon(fitAddon.current);
     terminal.current.loadAddon(clipboardAddon);
-    
+
     try {
       terminal.current.loadAddon(webglAddon);
     } catch (error) {
     }
-    
+
     terminal.current.open(terminalRef.current);
 
     // Wait for terminal to be fully rendered, then fit
@@ -284,7 +282,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         document.execCommand('copy');
         return false;
       }
-      
+
       // Ctrl+V or Cmd+V for paste
       if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
         navigator.clipboard.readText().then(text => {
@@ -299,10 +297,10 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         });
         return false;
       }
-      
+
       return true;
     });
-    
+
     // Ensure terminal takes full space and notify backend of size
     setTimeout(() => {
       if (fitAddon.current) {
@@ -317,7 +315,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         }
       }
     }, 100);
-    
+
     setIsInitialized(true);
 
     // Handle terminal input
@@ -353,11 +351,11 @@ function Shell({ selectedProject, selectedSession, isActive }) {
 
     return () => {
       resizeObserver.disconnect();
-      
+
       // Store session for reuse instead of disposing
       if (terminal.current && selectedProject) {
         const sessionKey = selectedSession?.id || `project-${selectedProject.name}`;
-        
+
         try {
           shellSessions.set(sessionKey, {
             terminal: terminal.current,
@@ -365,7 +363,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
             ws: ws.current,
             isConnected: isConnected
           });
-          
+
         } catch (error) {
         }
       }
@@ -399,7 +397,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
     if (isConnecting || isConnected) {
       return;
     }
-    
+
     try {
       // Get authentication token
       const token = localStorage.getItem('auth-token');
@@ -407,7 +405,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         console.error('No authentication token found for Shell WebSocket connection');
         return;
       }
-      
+
       // Fetch server configuration to get the correct WebSocket URL
       let wsBaseUrl;
       try {
@@ -418,7 +416,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         });
         const config = await configResponse.json();
         wsBaseUrl = config.wsUrl;
-        
+
         // If the config returns localhost but we're not on localhost, use current host but with API server port
         if (wsBaseUrl.includes('localhost') && !window.location.hostname.includes('localhost')) {
           const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -432,30 +430,30 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         const apiPort = window.location.port === '4009' ? '4008' : window.location.port;
         wsBaseUrl = `${protocol}//${window.location.hostname}:${apiPort}`;
       }
-      
+
       // Include token in WebSocket URL as query parameter
       const wsUrl = `${wsBaseUrl}/shell?token=${encodeURIComponent(token)}`;
       console.log('Connecting to WebSocket:', wsUrl.replace(/token=.*/, 'token=[REDACTED]'));
-      
+
       ws.current = new WebSocket(wsUrl);
 
       ws.current.onopen = () => {
         console.log('WebSocket connected successfully');
         setIsConnected(true);
         setIsConnecting(false);
-        
+
         // Wait for terminal to be ready, then fit and send dimensions
         setTimeout(() => {
           if (fitAddon.current && terminal.current) {
             // Force a fit to ensure proper dimensions
             fitAddon.current.fit();
-            
+
             // Wait a bit more for fit to complete, then send dimensions
             setTimeout(() => {
               // Send correct session ID from selected session
               const currentSessionId = selectedSession?.id || selectedSession?.sessionId;
               // console.log('🔗 Shell: Initializing with session:', currentSessionId);
-              
+
               const initPayload = {
                 type: 'init',
                 projectPath: selectedProject.fullPath || selectedProject.path,
@@ -464,9 +462,9 @@ function Shell({ selectedProject, selectedSession, isActive }) {
                 cols: terminal.current.cols,
                 rows: terminal.current.rows
               };
-              
+
               ws.current.send(JSON.stringify(initPayload));
-              
+
               // Also send resize message immediately after init
               setTimeout(() => {
                 if (terminal.current && ws.current && ws.current.readyState === WebSocket.OPEN) {
@@ -489,16 +487,14 @@ function Shell({ selectedProject, selectedSession, isActive }) {
             // Check for URLs in the output and make them clickable
             const urlRegex = /(https?:\/\/[^\s\x1b\x07]+)/g;
             let output = data.data;
-            
+
             // Find URLs in the text (excluding ANSI escape sequences)
             const urls = [];
             let match;
             while ((match = urlRegex.exec(output.replace(/\x1b\[[0-9;]*m/g, ''))) !== null) {
               urls.push(match[1]);
             }
-            
             // If URLs found, log them for potential opening
-            
             terminal.current.write(output);
           } else if (data.type === 'url_open') {
             // Handle explicit URL opening requests from server
@@ -512,7 +508,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
         console.log('WebSocket closed:', { code: event.code, reason: event.reason });
         setIsConnected(false);
         setIsConnecting(false);
-        
+
         // Clear terminal content when connection closes
         if (terminal.current) {
           terminal.current.clear();
@@ -521,7 +517,6 @@ function Shell({ selectedProject, selectedSession, isActive }) {
             terminal.current.write(`\x1b[1;31mConnection closed: ${event.reason || 'Unknown error (code: ' + event.code + ')'}\x1b[0m\r\n`);
           }
         }
-        
         // Don't auto-reconnect anymore - user must manually connect
       };
 
@@ -547,9 +542,9 @@ function Shell({ selectedProject, selectedSession, isActive }) {
   if (!selectedProject) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="text-center text-gray-500 dark:text-gray-400">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="text-center text-zinc-500 dark:text-zinc-400">
+          <div className="w-16 h-16 mx-auto mb-4 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
           </div>
@@ -561,9 +556,9 @@ function Shell({ selectedProject, selectedSession, isActive }) {
   }
 
   return (
-    <div className="h-full flex flex-col bg-gray-900 w-full">
+    <div className="h-full flex flex-col bg-zinc-900 w-full glass-morphism-dark">
       {/* Header */}
-      <div className="flex-shrink-0 bg-gray-800 border-b border-gray-700 px-4 py-2">
+      <div className="shrink-0 bg-zinc-800 border-b border-zinc-700 px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
@@ -573,7 +568,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
               </span>
             )}
             {!selectedSession && (
-              <span className="text-xs text-gray-400">(New Session)</span>
+              <span className="text-xs text-zinc-400">(New Session)</span>
             )}
             {!isInitialized && (
               <span className="text-xs text-yellow-400">(Initializing...)</span>
@@ -599,7 +594,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
             <button
               onClick={restartShell}
               disabled={isRestarting || isConnected}
-              className="text-xs text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
+              className="text-xs text-zinc-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
               title="Restart Shell (disconnect first)"
             >
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -617,14 +612,14 @@ function Shell({ selectedProject, selectedSession, isActive }) {
 
         {/* Loading state */}
         {!isInitialized && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90">
+          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 bg-opacity-90">
             <div className="text-white">Loading terminal...</div>
           </div>
         )}
 
         {/* Connect button when not connected */}
         {isInitialized && !isConnected && !isConnecting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 p-4">
+          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 bg-opacity-90 p-4">
             <div className="text-center max-w-sm w-full">
               <button
                 onClick={connectToShell}
@@ -636,7 +631,7 @@ function Shell({ selectedProject, selectedSession, isActive }) {
                 </svg>
                 <span>Continue in Shell</span>
               </button>
-              <p className="text-gray-400 text-sm mt-3 px-2">
+              <p className="text-zinc-400 text-sm mt-3 px-2">
                 {selectedSession ?
                   `Resume session: ${selectedSession.summary.slice(0, 50)}...` : 
                   'Start a new Gemini session'
@@ -648,13 +643,13 @@ function Shell({ selectedProject, selectedSession, isActive }) {
 
         {/* Connecting state */}
         {isConnecting && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 p-4">
+          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 bg-opacity-90 p-4">
             <div className="text-center max-w-sm w-full">
               <div className="flex items-center justify-center space-x-3 text-yellow-400">
                 <div className="w-6 h-6 animate-spin rounded-full border-2 border-yellow-400 border-t-transparent"></div>
                 <span className="text-base font-medium">Connecting to shell...</span>
               </div>
-              <p className="text-gray-400 text-sm mt-3 px-2">
+              <p className="text-zinc-400 text-sm mt-3 px-2">
                 Starting Gemini CLI in {selectedProject.displayName}
               </p>
             </div>

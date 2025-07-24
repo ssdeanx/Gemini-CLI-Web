@@ -1,18 +1,18 @@
 /*
  * ChatInterface.jsx - Chat Component with Session Protection Integration
- * 
+ *
  * SESSION PROTECTION INTEGRATION:
  * ===============================
- * 
+ *
  * This component integrates with the Session Protection System to prevent project updates
  * from interrupting active conversations:
- * 
+ *
  * Key Integration Points:
  * 1. handleSubmit() - Marks session as active when user sends message (including temp ID for new sessions)
- * 2. session-created handler - Replaces temporary session ID with real WebSocket session ID  
+ * 2. session-created handler - Replaces temporary session ID with real WebSocket session ID
  * 3. gemini-complete handler - Marks session as inactive when conversation finishes
  * 4. session-aborted handler - Marks session as inactive when conversation is aborted
- * 
+ *
  * This ensures uninterrupted chat experience by coordinating with App.jsx to pause sidebar updates.
  */
 
@@ -29,16 +29,16 @@ import { playNotificationSound } from '../utils/notificationSound';
 
 // Memoized message component to prevent unnecessary re-renders
 const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFileOpen, onShowSettings, autoExpandTools, showRawParameters }) => {
-  const isGrouped = prevMessage && prevMessage.type === message.type && 
-                   prevMessage.type === 'assistant' && 
-                   !prevMessage.isToolUse && !message.isToolUse;
+  const isGrouped = prevMessage && prevMessage.type === message.type &&
+                    prevMessage.type === 'assistant' &&
+                    !prevMessage.isToolUse && !message.isToolUse;
   const messageRef = React.useRef(null);
   const [isExpanded, setIsExpanded] = React.useState(false);
   React.useEffect(() => {
     if (!autoExpandTools || !messageRef.current || !message.isToolUse) {
       return;
     }
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -54,9 +54,9 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
       },
       { threshold: 0.1 }
     );
-    
+
     observer.observe(messageRef.current);
-    
+
     return () => {
       if (messageRef.current) {
         observer.unobserve(messageRef.current);
@@ -73,14 +73,14 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
       {message.type === 'system' ? (
         /* System message in center */
         <div className="flex justify-center w-full py-2">
-          <div className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-lg px-4 py-2 text-sm max-w-md text-center">
+          <div className="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded-lg px-4 py-2 text-sm max-w-md text-center neumorphic-inset dark:neumorphic-inset-dark">
             {message.content}
           </div>
         </div>
       ) : message.type === 'user' ? (
         /* User message bubble on the right */
         <div className="flex items-end space-x-0 sm:space-x-3 w-full sm:w-auto sm:max-w-[85%] md:max-w-md lg:max-w-lg xl:max-w-xl">
-          <div className="bg-gemini-600 text-white rounded-2xl rounded-br-md px-3 sm:px-4 py-2 shadow-sm flex-1 sm:flex-initial">
+          <div className="bg-gemini-600 text-white rounded-2xl rounded-br-md px-3 sm:px-4 py-2 shadow-layered glow-soft flex-1 sm:flex-initial">
             <div className="text-sm whitespace-pre-wrap break-words">
               {message.content}
             </div>
@@ -102,7 +102,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
             </div>
           </div>
           {!isGrouped && (
-            <div className="hidden sm:flex w-8 h-8 bg-gemini-600 rounded-full items-center justify-center text-white text-sm flex-shrink-0">
+            <div className="hidden sm:flex w-8 h-8 bg-gemini-600 rounded-full items-center justify-center text-white text-sm shrink-0 glow-soft">
               U
             </div>
           )}
@@ -121,7 +121,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                   <GeminiLogo className="w-full h-full" />
                 </div>
               )}
-              <div className="text-sm font-medium text-gray-900 dark:text-white">
+              <div className="text-sm font-medium text-zinc-900 dark:text-white">
                 {message.type === 'error' ? 'Error' : 'Gemini'}
               </div>
             </div>
@@ -130,10 +130,10 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
           <div className="w-full">
 
             {message.isToolUse && !['Read', 'TodoWrite', 'TodoRead'].includes(message.toolName) ? (
-              <div className="bg-gemini-50 dark:bg-gemini-900/20 border border-gemini-200 dark:border-gemini-800 rounded-lg p-2 sm:p-3 mb-2">
+              <div className="bg-gemini-50 dark:bg-gemini-900/20 border border-gemini-200 dark:border-gemini-800 rounded-lg p-2 sm:p-3 mb-2 glass-morphism dark:glass-morphism-dark">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 bg-gemini-600 rounded flex items-center justify-center">
+                    <div className="w-5 h-5 bg-gemini-600 rounded flex items-center justify-center glow-soft">
                       <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -152,7 +152,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                         e.stopPropagation();
                         onShowSettings();
                       }}
-                      className="p-1 rounded hover:bg-gemini-200 dark:hover:bg-gemini-800 transition-colors"
+                      className="p-1 rounded hover:bg-gemini-200 dark:hover:bg-gemini-800 transition-all duration-300 morph-hover"
                       title="Tool Settings"
                     >
                       <svg className="w-4 h-4 text-gemini-600 dark:text-gemini-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -172,8 +172,8 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             <svg className="w-4 h-4 transition-transform details-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
-                            📝 View edit diff for 
-                            <button 
+                            📝 View edit diff for
+                            <button
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -188,9 +188,9 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </button>
                           </summary>
                           <div className="mt-3">
-                            <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                              <div className="flex items-center justify-between px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                                <button 
+                            <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden neumorphic-inset dark:neumorphic-inset-dark">
+                              <div className="flex items-center justify-between px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700">
+                                <button
                                   onClick={() => onFileOpen && onFileOpen(input.file_path, {
                                     old_string: input.old_string,
                                     new_string: input.new_string
@@ -199,7 +199,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                                 >
                                   {input.file_path}
                                 </button>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                   Diff
                                 </span>
                               </div>
@@ -255,7 +255,6 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                 {message.toolInput && message.toolName !== 'Edit' && (() => {
                   // Debug log to see what we're dealing with
                   // Debug - Tool display
-
                   // Special handling for Write tool
                   if (message.toolName === 'Write') {
                     // Debug - Write tool detected
@@ -267,9 +266,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       } else {
                         input = message.toolInput;
                       }
-                      
                       // Debug - Parsed Write input
-                      
                       if (input.file_path && input.content !== undefined) {
                         return (
                           <details className="mt-2" open={autoExpandTools}>
@@ -294,8 +291,8 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </summary>
                             <div className="mt-3">
                               <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                                <div className="flex items-center justify-between px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                                  <button 
+                                <div className="flex items-center justify-between px-3 py-2 bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700">
+                                  <button
                                     onClick={() => onFileOpen && onFileOpen(input.file_path, {
                                       old_string: '',
                                       new_string: input.content
@@ -312,7 +309,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                                   {createDiff('', input.content).map((diffLine, i) => (
                                     <div key={i} className="flex">
                                       <span className={`w-8 text-center border-r ${
-                                        diffLine.type === 'removed' 
+                                        diffLine.type === 'removed'
                                           ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800'
                                           : 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800'
                                       }`}>
@@ -347,7 +344,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       // Fall back to regular display
                     }
                   }
-                  
+
                   // Special handling for TodoWrite tool
                   if (message.toolName === 'TodoWrite') {
                     try {
@@ -381,7 +378,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       // Fall back to regular display
                     }
                   }
-                  
+
                   // Special handling for Bash tool
                   if (message.toolName === 'Bash') {
                     try {
@@ -428,7 +425,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       // Fall back to regular display
                     }
                   }
-                  
+
                   // Special handling for Read tool
                   if (message.toolName === 'Read') {
                     try {
@@ -452,7 +449,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       // Fall back to regular display
                     }
                   }
-                  
+
                   // Special handling for exit_plan_mode tool
                   if (message.toolName === 'exit_plan_mode') {
                     try {
@@ -478,7 +475,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       // Fall back to regular display
                     }
                   }
-                  
+
                   // Regular tool input display for other tools
                   return (
                     <details className="mt-2" open={autoExpandTools}>
@@ -494,14 +491,14 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                     </details>
                   );
                 })()}
-                
+
                 {/* Tool Result Section */}
                 {message.toolResult && (
                   <div className="mt-3 border-t border-gemini-200 dark:border-gemini-700 pt-3">
                     <div className="flex items-center gap-2 mb-2">
                       <div className={`w-4 h-4 rounded flex items-center justify-center ${
-                        message.toolResult.isError 
-                          ? 'bg-red-500' 
+                        message.toolResult.isError
+                          ? 'bg-red-500'
                           : 'bg-green-500'
                       }`}>
                         <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -513,27 +510,27 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                         </svg>
                       </div>
                       <span className={`text-sm font-medium ${
-                        message.toolResult.isError 
-                          ? 'text-red-700 dark:text-red-300' 
+                        message.toolResult.isError
+                          ? 'text-red-700 dark:text-red-300'
                           : 'text-green-700 dark:text-green-300'
                       }`}>
                         {message.toolResult.isError ? 'Tool Error' : 'Tool Result'}
                       </span>
                     </div>
-                    
+
                     <div className={`text-sm ${
-                      message.toolResult.isError 
-                        ? 'text-red-800 dark:text-red-200' 
+                      message.toolResult.isError
+                        ? 'text-red-800 dark:text-red-200'
                         : 'text-green-800 dark:text-green-200'
                     }`}>
                       {(() => {
                         const content = String(message.toolResult.content || '');
-                        
+
                         // Special handling for TodoWrite/TodoRead results
                         if ((message.toolName === 'TodoWrite' || message.toolName === 'TodoRead') &&
-                            (content.includes('Todos have been modified successfully') || 
-                             content.includes('Todo list') || 
-                             (content.startsWith('[') && content.includes('"content"') && content.includes('"status"')))) {
+                            (content.includes('Todos have been modified successfully') ||
+                            content.includes('Todo list') || 
+                            (content.startsWith('[') && content.includes('"content"') && content.includes('"status"')))) {
                           try {
                             // Try to parse if it looks like todo JSON data
                             let todos = null;
@@ -549,7 +546,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                                 </div>
                               );
                             }
-                            
+
                             if (todos && Array.isArray(todos)) {
                               return (
                                 <div>
@@ -595,11 +592,11 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                           const promptIndex = lines.findIndex(line => line.includes('Do you want to proceed?'));
                           const beforePrompt = lines.slice(0, promptIndex).join('\n');
                           const promptLines = lines.slice(promptIndex);
-                          
+
                           // Extract the question and options
                           const questionLine = promptLines.find(line => line.includes('Do you want to proceed?')) || '';
                           const options = [];
-                          
+
                           // Parse numbered options (1. Yes, 2. No, etc.)
                           promptLines.forEach(line => {
                             const optionMatch = line.match(/^\s*(\d+)\.\s+(.+)$/);
@@ -610,11 +607,11 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                               });
                             }
                           });
-                          
+
                           // Find which option was selected (usually indicated by "> 1" or similar)
                           const selectedMatch = content.match(/>\s*(\d+)/);
                           const selectedOption = selectedMatch ? selectedMatch[1] : null;
-                          
+
                           return (
                             <div className="space-y-3">
                               {beforePrompt && (
@@ -636,7 +633,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                                     <p className="text-sm text-amber-800 dark:text-amber-200 mb-4">
                                       {questionLine}
                                     </p>
-                                    
+
                                     {/* Option buttons */}
                                     <div className="space-y-2 mb-4">
                                       {options.map((option) => (
@@ -671,7 +668,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                                         </button>
                                       ))}
                                     </div>
-                                    
+
                                     {selectedOption && (
                                       <div className="bg-amber-100 dark:bg-amber-800/30 rounded-lg p-3">
                                         <p className="text-amber-900 dark:text-amber-100 text-sm font-medium mb-1">
@@ -688,7 +685,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </div>
                           );
                         }
-                        
+
                         const fileEditMatch = content.match(/The file (.+?) has been updated\./);
                         if (fileEditMatch) {
                           return (
@@ -705,7 +702,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </div>
                           );
                         }
-                        
+
                         // Handle Write tool output for file creation
                         const fileCreateMatch = content.match(/(?:The file|File) (.+?) has been (?:created|written)(?: successfully)?\.?/);
                         if (fileCreateMatch) {
@@ -714,7 +711,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="font-medium">File created successfully</span>
                               </div>
-                              <button 
+                              <button
                                 onClick={() => onFileOpen && onFileOpen(fileCreateMatch[1])}
                                 className="text-xs font-mono bg-green-100 dark:bg-green-800/30 px-2 py-1 rounded text-gemini-500 dark:text-gemini-400 hover:text-gemini-600 dark:hover:text-gemini-300 underline cursor-pointer"
                               >
@@ -723,7 +720,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </div>
                           );
                         }
-                        
+
                         // Special handling for Write tool - hide content if it's just the file content
                         if (message.toolName === 'Write' && !message.toolResult.isError) {
                           // For Write tool, the diff is already shown in the tool input section
@@ -742,7 +739,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </div>
                           );
                         }
-                        
+
                         if (content.includes('cat -n') && content.includes('→')) {
                           return (
                             <details open={autoExpandTools}>
@@ -760,7 +757,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </details>
                           );
                         }
-                        
+
                         if (content.length > 300) {
                           return (
                             <details open={autoExpandTools}>
@@ -776,7 +773,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                             </details>
                           );
                         }
-                        
+
                         return (
                           <div className="prose prose-sm max-w-none prose-green dark:prose-invert">
                             <ReactMarkdown>{content}</ReactMarkdown>
@@ -804,7 +801,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       const lines = message.content.split('\n').filter(line => line.trim());
                       const questionLine = lines.find(line => line.includes('?')) || lines[0] || '';
                       const options = [];
-                      
+
                       // Parse the menu options
                       lines.forEach(line => {
                         // Match lines like "❯ 1. Yes" or "  2. No"
@@ -818,13 +815,13 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                           });
                         }
                       });
-                      
+
                       return (
                         <>
                           <p className="text-sm text-amber-800 dark:text-amber-200 mb-4">
                             {questionLine}
                           </p>
-                          
+
                           {/* Option buttons */}
                           <div className="space-y-2 mb-4">
                             {options.map((option) => (
@@ -855,7 +852,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                               </button>
                             ))}
                           </div>
-                          
+
                           <div className="bg-amber-100 dark:bg-amber-800/30 rounded-lg p-3">
                             <p className="text-amber-900 dark:text-amber-100 text-sm font-medium mb-1">
                               ⏳ Waiting for your response in the CLI
@@ -880,7 +877,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                     return (
                       <div className="bg-gemini-50 dark:bg-gemini-900/20 border-l-2 border-gemini-300 dark:border-gemini-600 pl-3 py-1 mb-2 text-sm text-gemini-700 dark:text-gemini-300">
                         📖 Read{' '}
-                        <button 
+                        <button
                           onClick={() => onFileOpen && onFileOpen(input.file_path)}
                           className="text-gemini-600 dark:text-gemini-400 hover:text-gemini-700 dark:hover:text-gemini-300 underline font-mono"
                         >
@@ -926,7 +923,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                 📋 Read todo list
               </div>
             ) : (
-              <div className={`text-sm ${message.type === 'error' ? 'text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-800 relative' : 'text-gray-700 dark:text-gray-300'}`}>
+              <div className={`text-sm ${message.type === 'error' ? 'text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-800 relative' : 'text-zinc-700 dark:text-zinc-300'}`}>
                 {message.type === 'error' && (
                   <button
                     onClick={() => {
@@ -941,7 +938,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                   </button>
                 )}
                 {message.type === 'assistant' ? (
-                  <div className={`prose prose-sm max-w-none dark:prose-invert prose-gray [&_code]:!bg-transparent [&_code]:!p-0 ${message.type === 'error' ? 'select-text cursor-text' : ''}`} style={{ contain: 'layout' }}>
+                  <div className={`prose prose-sm max-w-none dark:prose-invert prose-zinc [&_code]:!bg-transparent [&_code]:!p-0 ${message.type === 'error' ? 'select-text cursor-text' : ''}`} style={{ contain: 'layout' }}>
                     <ReactMarkdown
                       components={{
                         code: ({node, inline, className, children, ...props}) => {
@@ -950,15 +947,15 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                               {children}
                             </strong>
                           ) : (
-                            <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg overflow-hidden my-2">
-                              <code className="text-gray-800 dark:text-gray-200 text-sm font-mono block whitespace-pre-wrap break-words" {...props}>
+                            <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg overflow-hidden my-2">
+                              <code className="text-zinc-800 dark:text-zinc-200 text-sm font-mono block whitespace-pre-wrap break-words" {...props}>
                                 {children}
                               </code>
                             </div>
                           );
                         },
                         blockquote: ({children}) => (
-                          <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic text-gray-600 dark:text-gray-400 my-2">
+                          <blockquote className="border-l-4 border-zinc-300 dark:border-zinc-600 pl-4 italic text-zinc-600 dark:text-zinc-400 my-2">
                             {children}
                           </blockquote>
                         ),
@@ -1033,7 +1030,7 @@ const ImageAttachment = ({ file, onRemove, uploadProgress, error }) => {
 };
 
 // ChatInterface: Main chat component with Session Protection System integration
-// 
+//
 // Session Protection System prevents automatic project updates from interrupting active conversations:
 // - onSessionActive: Called when user sends message to mark session as protected
 // - onSessionInactive: Called when conversation completes/aborts to re-enable updates
@@ -2255,15 +2252,15 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         }}
       >
         {isLoadingSessionMessages && chatMessages.length === 0 ? (
-          <div className="text-center text-gray-500 dark:text-gray-400 mt-8">
+          <div className="text-center text-zinc-500 dark:text-zinc-400 mt-8">
             <div className="flex items-center justify-center space-x-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-zinc-400"></div>
               <p>Loading session messages...</p>
             </div>
           </div>
         ) : chatMessages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <div className="text-center text-gray-500 dark:text-gray-400 px-6 sm:px-4">
+            <div className="text-center text-zinc-500 dark:text-zinc-400 px-6 sm:px-4">
               <p className="font-bold text-lg sm:text-xl mb-3">Start a conversation with Gemini</p>
               <p className="text-sm sm:text-base leading-relaxed">
                 Ask questions about your code, request changes, or get help with development tasks
@@ -2273,10 +2270,10 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         ) : (
           <>
             {chatMessages.length > visibleMessageCount && (
-              <div className="text-center text-gray-500 dark:text-gray-400 text-sm py-2 border-b border-gray-200 dark:border-gray-700">
+              <div className="text-center text-zinc-500 dark:text-zinc-400 text-sm py-2 border-b border-zinc-200 dark:border-zinc-700">
                 Showing last {visibleMessageCount} messages ({chatMessages.length} total) •
                 <button
-                  className="ml-1 text-gemini-500 hover:text-gemini-600 underline"
+                  className="ml-1 text-gemini-600 hover:text-gemini-800 nderline"
                   onClick={loadEarlierMessages}
                 >
                   Load earlier messages
@@ -2308,13 +2305,13 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           <div className="chat-message assistant">
             <div className="w-full">
               <div className="flex items-center space-x-3 mb-2">
-                <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-white text-sm flex-shrink-0">
+                <div className="w-8 h-8 bg-zinc-600 rounded-full flex items-center justify-center text-white text-sm flex-shrink-0">
                   C
                 </div>
-                <div className="text-sm font-medium text-gray-900 dark:text-white">Gemini</div>
+                <div className="text-sm font-medium text-zinc-900 dark:text-white">Gemini</div>
                 {/* Abort button removed - functionality not yet implemented at backend */}
               </div>
-              <div className="w-full text-sm text-gray-500 dark:text-gray-400 pl-3 sm:pl-0">
+              <div className="w-full text-sm text-zinc-500 dark:text-zinc-400 pl-3 sm:pl-0">
                 <div className="flex items-center space-x-1">
                   <div className="animate-pulse">●</div>
                   <div className="animate-pulse" style={{ animationDelay: '0.2s' }}>●</div>
@@ -2346,8 +2343,8 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           <div className="flex items-center justify-center gap-3">
             <div className={`px-4 py-1.5 rounded-lg text-sm font-medium border transition-all duration-200 ${
               isYoloMode
-                ? 'bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-600'
-                : 'bg-gradient-to-r from-cyan-50 to-gemini-50 dark:from-cyan-900/20 dark:to-gemini-900/20 text-cyan-700 dark:text-cyan-300 border-cyan-300 dark:border-cyan-600'
+                ? 'bg-linear-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-600'
+                : 'bg-linear-to-r from-cyan-50 to-gemini-50 dark:from-cyan-900/20 dark:to-gemini-900/20 text-cyan-700 dark:text-cyan-300 border-cyan-300 dark:border-cyan-600'
             }`}>
               <div className="flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full animate-pulse ${isYoloMode ? 'bg-orange-500' : 'bg-cyan-500'}`} />
@@ -2360,7 +2357,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             {isUserScrolledUp && chatMessages.length > 0 && (
               <button
                 onClick={scrollToBottom}
-                className="w-8 h-8 bg-gemini-500 hover:bg-gemini-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gemini-500 focus:ring-offset-2 dark:ring-offset-gray-800"
+                className="w-8 h-8 bg-gemini-600 hover:bg-gemini-800 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gemini-500 focus:ring-offset-2 dark:ring-offset-gray-800"
                 title="Scroll to bottom"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2374,9 +2371,9 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         <form onSubmit={handleSubmit} className="relative max-w-4xl mx-auto">
           {/* Drag overlay */}
           {isDragActive && (
-            <div className="absolute inset-0 bg-gemini-500/20 border-2 border-dashed border-gemini-300 rounded-lg flex items-center justify-center z-50">
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg">
-                <svg className="w-8 h-8 text-gemini-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="absolute inset-0 bg-gemini-700/20 border-2 border-dashed border-gemini-300 rounded-lg flex items-center justify-center z-50">
+              <div className="bg-white dark:bg-zinc-800 rounded-lg p-4 shadow-lg">
+                <svg className="w-8 h-8 text-gemini-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
                 <p className="text-sm font-medium">Drop images here</p>
@@ -2386,7 +2383,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           
           {/* Image attachments preview */}
           {attachedImages.length > 0 && (
-            <div className="mb-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div className="mb-2 p-2 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
               <div className="flex flex-wrap gap-2">
                 {attachedImages.map((file, index) => (
                   <ImageAttachment
@@ -2405,14 +2402,14 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           
           {/* File dropdown - positioned outside dropzone to avoid conflicts */}
           {showFileDropdown && filteredFiles.length > 0 && (
-            <div className="absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 backdrop-blur-sm">
+            <div className="absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 backdrop-blur-sm">
               {filteredFiles.map((file, index) => (
                 <div
                   key={file.path}
-                  className={`px-4 py-3 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0 touch-manipulation ${
+                  className={`px-4 py-3 cursor-pointer border-b border-zinc-100 dark:border-zinc-700 last:border-b-0 touch-manipulation ${
                     index === selectedFileIndex
                       ? 'bg-gemini-50 dark:bg-gemini-900/20 text-gemini-700 dark:text-gemini-300'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      : 'hover:bg-zinc-50 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300'
                   }`}
                   onMouseDown={(e) => {
                     // Prevent textarea from losing focus on mobile
@@ -2426,7 +2423,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
                   }}
                 >
                   <div className="font-medium text-sm">{file.name}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                  <div className="text-xs text-zinc-500 dark:text-zinc-400 font-mono">
                     {file.path}
                   </div>
                 </div>
@@ -2434,7 +2431,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             </div>
           )}
 
-          <div {...getRootProps()} className={`chat-input-container relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-gemini-500 dark:focus-within:ring-gemini-500 focus-within:border-gemini-500 transition-all duration-200 ${isTextareaExpanded ? 'chat-input-expanded' : ''}`}>
+          <div {...getRootProps()} className={`chat-input-container relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-gemini-500 dark:focus-within:ring-gemini-500 focus-within:border-gemini-500 transition-all duration-200 ${isTextareaExpanded ? 'chat-input-expanded' : ''}`}>
             <input {...getInputProps()} />
             <textarea
               ref={textareaRef}
@@ -2459,7 +2456,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
               placeholder="Ask Gemini to help with your code... (@ to reference files)"
               disabled={isLoading}
               rows={1}
-              className="chat-input-placeholder w-full pl-12 pr-28 sm:pr-40 py-3 sm:py-4 bg-transparent rounded-2xl focus:outline-none text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 disabled:opacity-50 resize-none min-h-[40px] sm:min-h-[56px] max-h-[40vh] sm:max-h-[300px] overflow-y-auto text-sm sm:text-base transition-all duration-200"
+              className="chat-input-placeholder w-full pl-12 pr-28 sm:pr-40 py-3 sm:py-4 bg-transparent rounded-2xl focus:outline-none text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-400 disabled:opacity-50 resize-none min-h-[40px] sm:min-h-[56px] max-h-[40vh] sm:max-h-[300px] overflow-y-auto text-sm sm:text-base transition-all duration-200"
               style={{ height: 'auto' }}
             />
             {/* Clear button - shown when there's text */}
@@ -2489,17 +2486,17 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
                 className="absolute -left-0.5 -top-3 sm:right-28 sm:left-auto sm:top-1/2 sm:-translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-full flex items-center justify-center transition-all duration-200 group z-10 shadow-sm"
                 title="Clear input"
               >
-                <svg 
+                <svg
                   className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-100 transition-colors" 
-                  fill="none" 
-                  stroke="currentColor" 
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M6 18L18 6M6 6l12 12" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
               </button>
@@ -2535,7 +2532,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
                 e.preventDefault();
                 handleSubmit(e);
               }}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 w-12 h-12 sm:w-12 sm:h-12 bg-gemini-500 hover:bg-gemini-600 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-gemini-500 focus:ring-offset-2 dark:ring-offset-gray-800"
+              className="absolute right-2 top-1/3 transform -translate-y-1/2 w-12 h-12 sm:w-12 sm:h-12 bg-gemini-500 hover:bg-gemini-600 disabled:bg-gray-400 disabled:cursor-not-allowed rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-gemini-500 focus:ring-offset-2 dark:ring-offset-gray-800"
             >
               <svg
                 className="w-4 h-4 sm:w-5 sm:h-5 text-white transform rotate-90"

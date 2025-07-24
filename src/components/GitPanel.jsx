@@ -486,7 +486,7 @@ function GitPanel({ selectedProject, isMobile }) {
           isAddition ? 'bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300' :
           isDeletion ? 'bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300' :
           isHeader ? 'bg-gemini-50 dark:bg-gemini-950 text-gemini-700 dark:text-gemini-300' :
-          'text-gray-600 dark:text-gray-400'
+          'text-zinc-600 dark:text-zinc-400'
         }`}
       >
         {line}
@@ -511,7 +511,7 @@ function GitPanel({ selectedProject, isMobile }) {
     return (
       <div key={commit.hash} className="border-b border-gray-200 dark:border-gray-700 last:border-0">
         <div 
-          className="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+          className="flex items-start p-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer transition-all duration-300"
           onClick={() => toggleCommitExpanded(commit.hash)}
         >
           <div className="mr-2 mt-1 p-0.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
@@ -654,7 +654,7 @@ function GitPanel({ selectedProject, isMobile }) {
   }
 
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-gray-900">
+    <div className="h-full flex flex-col bg-white dark:bg-zinc-900 glass-morphism dark:glass-morphism-dark">
       {/* Header */}
       <div className={`flex items-center justify-between border-b border-gray-200 dark:border-gray-700 ${isMobile ? 'px-3 py-2' : 'px-4 py-3'}`}>
         <div className="relative" ref={dropdownRef}>

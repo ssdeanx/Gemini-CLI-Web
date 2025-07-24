@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '../lib/utils';
 
 function GeminiStatus({ status, onAbort, isLoading }) {
@@ -23,7 +23,9 @@ function GeminiStatus({ status, onAbort, isLoading }) {
   
   // Animate the status indicator
   useEffect(() => {
-    if (!isLoading) return;
+    if (!isLoading) {
+      return;
+    }
     
     const timer = setInterval(() => {
       setAnimationPhase(prev => (prev + 1) % 4);
@@ -32,7 +34,9 @@ function GeminiStatus({ status, onAbort, isLoading }) {
     return () => clearInterval(timer);
   }, [isLoading]);
   
-  if (!isLoading) return null;
+  if (!isLoading) {
+    return null;
+  }
   
   // Clever action words that cycle
   const actionWords = ['Thinking', 'Processing', 'Analyzing', 'Working', 'Computing', 'Reasoning'];
@@ -48,7 +52,7 @@ function GeminiStatus({ status, onAbort, isLoading }) {
   
   return (
     <div className="w-full mb-6 animate-in slide-in-from-bottom duration-300">
-      <div className="flex items-center justify-between max-w-4xl mx-auto bg-gradient-to-r from-gemini-900 to-gemini-900 dark:from-gemini-950 dark:to-gemini-950 text-white rounded-lg shadow-lg px-4 py-3 animate-pulse-subtle">
+      <div className="flex items-center justify-between max-w-4xl mx-auto bg-linear-to-r from-gemini-900 to-gemini-900 dark:from-gemini-950 dark:to-gemini-950 text-white rounded-lg shadow-elevated px-4 py-3 glow-pulse glass-morphism-dark">
         <div className="flex-1">
           <div className="flex items-center gap-3">
             {/* Animated spinner */}
@@ -63,7 +67,7 @@ function GeminiStatus({ status, onAbort, isLoading }) {
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-sm">{statusText}...</span>
-                <span className="text-gray-400 text-sm">({elapsedTime}s)</span>
+                <span className="text-zinc-400 text-sm">({elapsedTime}s)</span>
               </div>
             </div>
           </div>
@@ -73,7 +77,7 @@ function GeminiStatus({ status, onAbort, isLoading }) {
         {canInterrupt && onAbort && (
           <button
             onClick={onAbort}
-            className="ml-3 text-xs bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md transition-colors flex items-center gap-1.5 flex-shrink-0"
+            className="ml-3 text-xs bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md transition-all duration-300 flex items-center gap-1.5 shrink-0 morph-hover glow-sidebar"
           >
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

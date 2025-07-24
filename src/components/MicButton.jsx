@@ -189,7 +189,7 @@ export function MicButton({ onTranscript, className = '' }) {
     if (!isSupported) {
       return {
         icon: <Mic className="w-5 h-5" />,
-        className: 'bg-gray-400 cursor-not-allowed',
+        className: 'bg-zinc-400 cursor-not-allowed neumorphic-inset dark:neumorphic-inset-dark',
         disabled: true
       };
     }
@@ -198,7 +198,7 @@ export function MicButton({ onTranscript, className = '' }) {
       case 'recording':
         return {
           icon: <Mic className="w-5 h-5 text-white" />,
-          className: 'bg-red-500 hover:bg-red-600 animate-pulse',
+          className: 'bg-red-500 hover:bg-red-600 glow-pulse shadow-elevated',
           disabled: false
         };
       case 'transcribing':
@@ -216,7 +216,7 @@ export function MicButton({ onTranscript, className = '' }) {
       default: // idle
         return {
           icon: <Mic className="w-5 h-5" />,
-          className: 'bg-gray-700 hover:bg-gray-600',
+          className: 'bg-zinc-700 hover:bg-zinc-600 neumorphic dark:neumorphic-dark glow-sidebar',
           disabled: false
         };
     }

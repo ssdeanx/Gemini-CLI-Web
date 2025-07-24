@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ScrollArea } from './ui/scroll-area';
 import { Folder, FolderOpen, File } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -48,7 +48,7 @@ function EditorFileTree({ selectedProject, onFileSelect }) {
         <div
           className={cn(
             'flex items-center p-2 rounded-md cursor-pointer',
-            'hover:bg-gray-100 dark:hover:bg-gray-700'
+            'hover:bg-zinc-100 dark:hover:bg-zinc-700'
           )}
           style={{ paddingLeft: `${level * 1.5}rem` }}
           onClick={() => {
@@ -63,10 +63,10 @@ function EditorFileTree({ selectedProject, onFileSelect }) {
             expandedDirs.has(item.path) ? (
               <FolderOpen className="w-4 h-4 mr-2 text-gemini-500 dark:text-gemini-400" />
             ) : (
-              <Folder className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
+              <Folder className="w-4 h-4 mr-2 text-zinc-500 dark:text-zinc-400" />
             )
           ) : (
-            <File className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
+            <File className="w-4 h-4 mr-2 text-zinc-500 dark:text-zinc-400" />
           )}
           <span className="text-sm truncate">{item.name}</span>
         </div>
@@ -82,9 +82,11 @@ function EditorFileTree({ selectedProject, onFileSelect }) {
   }
 
   return (
-    <ScrollArea className="h-full">
-      {renderFileTree(files)}
-    </ScrollArea>
+    <div className="h-full bg-zinc-900 p-4">
+      <ScrollArea className="h-full">
+        {renderFileTree(files)}
+      </ScrollArea>
+    </div>
   );
 }
 

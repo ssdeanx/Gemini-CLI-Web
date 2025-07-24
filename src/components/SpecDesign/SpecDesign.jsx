@@ -280,7 +280,7 @@ ${requirements}
   };
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-blue-900/20">
+    <div className="h-full flex flex-col bg-linear-to-br from-slate-50 via-white to-gemini-50 dark:from-slate-900 dark:via-slate-800 dark:to-gemini-900/20">
       {/* Progress Indicator */}
       {stage !== 'input' && (
         <div className="p-6 border-b border-slate-200/60 dark:border-slate-700/60">
@@ -292,8 +292,8 @@ ${requirements}
               if (newStage === 'input') {
                 setStage('input');
               } else if (newStage === 'review' && completedSpecs.design && completedSpecs.requirements && completedSpecs.tasks) {
-                              setStage('review');
-                            }
+                setStage('review');
+              }
             }}
           />
         </div>
@@ -304,19 +304,19 @@ ${requirements}
         <div className="flex-1 flex flex-col items-center justify-center p-8 relative overflow-hidden">
           {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-violet-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-linear-to-br from-gemini-600 to-gemini-800 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-linear-to-br from-gemini-800 to-gemini-600 rounded-full blur-3xl animate-pulse delay-1000" />
           </div>
 
           <div className="relative w-full max-w-3xl space-y-8">
             <div className="text-center space-y-4">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 rounded-3xl shadow-xl shadow-violet-500/25 mb-6">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-gemini-400 via-gemini-700 to-gemini-900 rounded-3xl shadow-xl shadow-violet-500/25 mb-6">
                 <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
 
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-slate-900 via-violet-900 to-slate-900 dark:from-white dark:via-violet-100 dark:to-white bg-clip-text text-transparent">
+              <h1 className="text-5xl font-bold bg-linear-to-r from-slate-900 via-gemini-700 to-slate-900 dark:from-white dark:via-gemini-300 dark:to-white bg-clip-text text-transparent">
                 Specification Generator
               </h1>
               <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
@@ -327,7 +327,7 @@ ${requirements}
             <div className="space-y-6">
               <div className="relative">
                 <textarea
-                  className="w-full h-40 p-6 border-2 border-slate-200 dark:border-slate-700 rounded-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm dark:text-white text-lg resize-none focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 transition-all duration-300 shadow-lg placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                  className="w-full h-40 p-6 border-2 border-slate-200 dark:border-slate-700 rounded-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm dark:text-white text-lg resize-none focus:ring-4 focus:ring-gemini-500/20 focus:border-gemini-500 transition-all duration-300 shadow-lg placeholder:text-slate-400 dark:placeholder:text-slate-500"
                   value={userQuery}
                   onChange={(e) => setUserQuery(e.target.value)}
                   placeholder="Describe what you want to build...
@@ -345,7 +345,7 @@ Examples:
               <button
                 onClick={handleGenerateAll}
                 disabled={!userQuery.trim()}
-                className="group relative w-full py-6 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-600 hover:from-violet-600 hover:via-purple-600 hover:to-indigo-700 disabled:from-slate-300 disabled:via-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-xl transition-all duration-300 shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-[1.02] disabled:shadow-none disabled:scale-100"
+                className="group relative w-full py-6 bg-linear-to-r from-gemini-400 via-gemini-600 to-gemini-800 hover:from-gemini-400 hover:via-gemini-600 hover:to-gemini-800 disabled:from-slate-300 disabled:via-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-2xl text-xl transition-all duration-300 shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-[1.02] disabled:shadow-none disabled:scale-100"
               >
                 <span className="relative z-10 flex items-center justify-center gap-3">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -355,10 +355,10 @@ Examples:
                 </span>
 
                 {/* Animated background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-linear-to-r from-gemini-600 via-gemini-800 to-gemini-900 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                 {/* Shine effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 rounded-2xl" />
+                <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 rounded-2xl" />
               </button>
             </div>
           </div>
@@ -370,7 +370,7 @@ Examples:
         <div className="flex-1 flex flex-col p-8 space-y-8">
           {/* Header */}
           <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-900 via-violet-900 to-slate-900 dark:from-white dark:via-violet-100 dark:to-white bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold bg-linear-to-r from-slate-900 via-gemini-700 to-slate-900 dark:from-white dark:via-gemini-300 dark:to-white bg-clip-text text-transparent">
               Generating Your Specification
             </h2>
             <div className="max-w-3xl mx-auto p-4 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-xl border border-slate-200 dark:border-slate-700">
@@ -399,7 +399,7 @@ Examples:
             <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-linear-to-br from-gemini-500 to-gemini-800 rounded-xl flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
@@ -410,7 +410,7 @@ Examples:
                 </div>
                 <div className="flex items-center space-x-2">
                   {isLoading.design && (
-                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-violet-500 border-t-transparent"></div>
+                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-gemini-500 border-t-transparent"></div>
                   )}
                   {completedSpecs.design && (
                     <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
@@ -440,7 +440,7 @@ Examples:
             <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                     </svg>
@@ -481,7 +481,7 @@ Examples:
             <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-slate-200 dark:border-slate-700 p-6 shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-linear-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                     </svg>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
@@ -529,8 +529,8 @@ function ToolsSettings({ isOpen, onClose }) {
   }
 
   return (
-    <div className="modal-backdrop fixed inset-0 flex items-center justify-center z-[100] md:p-4 bg-background/95">
-      <div className="bg-background border border-border md:rounded-lg shadow-xl w-full md:max-w-4xl h-full md:h-[90vh] flex flex-col">
+    <div className="modal-backdrop fixed inset-0 flex items-center justify-center z-[100] md:p-4 bg-background/95 glass-morphism">
+      <div className="bg-background border border-border md:rounded-lg shadow-elevated w-full md:max-w-4xl h-full md:h-[90vh] flex flex-col glass-morphism dark:glass-morphism-dark">
         <div className="flex items-center justify-between p-4 md:p-6 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-3">
             <Settings className="w-5 h-5 md:w-6 md:h-6 text-gemini-500" />
@@ -584,7 +584,7 @@ function ToolsSettings({ isOpen, onClose }) {
   <div className="space-y-6 md:space-y-8">
     {/* Theme Settings */}
     <div className="space-y-4">
-      <div className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+      <div className="bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 neumorphic dark:neumorphic-dark">
         <div className="flex items-center justify-between">
           <div>
             <div className="font-medium text-foreground">
@@ -596,7 +596,7 @@ function ToolsSettings({ isOpen, onClose }) {
           </div>
           <button
             onClick={toggleDarkMode}
-            className="relative inline-flex h-8 w-14 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gemini-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+            className="relative inline-flex h-8 w-14 items-center rounded-full bg-zinc-200 dark:bg-zinc-700 transition-all duration-300 focus:outline-hidden focus:ring-2 focus:ring-gemini-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 morph-hover"
             role="switch"
             aria-checked={isDarkMode}
             aria-label="Toggle dark mode"
@@ -608,7 +608,7 @@ function ToolsSettings({ isOpen, onClose }) {
               } inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-200 items-center justify-center`}
             >
               {isDarkMode ? (
-                <Moon className="w-3.5 h-3.5 text-gray-700" />
+                <Moon className="w-3.5 h-3.5 text-zinc-700" />
               ) : (
                 <Sun className="w-3.5 h-3.5 text-yellow-500" />
               )}

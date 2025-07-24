@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ScrollArea } from './ui/scroll-area';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -434,7 +434,7 @@ function Sidebar({
         {/* Desktop Header */}
         <div className="hidden md:flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-layered glow-sidebar">
               <MessageSquare className="w-4 h-4 text-primary-foreground" />
             </div>
             <div>
@@ -463,7 +463,7 @@ function Sidebar({
             <Button
               variant="default"
               size="sm"
-              className="h-9 w-9 px-0 bg-primary hover:bg-primary/90 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="h-9 w-9 px-0 bg-primary hover:bg-primary/90 transition-all duration-300 shadow-layered hover:shadow-elevated glow-soft morph-hover"
               onClick={() => setShowNewProject(true)}
               title="Create new project (Ctrl+N)"
             >
@@ -556,7 +556,7 @@ function Sidebar({
           </div>
 
           {/* Mobile Form - Simple Overlay */}
-          <div className="md:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
+          <div className="md:hidden fixed inset-0 z-50 bg-zinc-950/50 backdrop-blur-sm glass-morphism-dark">
             <div className="absolute bottom-0 left-0 right-0 bg-card rounded-t-lg border-t border-border p-4 space-y-4 animate-in slide-in-from-bottom duration-300">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -718,7 +718,7 @@ function Sidebar({
                                   type="text"
                                   value={editingName}
                                   onChange={(e) => setEditingName(e.target.value)}
-                                  className="w-full px-3 py-2 text-sm border-2 border-primary/40 focus:border-primary rounded-lg bg-background text-foreground shadow-sm focus:shadow-md transition-all duration-200 focus:outline-none"
+                                  className="w-full px-3 py-2 text-sm border-2 border-primary/40 focus:border-primary rounded-lg bg-background text-foreground shadow-layered focus:shadow-elevated transition-all duration-300 focus:outline-hidden neumorphic-inset dark:neumorphic-inset-dark"
                                   placeholder="Project name"
                                   autoFocus
                                   autoComplete="off"
@@ -758,7 +758,7 @@ function Sidebar({
                             {editingProject === project.name ? (
                               <>
                                 <button
-                                  className="w-8 h-8 rounded-lg bg-green-500 dark:bg-green-600 flex items-center justify-center active:scale-90 transition-all duration-150 shadow-sm active:shadow-none"
+                                  className="w-8 h-8 rounded-lg bg-green-500 dark:bg-green-600 flex items-center justify-center active:scale-90 transition-all duration-300 shadow-layered active:shadow-none glow-soft morph-hover"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     saveProjectName(project.name);
@@ -767,7 +767,7 @@ function Sidebar({
                                   <Check className="w-4 h-4 text-white" />
                                 </button>
                                 <button
-                                  className="w-8 h-8 rounded-lg bg-gray-500 dark:bg-gray-600 flex items-center justify-center active:scale-90 transition-all duration-150 shadow-sm active:shadow-none"
+                                  className="w-8 h-8 rounded-lg bg-zinc-500 dark:bg-zinc-600 flex items-center justify-center active:scale-90 transition-all duration-300 shadow-layered active:shadow-none glow-soft morph-hover"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     cancelEditing();

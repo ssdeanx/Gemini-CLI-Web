@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
 function DarkModeToggle() {
@@ -7,7 +7,7 @@ function DarkModeToggle() {
   return (
     <button
       onClick={toggleDarkMode}
-      className="relative inline-flex h-8 w-14 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gemini-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+      className="relative inline-flex h-8 w-14 items-center rounded-full bg-zinc-200 dark:bg-zinc-700 transition-all duration-300 focus:outline-hidden focus:ring-2 focus:ring-gemini-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 morph-hover neumorphic dark:neumorphic-dark"
       role="switch"
       aria-checked={isDarkMode}
       aria-label="Toggle dark mode"
@@ -16,10 +16,10 @@ function DarkModeToggle() {
       <span
         className={`${
           isDarkMode ? 'translate-x-7' : 'translate-x-1'
-        } inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-200 items-center justify-center`}
+        } inline-block h-6 w-6 transform rounded-full bg-white shadow-elevated transition-all duration-300 items-center justify-center glow-sidebar`}
       >
         {isDarkMode ? (
-          <svg className="w-3.5 h-3.5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-3.5 h-3.5 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
           </svg>
         ) : (

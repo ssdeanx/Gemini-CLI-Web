@@ -1,4 +1,3 @@
-import React from 'react';
 import ChatInterface from './ChatInterface';
 import { X } from 'lucide-react';
 
@@ -8,11 +7,11 @@ function ChatModal({ isOpen, onClose, selectedProject, selectedSession, ws, send
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-md h-full max-h-[35vh] flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="fixed inset-0 bg-zinc-950 bg-opacity-50 z-50 flex items-center justify-center glass-morphism-dark">
+      <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-elevated w-full max-w-md h-full max-h-[35vh] flex flex-col">
+        <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-700">
           <h3 className="text-lg font-semibold text-gemini-700 dark:text-gemini-300">Gemini Chat</h3>
-          <button onClick={onClose} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
+          <button onClick={onClose} className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded transition-all duration-300 morph-hover glow-minimal">
             <X className="w-5 h-5" />
           </button>
         </div>

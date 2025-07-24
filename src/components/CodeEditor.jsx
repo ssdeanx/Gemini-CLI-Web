@@ -247,11 +247,11 @@ function CodeEditor({ file, onClose, projectPath }) {
             }
           `}
         </style>
-        <div className="fixed inset-0 z-50 md:bg-black/50 md:flex md:items-center md:justify-center">
+        <div className="fixed inset-0 z-50 md:bg-zinc-950/50 md:flex md:items-center md:justify-center glass-morphism-dark">
           <div className="code-editor-loading w-full h-full md:rounded-lg md:w-auto md:h-auto p-8 flex items-center justify-center">
             <div className="flex items-center gap-3">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gemini-600"></div>
-              <span className="text-gray-900 dark:text-white">Loading {file.name}...</span>
+              <span className="text-zinc-900 dark:text-white">Loading {file.name}...</span>
             </div>
           </div>
         </div>
@@ -262,15 +262,15 @@ function CodeEditor({ file, onClose, projectPath }) {
   return (
     <div className={`fixed inset-0 z-50 ${
       // Mobile: native fullscreen, Desktop: modal with backdrop
-      'md:bg-black/50 md:flex md:items-center md:justify-center md:p-4'
+      'md:bg-zinc-950/50 md:flex md:items-center md:justify-center md:p-4 glass-morphism-dark'
     } ${isFullscreen ? 'md:p-0' : ''}`}>
-      <div className={`bg-white shadow-2xl flex flex-col ${
+      <div className={`bg-white shadow-elevated flex flex-col glass-morphism dark:glass-morphism-dark ${
         // Mobile: always fullscreen, Desktop: modal sizing
-        'w-full h-full md:rounded-lg md:shadow-2xl' +
+        'w-full h-full md:rounded-lg md:shadow-elevated' +
         (isFullscreen ? ' md:w-full md:h-full md:rounded-none' : ' md:w-full md:max-w-6xl md:h-[80vh] md:max-h-[80vh]')
       }`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0 min-w-0">
+        <div className="flex items-center justify-between p-4 border-b border-zinc-200 flex-shrink-0 min-w-0">
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className="w-8 h-8 bg-gemini-600 rounded flex items-center justify-center flex-shrink-0">
               <span className="text-white text-sm font-mono">
@@ -279,34 +279,34 @@ function CodeEditor({ file, onClose, projectPath }) {
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 min-w-0">
-                <h3 className="font-medium text-gray-900 truncate">{file.name}</h3>
+                <h3 className="font-medium text-zinc-900 truncate">{file.name}</h3>
                 {file.diffInfo && (
                   <span className="text-xs bg-gemini-100 text-gemini-600 px-2 py-1 rounded whitespace-nowrap">
                     📝 Has changes
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-500 truncate">{file.path}</p>
+              <p className="text-sm text-zinc-500 truncate">{file.path}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
             {file.diffInfo && (
               <button
                 onClick={() => setShowDiff(!showDiff)}
-                className="p-2 md:p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center"
+                className="p-2 md:p-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center"
                 title={showDiff ? "Hide diff highlighting" : "Show diff highlighting"}
               >
                 {showDiff ? <EyeOff className="w-5 h-5 md:w-4 md:h-4" /> : <Eye className="w-5 h-5 md:w-4 md:h-4" />}
               </button>
             )}
-            
+
             <button
               onClick={() => setWordWrap(!wordWrap)}
-              className={`p-2 md:p-2 rounded-md hover:bg-gray-100 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center ${
+              className={`p-2 md:p-2 rounded-md hover:bg-zinc-100 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 flex items-center justify-center transition-all duration-300 morph-hover ${
                 wordWrap 
-                  ? 'text-gemini-600 bg-gemini-50' 
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'text-gemini-600 bg-gemini-50 glow-soft'
+                  : 'text-zinc-600 hover:text-zinc-900'
               }`}
               title={wordWrap ? 'Disable word wrap' : 'Enable word wrap'}
             >
@@ -405,8 +405,8 @@ function CodeEditor({ file, onClose, projectPath }) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex-shrink-0">
-          <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center justify-between p-3 border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 shrink-0 neumorphic-inset dark:neumorphic-inset-dark">
+          <div className="flex items-center gap-4 text-sm text-zinc-600 dark:text-zinc-400">
             <span>Lines: {content.split('\n').length}</span>
             <span>Characters: {content.length}</span>
             <span>Language: {file.name.split('.').pop()?.toUpperCase() || 'Text'}</span>

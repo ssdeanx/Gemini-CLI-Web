@@ -42,7 +42,6 @@ import sessionManager from './sessionManager.js';
 import gitRoutes from './routes/git.js';
 import authRoutes from './routes/auth.js';
 import mcpRoutes from './routes/mcp.js';
-import specRoutes from './routes/spec.js';
 import { initializeDatabase } from './database/db.js';
 import { validateApiKey, authenticateToken, authenticateWebSocket } from './middleware/auth.js';
 
@@ -80,17 +79,17 @@ async function setupProjectsWatcher() {
         pollInterval: 50
       }
     });
-    
+
     // Debounce function to prevent excessive notifications
     let debounceTimer;
     const debouncedUpdate = async (eventType, filePath) => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(async () => {
         try {
-          
+
           // Clear project directory cache when files change
           clearProjectDirectoryCache();
-          
+
           // Get updated projects list
           const updatedProjects = await getProjects();
           

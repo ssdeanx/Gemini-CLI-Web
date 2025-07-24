@@ -20,8 +20,8 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center p-4 glass-morphism dark:glass-morphism-dark">
+          <div className="max-w-md w-full bg-white dark:bg-zinc-800 rounded-lg shadow-elevated p-6 glass-morphism dark:glass-morphism-dark">
             <div className="text-center">
               <svg
                 className="mx-auto h-12 w-12 text-red-500"
@@ -36,10 +36,10 @@ class ErrorBoundary extends React.Component {
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                 />
               </svg>
-              <h2 className="mt-4 text-xl font-semibold text-gray-900 dark:text-white">
+              <h2 className="mt-4 text-xl font-semibold text-zinc-900 dark:text-white">
                 Oops! Something went wrong
               </h2>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                 An unexpected error occurred. Please refresh the page to try again.
               </p>
               <button

@@ -45,7 +45,7 @@ function MobileNav({ activeTab, setActiveTab, isInputFocused }) {
         `}
       </style>
       <div
-        className={`mobile-nav-container fixed bottom-0 left-0 right-0 border-t border-gray-200 dark:border-gray-700 z-50 ios-bottom-safe transform transition-transform duration-300 ease-in-out shadow-lg ${
+        className={`mobile-nav-container fixed bottom-0 left-0 right-0 border-t border-zinc-200 dark:border-zinc-700 z-50 ios-bottom-safe transform transition-transform duration-300 ease-in-out shadow-elevated glass-morphism dark:glass-morphism-dark ${
           isInputFocused ? 'translate-y-full' : 'translate-y-0'
         }`}
       >
@@ -65,7 +65,7 @@ function MobileNav({ activeTab, setActiveTab, isInputFocused }) {
               className={`flex items-center justify-center p-2 rounded-lg min-h-[40px] min-w-[40px] relative touch-manipulation ${
                 isActive
                   ? 'text-gemini-500 dark:text-gemini-400'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all duration-300'
               }`}
               aria-label={item.id}
             >

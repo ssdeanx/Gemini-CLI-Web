@@ -311,7 +311,7 @@ function FileTree({ selectedProject }) {
   if (loading) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="text-gray-500 dark:text-gray-400">
+        <div className="text-zinc-500 dark:text-zinc-400">
           Loading files...
         </div>
       </div>

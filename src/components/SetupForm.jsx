@@ -44,7 +44,7 @@ const SetupForm = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-card rounded-lg shadow-lg border border-border p-8 space-y-6">
+        <div className="bg-card rounded-lg shadow-elevated border border-border p-8 space-y-6 glass-morphism dark:glass-morphism-dark">
           {/* Logo and Title */}
           <div className="text-center">
             <div className="flex justify-center mb-4">

@@ -106,17 +106,17 @@ function NewCodeEditor({ file, onClose, initialContent }) {
   }
 
   return (
-    <div className="flex flex-col bg-white dark:bg-gray-800 w-full h-full">
-      <div className="flex items-center justify-between p-2 border-b border-gray-200 dark:border-gray-700">
+    <div className="flex flex-col bg-white dark:bg-zinc-800 w-full h-full">
+      <div className="flex items-center justify-between p-2 border-b border-zinc-200 dark:border-zinc-700">
         <h3 className="font-semibold text-lg">{file.name}</h3>
         <div className="flex items-center space-x-2">
-          <button onClick={handleSave} disabled={saving} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
+          <button onClick={handleSave} disabled={saving} className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded">
             {saving ? 'Saving...' : <Save className="w-5 h-5" />}
           </button>
-          <button onClick={handleDownload} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
+          <button onClick={handleDownload} className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded">
             <Download className="w-5 h-5" />
           </button>
-          <button onClick={onClose} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">
+          <button onClick={onClose} className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded">
             <X className="w-5 h-5" />
           </button>
         </div>
