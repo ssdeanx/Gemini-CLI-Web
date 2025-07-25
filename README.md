@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo.svg" alt="Gemini CLI UI" width="64" height="64">
+  <img src="public/logo-n.png" alt="Gemini CLI UI" width="64" height="64">
   <h1>Gemini CLI Web UI</h1>
 </div>
 
