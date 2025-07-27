@@ -3,6 +3,8 @@
   <h1>Gemini CLI Web UI</h1>
 </div>
 
+
+
 A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini-cli), Google's official CLI for AI-assisted coding. You can use it locally or remotely to view your active projects and sessions in Gemini CLI and make changes to them the same way you would do it in Gemini CLI. This gives you a proper interface that works everywhere.
 
 ## Technologies Used
@@ -56,13 +58,14 @@ A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini
 
 <div align="center">
 <h3>Updates to Gemini CLI Web UI</h3>
-<img src="public/screenshots/Screenshot from 2025-07-23 11-23-30.png" alt="Gemini CLI Monaco Code Editor" width="800">
+<img src="public/screenshots/Screenshot from 2025-07-27 11-02-53.png" alt="Gemini CLI Monaco Code Editor" width="800">
 <em>Monaco Code Editor for editing files in Gemini CLI UI</em>
 <br>
 
 <img src="public/screenshots/Screenshot from 2025-07-23 11-22-18.png" alt="Gemini CLI Monaco Code Editor" width="800">
 <em>Spec File Generation</em>
 <br>
+
 </div align="center">
 
 ## Features
