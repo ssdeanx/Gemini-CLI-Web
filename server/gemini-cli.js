@@ -312,7 +312,7 @@ async function spawnGemini(command, options = {}, ws) {
       // Debug - Raw Gemini stderr
       
       // Filter out deprecation warnings
-      if (errorMsg.includes('[DEP0040]') || 
+      if (errorMsg.includes('[DEP0040]') ||
           errorMsg.includes('DeprecationWarning') ||
           errorMsg.includes('--trace-deprecation')) {
         // Log but don't send to client
@@ -326,7 +326,7 @@ async function spawnGemini(command, options = {}, ws) {
         error: errorMsg
       }));
     });
-    
+
     // Handle process completion
     geminiProcess.on('close', async (code) => {
       // console.log(`Gemini CLI process exited with code ${code}`);

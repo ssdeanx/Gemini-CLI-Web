@@ -12,9 +12,9 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground shadow-layered hover:bg-destructive/90 glow-minimal",
         outline:
-          "border border-input bg-background shadow-layered hover:bg-accent hover:text-accent-foreground neumorphic dark:neumorphic-dark",
+          "border border-input bg-background shadow-layered hover:bg-accent hover:text-accent-foreground glow-sidebar",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-layered hover:bg-secondary/80 neumorphic dark:neumorphic-dark",
+          "bg-secondary text-secondary-foreground shadow-layered hover:bg-secondary/80 glow-sidebar",
         ghost: "hover:bg-accent hover:text-accent-foreground transition-all duration-300",
         link: "text-primary underline-offset-4 hover:underline glow-neon",
         gemini: "gradient-gemini text-white shadow-elevated hover:shadow-elevated glow-sidebar",

@@ -1452,14 +1452,14 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     if (messages.length > 0) {
       const latestMessage = messages[messages.length - 1];
       // console.log('Received WebSocket message:', latestMessage.type, latestMessage);
-      
+
       switch (latestMessage.type) {
         case 'session-created':
           // New session created by Gemini CLI - we receive the real session ID here
           // Store it temporarily until conversation completes (prevents premature session association)
           if (latestMessage.sessionId && !currentSessionId) {
             sessionStorage.setItem('pendingSessionId', latestMessage.sessionId);
-            
+
             // Session Protection: Replace temporary "new-session-*" identifier with real session ID
             // This maintains protection continuity - no gap between temp ID and real ID
             // The temporary session is removed and real session is marked as active
@@ -1468,25 +1468,21 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             }
           }
           break;
-          
+
         case 'gemini-response':
           const messageData = latestMessage.data.message || latestMessage.data;
-          
           // Handle Gemini CLI session duplication bug workaround:
           // When resuming a session, Gemini CLI creates a new session instead of resuming.
           // We detect this by checking for system/init messages with session_id that differs
           // from our current session. When found, we need to switch the user to the new session.
-          if (latestMessage.data.type === 'system' && 
-              latestMessage.data.subtype === 'init' && 
-              latestMessage.data.session_id && 
-              currentSessionId && 
+          if (latestMessage.data.type === 'system' &&
+              latestMessage.data.subtype === 'init' &&
+              latestMessage.data.session_id &&
+              currentSessionId &&
               latestMessage.data.session_id !== currentSessionId) {
-            
             // Debug - Gemini CLI session duplication detected
-            
             // Mark this as a system-initiated session change to preserve messages
             setIsSystemSessionChange(true);
-            
             // Switch to the new session using React Router navigation
             // This triggers the session loading logic in App.jsx without a page reload
             if (onNavigateToSession) {
@@ -1494,35 +1490,35 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             }
             return; // Don't process the message further, let the navigation handle it
           }
-          
+
           // Handle system/init for new sessions (when currentSessionId is null)
-          if (latestMessage.data.type === 'system' && 
-              latestMessage.data.subtype === 'init' && 
-              latestMessage.data.session_id && 
+          if (latestMessage.data.type === 'system' &&
+              latestMessage.data.subtype === 'init' &&
+              latestMessage.data.session_id &&
               !currentSessionId) {
-            
+
             // Debug - New session init detected
-            
+
             // Mark this as a system-initiated session change to preserve messages
             setIsSystemSessionChange(true);
-            
+
             // Switch to the new session
             if (onNavigateToSession) {
               onNavigateToSession(latestMessage.data.session_id);
             }
             return; // Don't process the message further, let the navigation handle it
           }
-          
+
           // For system/init messages that match current session, just ignore them
-          if (latestMessage.data.type === 'system' && 
-              latestMessage.data.subtype === 'init' && 
-              latestMessage.data.session_id && 
-              currentSessionId && 
+          if (latestMessage.data.type === 'system' &&
+              latestMessage.data.subtype === 'init' &&
+              latestMessage.data.session_id &&
+              currentSessionId &&
               latestMessage.data.session_id === currentSessionId) {
             // Debug - System init message for current session, ignoring
             return; // Don't process the message further
           }
-          
+
           // Handle different types of content in the response
           if (Array.isArray(messageData.content)) {
             for (const part of messageData.content) {
@@ -1608,16 +1604,14 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           setCanAbortSession(false);
           setGeminiStatus(null);
           break;
-          
+
         case 'gemini-complete':
           // console.log('Gemini completed, setting isLoading to false');
           setIsLoading(false);
           setCanAbortSession(false);
           setGeminiStatus(null);
-
           // Play notification sound when response is complete
           playNotificationSound();
-          
           // Session Protection: Mark session as inactive to re-enable automatic project updates
           // Conversation is complete, safe to allow project updates again
           // Use real session ID if available, otherwise use pending session ID
@@ -1625,31 +1619,29 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           if (activeSessionId && onSessionInactive) {
             onSessionInactive(activeSessionId);
           }
-          
+
           // If we have a pending session ID and the conversation completed successfully, use it
           const pendingSessionId = sessionStorage.getItem('pendingSessionId');
           if (pendingSessionId && !currentSessionId && latestMessage.exitCode === 0) {
                 setCurrentSessionId(pendingSessionId);
             sessionStorage.removeItem('pendingSessionId');
           }
-          
+
           // Clear persisted chat messages after successful completion
           if (selectedProject && latestMessage.exitCode === 0) {
             localStorage.removeItem(`chat_messages_${selectedProject.name}`);
           }
           break;
-          
+
         case 'session-aborted':
           setIsLoading(false);
           setCanAbortSession(false);
           setGeminiStatus(null);
-          
           // Session Protection: Mark session as inactive when aborted
           // User or system aborted the conversation, re-enable project updates
           if (currentSessionId && onSessionInactive) {
             onSessionInactive(currentSessionId);
           }
-          
           setChatMessages(prev => [...prev, {
             type: 'assistant',
             content: 'Session interrupted by user.',
@@ -1668,7 +1660,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
               tokens: 0,
               can_interrupt: true
             };
-            
+
             // Check for different status message formats
             if (statusData.message) {
               statusInfo.text = statusData.message;
@@ -1677,26 +1669,26 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             } else if (typeof statusData === 'string') {
               statusInfo.text = statusData;
             }
-            
+
             // Extract token count
             if (statusData.tokens) {
               statusInfo.tokens = statusData.tokens;
             } else if (statusData.token_count) {
               statusInfo.tokens = statusData.token_count;
             }
-            
+
             // Check if can interrupt
             if (statusData.can_interrupt !== undefined) {
               statusInfo.can_interrupt = statusData.can_interrupt;
             }
-            
+
             // Debug - Setting claude status
             setGeminiStatus(statusInfo);
             setIsLoading(true);
             setCanAbortSession(statusInfo.can_interrupt);
           }
           break;
-  
+
       }
     }
   }, [messages]);
@@ -1743,20 +1735,20 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
   useEffect(() => {
     const textBeforeCursor = input.slice(0, cursorPosition);
     const lastAtIndex = textBeforeCursor.lastIndexOf('@');
-    
+
     if (lastAtIndex !== -1) {
       const textAfterAt = textBeforeCursor.slice(lastAtIndex + 1);
       // Check if there's a space after the @ symbol (which would end the file reference)
       if (!textAfterAt.includes(' ')) {
         setAtSymbolPosition(lastAtIndex);
         setShowFileDropdown(true);
-        
+
         // Filter files based on the text after @
-        const filtered = fileList.filter(file => 
+        const filtered = fileList.filter(file =>
           file.name.toLowerCase().includes(textAfterAt.toLowerCase()) ||
           file.path.toLowerCase().includes(textAfterAt.toLowerCase())
         ).slice(0, 10); // Limit to 10 results
-        
+
         setFilteredFiles(filtered);
         setSelectedFileIndex(-1);
       } else {
@@ -1774,7 +1766,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     const timer = setTimeout(() => {
       setDebouncedInput(input);
     }, 150); // 150ms debounce
-    
+
     return () => clearTimeout(timer);
   }, [input]);
 
@@ -1812,7 +1804,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         const prevTop = scrollPositionRef.current.top;
         const newHeight = container.scrollHeight;
         const heightDiff = newHeight - prevHeight;
-        
         // If content was added above the current view, adjust scroll position
         if (heightDiff > 0 && prevTop > 0) {
           container.scrollTop = prevTop + heightDiff;
@@ -1865,20 +1856,17 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     if (text.trim()) {
       setInput(prevInput => {
         const newInput = prevInput.trim() ? `${prevInput} ${text}` : text;
-        
         // Update textarea height after setting new content
         setTimeout(() => {
           if (textareaRef.current) {
             textareaRef.current.style.height = 'auto';
             textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-            
             // Check if expanded after transcript
             const lineHeight = parseInt(window.getComputedStyle(textareaRef.current).lineHeight);
             const isExpanded = textareaRef.current.scrollHeight > lineHeight * 2;
             setIsTextareaExpanded(isExpanded);
           }
         }, 0);
-        
         return newInput;
       });
     }
@@ -1910,7 +1898,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
   // Handle clipboard paste for images
   const handlePaste = useCallback(async (e) => {
     const items = Array.from(e.clipboardData.items);
-    
     for (const item of items) {
       if (item.type.startsWith('image/')) {
         const file = item.getAsFile();
@@ -1919,7 +1906,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         }
       }
     }
-    
     // Fallback for some browsers/platforms
     if (items.length === 0 && e.clipboardData.files.length > 0) {
       const files = Array.from(e.clipboardData.files);
@@ -1955,24 +1941,24 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
       attachedImages.forEach(file => {
         formData.append('images', file);
       });
-      
+
       try {
         const token = localStorage.getItem('auth-token');
         const headers = {};
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;
         }
-        
+
         const response = await fetch(`/api/projects/${selectedProject.name}/upload-images`, {
           method: 'POST',
           headers: headers,
           body: formData
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to upload images');
         }
-        
+
         const result = await response.json();
         uploadedImages = result.images;
       } catch (error) {
@@ -2003,7 +1989,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
       tokens: 0,
       can_interrupt: true
     });
-    
+
     // Always scroll to bottom when user sends a message and reset scroll state
     setIsUserScrolledUp(false); // Reset scroll state so auto-scroll works for Gemini's response
     setTimeout(() => scrollToBottom(), 100); // Longer delay to ensure message is rendered
@@ -2065,14 +2051,11 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     setUploadingImages(new Map());
     setImageErrors(new Map());
     setIsTextareaExpanded(false);
-    
     // Reset textarea height
-
-
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
-    
+
     // Clear the saved draft since message was sent
     if (selectedProject) {
       localStorage.removeItem(`draft_input_${selectedProject.name}`);
@@ -2084,14 +2067,14 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     if (showFileDropdown && filteredFiles.length > 0) {
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setSelectedFileIndex(prev => 
+        setSelectedFileIndex(prev =>
           prev < filteredFiles.length - 1 ? prev + 1 : 0
         );
         return;
       }
       if (e.key === 'ArrowUp') {
         e.preventDefault();
-        setSelectedFileIndex(prev => 
+        setSelectedFileIndex(prev =>
           prev > 0 ? prev - 1 : filteredFiles.length - 1
         );
         return;
@@ -2111,7 +2094,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         return;
       }
     }
-    
     // Handle Tab key for mode switching (only when file dropdown is not showing)
     // Disabled for Gemini - no permission modes
     /*
@@ -2124,7 +2106,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
       return;
     }
     */
-    
     // Handle Enter key: Ctrl+Enter (Cmd+Enter on Mac) sends, Shift+Enter creates new line
     if (e.key === 'Enter') {
       if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
@@ -2145,24 +2126,19 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     const textAfterAtQuery = input.slice(atSymbolPosition);
     const spaceIndex = textAfterAtQuery.indexOf(' ');
     const textAfterQuery = spaceIndex !== -1 ? textAfterAtQuery.slice(spaceIndex) : '';
-    
     const newInput = textBeforeAt + '@' + file.path + ' ' + textAfterQuery;
     const newCursorPos = textBeforeAt.length + 1 + file.path.length + 1;
-    
     // Immediately ensure focus is maintained
     if (textareaRef.current && !textareaRef.current.matches(':focus')) {
       textareaRef.current.focus();
     }
-    
     // Update input and cursor position
     setInput(newInput);
     setCursorPosition(newCursorPos);
-    
     // Hide dropdown
     setShowFileDropdown(false);
     setAtSymbolPosition(-1);
-    
-    // Set cursor position synchronously 
+    // Set cursor position synchronously
     if (textareaRef.current) {
       // Use requestAnimationFrame for smoother updates
       requestAnimationFrame(() => {
@@ -2181,7 +2157,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     const newValue = e.target.value;
     setInput(newValue);
     setCursorPosition(e.target.selectionStart);
-    
     // Handle height reset when input becomes empty
     if (!newValue.trim()) {
       e.target.style.height = 'auto';
@@ -2193,15 +2168,13 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     setCursorPosition(e.target.selectionStart);
   };
 
-
-
   const handleNewSession = () => {
     setChatMessages([]);
     setInput('');
     setIsLoading(false);
     setCanAbortSession(false);
   };
-  
+
   const handleAbortSession = () => {
     if (currentSessionId && canAbortSession) {
       sendMessage({
@@ -2209,14 +2182,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         sessionId: currentSessionId
       });
     }
-  };
-
-  const handleModeSwitch = () => {
-    // Disabled for Gemini - no permission modes
-    // const modes = ['default', 'acceptEdits', 'bypassPermissions', 'plan'];
-    // const currentIndex = modes.indexOf(permissionMode);
-    // const nextIndex = (currentIndex + 1) % modes.length;
-    // setPermissionMode(modes[nextIndex]);
   };
 
   // Don't render if no project is selected
@@ -2283,7 +2248,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
 
             {visibleMessages.map((message, index) => {
               const prevMessage = index > 0 ? visibleMessages[index - 1] : null;
-
               return (
                 <MessageComponent
                   key={`${message.id || index}-${message.timestamp}`}
@@ -2367,7 +2331,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             )}
           </div>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="relative max-w-4xl mx-auto">
           {/* Drag overlay */}
           {isDragActive && (
@@ -2380,7 +2344,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
               </div>
             </div>
           )}
-          
+
           {/* Image attachments preview */}
           {attachedImages.length > 0 && (
             <div className="mb-2 p-2 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
@@ -2399,7 +2363,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
               </div>
             </div>
           )}
-          
+
           {/* File dropdown - positioned outside dropzone to avoid conflicts */}
           {showFileDropdown && filteredFiles.length > 0 && (
             <div className="absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 backdrop-blur-sm">

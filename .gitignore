@@ -27,6 +27,15 @@ out/
 *.augment/**/*.md
 *.github
 .gemini/settings.json
+*!.kiro/
+*.kiro
+*.kiro/**/*.md
+*.kiro/**/.*.md
+*!.kiro/
+*.kiro
+*.kiro/**/.*.md
+!.kiro/**/.*.md
+
 
 # IDE and editor files
 .vscode/
