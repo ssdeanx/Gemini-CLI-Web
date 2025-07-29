@@ -3,6 +3,121 @@
 **Overview:**
 The Gemini CLI Web UI is a full-stack application designed to provide a rich, interactive web interface for the Gemini Command Line Interface (CLI) tool. It acts as a bridge, enabling users to interact with the Gemini CLI, manage projects, edit files, and track Git changes directly from their browser. The architecture emphasizes real-time communication, robust authentication, and a modular component structure for maintainability and scalability.
 
+**Quick Links:**
+
+*   [Backend Architecture](./server/GEMINI.md)
+*   [Frontend Architecture](./src/GEMINI.md)
+*   [Configuration](./documentation/configuration.md)
+*   [Checkpointing](./documentation/checkpointing.md)
+*   [Deployment](./documentation/deployment.md)
+*   [Extensions](./documentation/extension.md)
+*   [Keyboard Shortcuts](./documentation/keyboard-shortcuts.md)
+*   [Memory Import Processor](./documentation/memport.md)
+*   [Proxy Script](./documentation/proxy-script.md)
+*   [Sandboxing](./documentation/sandbox.md)
+*   [Telemetry](./documentation/telemetry.md)
+*   [Tools API](./documentation/tools-api.md)
+*   [Troubleshooting](./documentation/troubleshooting.md)
+
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph User
+        A[User]
+    end
+
+    subgraph Browser (Frontend)
+        B[React UI Components]
+        C[WebSocket Client]
+        D[API Client]
+    end
+
+    subgraph "Node.js Server (Backend)"
+        E[Express Server]
+        F[WebSocket Server]
+        G[Gemini CLI Bridge]
+        H[Session Manager]
+        I[Auth Layer]
+        J[Git API]
+    end
+
+    subgraph "Local System"
+        K[Gemini CLI Process]
+        L[Project Files]
+        M[Git Repository]
+        N[SQLite DB]
+        O[gemini config files]
+    end
+
+    subgraph "External Services"
+        P[OpenAI Whisper API]
+    end
+
+    A -- Interacts --> B
+    B -- Sends/Receives Chat --> C
+    B -- File & Git Ops --> D
+    C -- Real-time --> F
+    D -- HTTP Requests --> E
+    F -- CLI Commands --> G
+    E -- Auth --> I
+    E -- Git --> J
+    E -- File System --> L
+    G -- Spawns --> K
+    G -- Uses --> H
+    H -- Reads/Writes --> O
+    I -- Reads/Writes --> N
+    J -- Executes --> M
+    K -- Reads/Writes --> L
+    E -- Transcribes Audio --> P
+```
+
+## Tools
+
+### `lotuswisdom`
+
+-   **Purpose:** A tool for problem-solving using the Lotus Sutra's wisdom framework.
+-   **How it works:** This tool helps analyze problems through multiple approaches while recognizing inherent wisdom. Each step can utilize different techniques for understanding and expression.
+-   **When to use:**
+    -   Breaking down complex problems requiring multi-faceted understanding
+    -   Questions that benefit from both direct and gradual approaches
+    -   Problems where apparent contradictions need integration
+    -   Situations requiring both analytical and intuitive understanding
+    -   Tasks that benefit from meditative pauses to allow insight
+    -   Questions containing their own inherent wisdom
+
+### `vibe-check`
+
+-   **Purpose:** A tool for analyzing a problem and a plan to solve it.
+-   **How it works:** This tool takes a user request and a plan as input and provides feedback on the plan. It can help to identify potential issues with the plan and suggest improvements.
+-   **When to use:**
+    -   Before implementing a solution to a problem.
+    -   When you want to get feedback on a plan.
+
+### `vibe-learn`
+
+-   **Purpose:** A tool for recording what you've learned from an interaction.
+-   **How it works:** This tool takes a category, a mistake, and a solution as input and records it for future reference.
+-   **When to use:**
+    -   After using the `vibe-check` tool.
+    -   When you want to record a lesson learned.
+
+### `sequentialthinking`
+
+-   **Purpose:** A tool for creating a detailed plan for solving a problem.
+-   **How it works:** This tool takes a problem statement as input and guides you through the process of creating a plan to solve it. It helps you to break down the problem into smaller, more manageable steps.
+-   **When to use:**
+    -   When you need to create a detailed plan for solving a problem.
+    -   When you want to break down a complex problem into smaller steps.
+
+### `visualreasoning`
+
+-   **Purpose:** A tool for creating diagrams and other visual representations of information.
+-   **How it works:** This tool takes a diagram type and a list of elements as input and creates a diagram. It can be used to create a variety of diagrams, including graphs, flowcharts, and state diagrams.
+-   **When to use:**
+    -   When you want to create a visual representation of information.
+    -   When you want to create a diagram to help you to understand a complex system.
+
 **Project Structure:**
 
 ```
