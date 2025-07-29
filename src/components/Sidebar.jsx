@@ -13,18 +13,18 @@ import { api } from '../utils/api';
 const formatTimeAgo = (dateString, currentTime) => {
   const date = new Date(dateString);
   const now = currentTime;
-  
+
   // Check if date is valid
   if (isNaN(date.getTime())) {
     return 'Unknown';
   }
-  
+
   const diffInMs = now - date;
   const diffInSeconds = Math.floor(diffInMs / 1000);
   const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
   const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
   const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-  
+
   if (diffInSeconds < 60) {
     return 'Just now';
   }
@@ -49,12 +49,12 @@ const formatTimeAgo = (dateString, currentTime) => {
   return date.toLocaleDateString();
 };
 
-function Sidebar({ 
-  projects, 
-  selectedProject, 
-  selectedSession, 
-  onProjectSelect, 
-  onSessionSelect, 
+function Sidebar({
+  projects,
+  selectedProject,
+  selectedSession,
+  onProjectSelect,
+  onSessionSelect,
   onNewSession,
   onSessionDelete,
   onProjectDelete,
@@ -83,7 +83,6 @@ function Sidebar({
   const [generatingSummary, setGeneratingSummary] = useState({});
   const [searchFilter, setSearchFilter] = useState('');
 
-  
   // Starred projects state - persisted in localStorage
   const [starredProjects, setStarredProjects] = useState(() => {
     try {
@@ -168,14 +167,14 @@ function Sidebar({
     };
 
     window.addEventListener('storage', handleStorageChange);
-    
+
     // Also check periodically when component is focused (for same-tab changes)
     const checkInterval = setInterval(() => {
       if (document.hasFocus()) {
         loadSortOrder();
       }
     }, 1000);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(checkInterval);
@@ -201,7 +200,7 @@ function Sidebar({
       newStarred.add(projectName);
     }
     setStarredProjects(newStarred);
-    
+
     // Persist to localStorage
     try {
       localStorage.setItem('starredProjects', JSON.stringify([...newStarred]));
@@ -227,7 +226,7 @@ function Sidebar({
     if (allSessions.length === 0) {
       return new Date(0); // Return epoch date for projects with no sessions
     }
-    
+
     // Find the most recent session activity
     return allSessions.reduce((latest, session) => {
           const sessionDate = new Date(session.lastActivity);
@@ -239,7 +238,7 @@ function Sidebar({
   const sortedProjects = [...projects].sort((a, b) => {
     const aStarred = isProjectStarred(a.name);
     const bStarred = isProjectStarred(b.name);
-    
+
     // First, sort by starred status
     if (aStarred && !bStarred) {
       return -1;
@@ -247,7 +246,7 @@ function Sidebar({
     if (!aStarred && bStarred) {
       return 1;
     }
-    
+
     // For projects with same starred status, sort by selected order
     if (projectSortOrder === 'date') {
       // Sort by most recent activity (descending)
@@ -287,7 +286,7 @@ function Sidebar({
     } catch (error) {
       console.error('Error renaming project:', error);
     }
-    
+
     setEditingProject(null);
     setEditingName('');
   };

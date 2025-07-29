@@ -27,6 +27,15 @@ out/
 *.augment/**/*.md
 *.github
 .gemini/settings.json
+*!.kiro/
+*.kiro
+*.kiro/**/*.md
+*.kiro/**/.*.md
+*!.kiro/
+*.kiro
+*.kiro/**/.*.md
+!.kiro/**/.*.md
+
 
 # IDE and editor files
 .vscode/
@@ -145,3 +154,6 @@ user_uploads/
 #Ignore vscode AI rules
 .github/copilot-instructions.md
 TAILWIND_V4_MIGRATION_SPEC.md
+tools-cli/Mastering Google Gemini CLI_ An Expert-Level Analysis of Commands, Settings, and Model Context Protocol.md
+documentation/Mastering Google Gemini CLI_ An Expert-Level Analysis of Commands, Settings, and Model Context Protocol.md
+documentation/Gemini CLI Custom Tool Integration_.md
