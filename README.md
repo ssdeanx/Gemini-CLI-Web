@@ -91,8 +91,8 @@ A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini
 1. **Clone the repository:**
 
 ```bash
-git clone git@github.com:cruzyjapan/Gemini-CLI-UI.git
-cd geminicliui
+git clone https://github.com/ssdeanx/Gemini-CLI-Web.git
+cd gemini-cli-web
 ```
 
 2. **Install dependencies:**
@@ -344,48 +344,174 @@ This project is based on [Claude Code UI](https://github.com/siteboon/claudecode
 ```mermaid
 graph TD
 
-    19["Database<br>SQL"]
-    4["User<br>External Actor"]
-    subgraph 1["Public Assets System<br>Static Files"]
-        15["Web Entry Assets<br>HTML, JSON, JS"]
-        16["Icons<br>SVG, PNG"]
-        17["Screenshots<br>PNG"]
-        18["Sounds<br>HTML"]
+    20["User<br>External Actor"]
+    91["User<br>External Actor"]
+    subgraph 1["Static Assets/Public System<br>Web Server"]
+        77["Icons<br>Image Files"]
+        78["Screenshots<br>Image Files"]
+        79["Sounds<br>Audio Files"]
+        subgraph 2["Root Assets<br>HTML/JS"]
+            74["Main HTML<br>HTML"]
+            75["Web App Manifest<br>JSON"]
+            76["Service Worker<br>JavaScript"]
+        end
     end
-    subgraph 2["Backend System<br>Node.js, Express"]
-        10["Server Entry Point<br>Node.js"]
-        11["Core Logic Modules<br>Node.js"]
-        12["Database Access<br>Node.js, SQL"]
-        13["Auth Middleware<br>Node.js"]
-        14["API Routes<br>Express"]
+    subgraph 3["Backend System<br>Node.js"]
+        71["Auth Middleware<br>Express"]
+        72["Session Manager<br>Node.js"]
+        73["Project Manager<br>Node.js"]
+        subgraph 4["Database Management<br>Node.js"]
+            69["DB Connection<br>Node.js"]
+            70["DB Schema Init<br>SQL"]
+        end
+        subgraph 5["API Routes<br>Express"]
+            66["Auth Route<br>Express"]
+            67["Git Route<br>Express"]
+            68["MCP Route<br>Express"]
+        end
+        subgraph 6["Main Server<br>Node.js"]
+            64["Main Entry Point<br>Node.js"]
+            65["CLI Core Logic<br>Node.js"]
+        end
         %% Edges at this level (grouped by source)
-        10["Server Entry Point<br>Node.js"] -->|Initializes| 11["Core Logic Modules<br>Node.js"]
-        10["Server Entry Point<br>Node.js"] -->|Applies| 13["Auth Middleware<br>Node.js"]
-        10["Server Entry Point<br>Node.js"] -->|Registers| 14["API Routes<br>Express"]
-        13["Auth Middleware<br>Node.js"] -->|Uses| 11["Core Logic Modules<br>Node.js"]
-        14["API Routes<br>Express"] -->|Invokes| 11["Core Logic Modules<br>Node.js"]
-        14["API Routes<br>Express"] -->|Accesses| 12["Database Access<br>Node.js, SQL"]
-        11["Core Logic Modules<br>Node.js"] -->|Interacts with| 12["Database Access<br>Node.js, SQL"]
+        3["Backend System<br>Node.js"] -->|Accesses| 4["Database Management<br>Node.js"]
     end
-    subgraph 3["Frontend System<br>React, Vite, Tailwind CSS"]
-        5["Core Application<br>React"]
-        6["UI Components<br>React"]
-        7["State Management &amp; Contexts<br>React Context"]
-        8["Hooks<br>JavaScript"]
-        9["Utilities<br>JavaScript"]
+    subgraph 7["Frontend System<br>React"]
+        subgraph 10["Contexts/State Management<br>React"]
+            54["AuthContext<br>React"]
+            55["SettingsContext<br>React"]
+            56["ThemeContext<br>React"]
+        end
+        subgraph 11["UI Components<br>React"]
+            subgraph 12["Spec Design Components<br>React"]
+                51["SpecDesign<br>React"]
+                52["ProgressIndicator<br>React"]
+                53["ThinkingIndicator<br>React"]
+            end
+            subgraph 13["UI Primitives<br>React"]
+                47["Button<br>React"]
+                48["Input<br>React"]
+                49["Badge<br>React"]
+                50["Scroll-Area<br>React"]
+            end
+            subgraph 14["Utility and Display Components<br>React"]
+                39["FileTree<br>React"]
+                40["ImageViewer<br>React"]
+                41["GeminiLogo<br>React"]
+                42["GeminiStatus<br>React"]
+                43["DarkModeToggle<br>React"]
+                44["MicButton<br>React"]
+                45["TodoList<br>React"]
+                46["ErrorBoundary<br>React"]
+            end
+            subgraph 15["Authentication and Settings Components<br>React"]
+                34["LoginForm<br>React"]
+                35["ProtectedRoute<br>React"]
+                36["QuickSettingsPanel<br>React"]
+                37["ToolsSettings<br>React"]
+                38["SetupForm<br>React"]
+            end
+            subgraph 16["Layout and Navigation Components<br>React"]
+                31["Sidebar<br>React"]
+                32["MainContent<br>React"]
+                33["MobileNav<br>React"]
+            end
+            subgraph 17["Code Editor Components<br>React"]
+                26["CodeEditor<br>React"]
+                27["NewCodeEditor<br>React"]
+                28["CodeTabs<br>React"]
+                29["EditorTab<br>React"]
+                30["EditorFileTree<br>React"]
+            end
+            subgraph 18["Chat Interface Components<br>React"]
+                24["ChatInterface<br>React"]
+                25["ChatSidebar<br>React"]
+            end
+        end
+        subgraph 19["Core Application<br>React"]
+            21["Main Application Entry<br>React"]
+            22["Root Component<br>React"]
+            23["Global Styles<br>CSS"]
+        end
+        subgraph 8["Utilities/API Integration<br>JavaScript"]
+            59["API Utility<br>JavaScript"]
+            60["WebSocket Utility<br>JavaScript"]
+            61["Whisper Integration<br>JavaScript"]
+            62["Notification Sound<br>JavaScript"]
+            63["General Utilities<br>JavaScript"]
+        end
+        subgraph 9["Hooks<br>React"]
+            57["useAudioRecorder<br>React"]
+            58["useVersionCheck<br>React"]
+        end
+    end
+    subgraph 80["Static Assets/Public System<br>Web Server"]
+        119["Icons<br>SVG/PNG"]
+        120["Screenshots<br>PNG"]
+        121["Sounds<br>HTML/Audio"]
+        subgraph 81["Root Assets<br>HTML/JS"]
+            116["Main HTML<br>HTML"]
+            117["Web Manifest<br>JSON"]
+            118["Service Worker<br>JavaScript"]
+        end
+    end
+    subgraph 82["Backend System<br>Node.js/Express"]
+        113["Auth Middleware<br>Express"]
+        114["Session Manager<br>Node.js"]
+        115["Project Manager<br>Node.js"]
+        subgraph 83["Database Management<br>SQLite"]
+            111["DB Manager<br>JavaScript"]
+            112["DB Init Script<br>SQL"]
+        end
+        subgraph 84["API Routes<br>Express"]
+            108["Auth Route<br>Express"]
+            109["Git Route<br>Express"]
+            110["MCP Route<br>Express"]
+        end
+        subgraph 85["Main Server<br>Node.js/Express"]
+            106["Server Entry Point<br>Node.js"]
+            107["Gemini CLI Core<br>Node.js"]
+        end
         %% Edges at this level (grouped by source)
-        5["Core Application<br>React"] -->|Uses| 6["UI Components<br>React"]
-        5["Core Application<br>React"] -->|Uses| 7["State Management &amp; Contexts<br>React Context"]
-        5["Core Application<br>React"] -->|Uses| 8["Hooks<br>JavaScript"]
-        5["Core Application<br>React"] -->|Uses| 9["Utilities<br>JavaScript"]
-        6["UI Components<br>React"] -->|Uses| 7["State Management &amp; Contexts<br>React Context"]
-        6["UI Components<br>React"] -->|Uses| 9["Utilities<br>JavaScript"]
+        82["Backend System<br>Node.js/Express"] -->|Interacts with| 83["Database Management<br>SQLite"]
+        106["Server Entry Point<br>Node.js"] -->|Initializes| 83["Database Management<br>SQLite"]
+        106["Server Entry Point<br>Node.js"] -->|Initializes| 84["API Routes<br>Express"]
+        106["Server Entry Point<br>Node.js"] -->|Initializes| 114["Session Manager<br>Node.js"]
+        106["Server Entry Point<br>Node.js"] -->|Initializes| 115["Project Manager<br>Node.js"]
+        108["Auth Route<br>Express"] -->|Authenticates via| 113["Auth Middleware<br>Express"]
+        113["Auth Middleware<br>Express"] -->|Manages sessions via| 114["Session Manager<br>Node.js"]
+    end
+    subgraph 86["Frontend System<br>React"]
+        95["UI Components<br>React"]
+        subgraph 87["Utilities/API Integration<br>JavaScript"]
+            101["API Utility<br>JavaScript"]
+            102["WebSocket Utility<br>JavaScript"]
+            103["Whisper Integration<br>JavaScript"]
+            104["Notification Sound<br>JavaScript"]
+            105["General Utilities<br>JavaScript"]
+        end
+        subgraph 88["Hooks<br>React"]
+            100["Version Check Hook<br>React"]
+            99["Audio Recorder Hook<br>React"]
+        end
+        subgraph 89["Contexts/State Management<br>React"]
+            96["Auth Context<br>React"]
+            97["Settings Context<br>React"]
+            98["Theme Context<br>React"]
+        end
+        subgraph 90["Core Application<br>React"]
+            92["Main Application Entry<br>React"]
+            93["Root Component<br>React"]
+            94["Global Styles<br>CSS"]
+        end
     end
     %% Edges at this level (grouped by source)
-    3["Frontend System<br>React, Vite, Tailwind CSS"] -->|Makes REST API calls| 2["Backend System<br>Node.js, Express"]
-    1["Public Assets System<br>Static Files"] -->|Serves static files to| 3["Frontend System<br>React, Vite, Tailwind CSS"]
-    4["User<br>External Actor"] -->|Interacts with| 3["Frontend System<br>React, Vite, Tailwind CSS"]
-    2["Backend System<br>Node.js, Express"] -->|Queries & Persists Data| 19["Database<br>SQL"]
+    7["Frontend System<br>React"] -->|Serves| 1["Static Assets/Public System<br>Web Server"]
+    7["Frontend System<br>React"] -->|Makes API requests to| 3["Backend System<br>Node.js"]
+    20["User<br>External Actor"] -->|Interacts with| 7["Frontend System<br>React"]
+    91["User<br>External Actor"] -->|Accesses| 80["Static Assets/Public System<br>Web Server"]
+    86["Frontend System<br>React"] -->|Communicates via REST/WebSockets| 82["Backend System<br>Node.js/Express"]
+    80["Static Assets/Public System<br>Web Server"] -->|Loads| 86["Frontend System<br>React"]
 ```
 
 **Major Changes:**
