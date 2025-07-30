@@ -252,8 +252,8 @@ async function spawnGemini(command, options = {}, ws) {
       const lines = rawOutput.split('\n');
       const filteredLines = lines.filter(line => {
         // Skip debug messages
-        if (line.includes('[DEBUG]') || 
-            line.includes('Flushing log events') || 
+        if (line.includes('[DEBUG]') ||
+            line.includes('Flushing log events') ||
             line.includes('Clearcut response') ||
             line.includes('[MemoryDiscovery]') ||
             line.includes('[BfsFileSearch]')) {
