@@ -23,7 +23,7 @@
     "web",
     "gemini-cli-web",
     "gui"
-    ],
+  ],
   "homepage": "https://github.com/ssdeanx/gemini-cli-web",
   "repository": {
     "type": "git",
@@ -72,6 +72,8 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.7.1",
     "tailwind-merge": "^3.3.1",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0",
     "ws": "^8.18.3",
     "xterm": "^5.3.0",
     "xterm-addon-fit": "^0.8.0"
