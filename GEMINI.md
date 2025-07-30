@@ -28,48 +28,148 @@ graph TD
     end
 
     subgraph Browser (Frontend)
-        B[React UI Components]
-        C[WebSocket Client]
-        D[API Client]
+        subgraph "React UI Components"
+            App(App.jsx)
+            MainContent(MainContent.jsx)
+            Sidebar(Sidebar.jsx)
+            ChatInterface(ChatInterface.jsx)
+            EditorTab(EditorTab.jsx)
+            GitPanel(GitPanel.jsx)
+            Shell(Shell.jsx)
+            ChatSidebar(ChatSidebar.jsx)
+            CodeEditor(CodeEditor.jsx)
+            CodeTabs(CodeTabs.jsx)
+            DarkModeToggle(DarkModeToggle.jsx)
+            EditorFileTree(EditorFileTree.jsx)
+            ErrorBoundary(ErrorBoundary.jsx)
+            FileTree(FileTree.jsx)
+            GeminiLogo(GeminiLogo.jsx)
+            GeminiStatus(GeminiStatus.jsx)
+            ImageViewer(ImageViewer.jsx)
+            LoginForm(LoginForm.jsx)
+            MicButton(MicButton.jsx)
+            MobileNav(MobileNav.jsx)
+            NewCodeEditor(NewCodeEditor.jsx)
+            ProtectedRoute(ProtectedRoute.jsx)
+            QuickSettingsPanel(QuickSettingsPanel.jsx)
+            SetupForm(SetupForm.jsx)
+            TodoList(TodoList.jsx)
+            ToolsSettings(ToolsSettings.jsx)
+            SpecDesign(SpecDesign.jsx)
+            ProgressIndicator(ProgressIndicator.jsx)
+            ThinkingIndicator(ThinkingIndicator.jsx)
+            badge(badge.jsx)
+            button(button.jsx)
+            input(input.jsx)
+            scroll_area(scroll-area.jsx)
+        end
+        subgraph "Contexts"
+            AuthContext(AuthContext.jsx)
+            ThemeContext(ThemeContext.jsx)
+            SettingsContext(SettingsContext.jsx)
+        end
+        subgraph "Hooks"
+            useWebSocket(useWebSocket.js)
+            useAudioRecorder(useAudioRecorder.js)
+            useVersionCheck(useVersionCheck.js)
+        end
+        subgraph "Utils"
+            api(api.js)
+            notificationSound(notificationSound.js)
+            whisper(whisper.js)
+            lib_utils(utils.js)
+        end
     end
 
     subgraph "Node.js Server (Backend)"
-        E[Express Server]
-        F[WebSocket Server]
-        G[Gemini CLI Bridge]
-        H[Session Manager]
-        I[Auth Layer]
-        J[Git API]
+        ExpressServer(Express Server)
+        WebSocketServer(WebSocket Server)
+        GeminiCLIBridg(Gemini CLI Bridge)
+        SessionManager(Session Manager)
+        AuthLayer(Auth Layer)
+        GitAPI(Git API)
     end
 
     subgraph "Local System"
-        K[Gemini CLI Process]
-        L[Project Files]
-        M[Git Repository]
-        N[SQLite DB]
-        O[gemini config files]
+        GeminiCLIProcess(Gemini CLI Process)
+        ProjectFiles(Project Files)
+        GitRepository(Git Repository)
+        SQLiteDB(SQLite DB)
+        GeminiConfigFiles(gemini config files)
     end
 
     subgraph "External Services"
-        P[OpenAI Whisper API]
+        OpenAIWhisperAPI(OpenAI Whisper API)
     end
 
-    A -- Interacts --> B
-    B -- Sends/Receives Chat --> C
-    B -- File & Git Ops --> D
-    C -- Real-time --> F
-    D -- HTTP Requests --> E
-    F -- CLI Commands --> G
-    E -- Auth --> I
-    E -- Git --> J
-    E -- File System --> L
-    G -- Spawns --> K
-    G -- Uses --> H
-    H -- Reads/Writes --> O
-    I -- Reads/Writes --> N
-    J -- Executes --> M
-    K -- Reads/Writes --> L
-    E -- Transcribes Audio --> P
+    A -- Interacts --> App
+
+    App --> MainContent
+    App --> Sidebar
+    App --> DarkModeToggle
+    App --> ErrorBoundary
+    App --> MobileNav
+    App --> ProtectedRoute
+    App --> useVersionCheck
+
+    MainContent --> ChatInterface
+    MainContent --> EditorTab
+    MainContent --> GitPanel
+    MainContent --> Shell
+    MainContent --> ChatSidebar
+    MainContent --> ImageViewer
+    MainContent --> TodoList
+    MainContent --> SpecDesign
+
+    Sidebar --> FileTree
+    Sidebar --> GeminiLogo
+    Sidebar --> QuickSettingsPanel
+    Sidebar --> ToolsSettings
+    Sidebar --> api
+
+    ChatInterface --> CodeEditor
+    ChatInterface --> GeminiStatus
+    ChatInterface --> MicButton
+    ChatInterface --> useWebSocket
+    ChatInterface --> api
+    ChatInterface --> notificationSound
+
+    EditorTab --> CodeTabs
+    EditorTab --> EditorFileTree
+    EditorTab --> NewCodeEditor
+
+    SpecDesign --> ProgressIndicator
+    SpecDesign --> ThinkingIndicator
+
+    AuthContext --> LoginForm
+    AuthContext --> SetupForm
+
+    MicButton --> useAudioRecorder
+    useAudioRecorder --> whisper
+
+    App --> AuthContext
+    App --> ThemeContext
+    App --> SettingsContext
+    App --> useWebSocket
+
+    api --> ExpressServer
+    useWebSocket --> WebSocketServer
+
+    ExpressServer --> GeminiCLIBridg
+    WebSocketServer --> GeminiCLIBridg
+    ExpressServer --> AuthLayer
+    ExpressServer --> GitAPI
+    ExpressServer --> ProjectFiles
+    ExpressServer --> OpenAIWhisperAPI
+
+    GeminiCLIBridg --> SessionManager
+    GeminiCLIBridg --> GeminiCLIProcess
+
+    AuthLayer --> SQLiteDB
+    GitAPI --> GitRepository
+    SessionManager --> GeminiConfigFiles
+    GeminiCLIProcess --> ProjectFiles
+end
 ```
 
 ## Tools

@@ -58,7 +58,7 @@ function SpecDesign({ selectedProject }) {
       const lastMessage = messages[messages.length - 1];
 
       if (lastMessage.type === 'gemini-response' && currentGenerationType) {
-        const content = lastMessage.content || '';
+        const content = (lastMessage.content || '').replace(/Loaded cached credentials.\n/g, '');
 
         if (currentGenerationType === 'design') {
           setDesign(content);
