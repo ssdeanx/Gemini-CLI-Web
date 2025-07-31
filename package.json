@@ -14,15 +14,14 @@
   },
   "keywords": [
     "gemini",
+    "gemini-cli",
+    "gemini-cli-web",
+    "gui",
+    "web",
     "ai",
     "code",
     "ui",
-    "assistant",
-    "gemini-cli",
-    "gemini",
-    "web",
-    "gemini-cli-web",
-    "gui"
+    "assistant"
   ],
   "homepage": "https://github.com/ssdeanx/gemini-cli-web",
   "repository": {
@@ -39,7 +38,7 @@
     "@codemirror/lang-markdown": "^6.3.3",
     "@codemirror/lang-python": "^6.2.1",
     "@codemirror/theme-one-dark": "^6.1.3",
-    "@google/genai": "^1.11.0",
+    "@google/genai": "^1.12.0",
     "@google/generative-ai": "^0.24.1",
     "@libsql/client": "^0.15.10",
     "@monaco-editor/react": "^4.7.0",
@@ -71,6 +70,7 @@
     "react-dropzone": "^14.3.8",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.7.1",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.3.1",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",

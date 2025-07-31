@@ -1,8 +1,16 @@
-import { transports as _transports, createLogger, format as _format } from 'winston';
+import { transports, createLogger, format } from 'winston';
 import 'winston-daily-rotate-file';
+import * as fs from 'fs';
 
-const transport = new _transports.DailyRotateFile({
-  filename: 'logs/application-%DATE%.log',
+const logPath = process.env.LOG_PATH || 'logs/application-%DATE%.log';
+const logDir = logPath.split('/')[0];
+
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir, { recursive: true });
+}
+
+const transport = new transports.DailyRotateFile({
+  filename: logPath,
   datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
   maxSize: '20m',
@@ -11,12 +19,12 @@ const transport = new _transports.DailyRotateFile({
 
 const logger = createLogger({
   level: 'info',
-  format: _format.combine(
-    _format.timestamp(),
-    _format.json()
+  format: format.combine(
+    format.timestamp(),
+    format.json()
   ),
   transports: [
-    new _transports.Console(),
+    new transports.Console(),
     transport
   ]
 });

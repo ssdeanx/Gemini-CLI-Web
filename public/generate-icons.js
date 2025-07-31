@@ -12,7 +12,6 @@ const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
 // SVG template function for Gemini logo
 function createIconSVG(size) {
   const cornerRadius = Math.round(size * 0.1875); // 18.75% corner radius for modern look
-  
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="geminiGrad${size}" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -28,10 +27,10 @@ function createIconSVG(size) {
       </feMerge>
     </filter>
   </defs>
-  
+
   <!-- Background with gradient -->
   <rect x="0" y="0" width="${size}" height="${size}" rx="${cornerRadius}" fill="url(#geminiGrad${size})"/>
-  
+
   <!-- Gemini constellation symbol -->
   <g transform="translate(${size/2},${size/2})" filter="url(#glow${size})">
     <!-- Top star shape -->
@@ -54,11 +53,9 @@ async function generateIcons() {
     const pngFilename = `icon-${size}x${size}.png`;
     const svgFilepath = path.join(__dirname, 'icons', svgFilename);
     const pngFilepath = path.join(__dirname, 'icons', pngFilename);
-    
     // Write SVG file
     fs.writeFileSync(svgFilepath, svgContent);
     console.log(`Created ${svgFilename}`);
-    
     // Convert SVG to PNG using sharp
     try {
       await sharp(Buffer.from(svgContent))
@@ -69,7 +66,6 @@ async function generateIcons() {
       console.error(`Error creating ${pngFilename}:`, error.message);
     }
   }
-  
   // Also create favicon.png from favicon.svg
   try {
     const faviconSvg = fs.readFileSync(path.join(__dirname, 'favicon.svg'), 'utf8');
