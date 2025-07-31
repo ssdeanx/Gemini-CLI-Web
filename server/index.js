@@ -1,3 +1,4 @@
+import logger from './logger.js';
 // Load environment variables from .env file
 import fs from 'fs';
 import path from 'path';
