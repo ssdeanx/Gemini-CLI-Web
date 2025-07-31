@@ -36,22 +36,18 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       setError(null);
-
       // Check if system needs setup
       const statusResponse = await api.auth.status();
       const statusData = await statusResponse.json();
-
       if (statusData.needsSetup) {
         setNeedsSetup(true);
         setIsLoading(false);
         return;
       }
-
       // If we have a token, verify it
       if (token) {
         try {
           const userResponse = await api.auth.user();
-
           if (userResponse.ok) {
             const userData = await userResponse.json();
             setUser(userData.user);
@@ -81,9 +77,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       const response = await api.auth.login(username, password);
-
       const data = await response.json();
-
       if (response.ok) {
         setToken(data.token);
         setUser(data.user);
@@ -105,9 +99,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       const response = await api.auth.register(username, password);
-
       const data = await response.json();
-
       if (response.ok) {
         setToken(data.token);
         setUser(data.user);

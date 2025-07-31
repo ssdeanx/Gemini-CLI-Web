@@ -137,42 +137,34 @@ function AppContent() {
   useEffect(() => {
     if (messages.length > 0) {
       const latestMessage = messages[messages.length - 1];
-      
       if (latestMessage.type === 'projects_updated') {
-        
         // Session Protection Logic: Allow additions but prevent changes during active conversations
         // This allows new sessions/projects to appear in sidebar while protecting active chat messages
         // We check for two types of active sessions:
         // 1. Existing sessions: selectedSession.id exists in activeSessions
         // 2. New sessions: temporary "new-session-*" identifiers in activeSessions (before real session ID is received)
         const hasActiveSession = (selectedSession && activeSessions.has(selectedSession.id)) ||
-                                 (activeSessions.size > 0 && Array.from(activeSessions).some(id => id.startsWith('new-session-')));
-        
+                                  (activeSessions.size > 0 && Array.from(activeSessions).some(id => id.startsWith('new-session-')));
         if (hasActiveSession) {
           // Allow updates but be selective: permit additions, prevent changes to existing items
           const updatedProjects = latestMessage.projects;
           const currentProjects = projects;
-          
           // Check if this is purely additive (new sessions/projects) vs modification of existing ones
           const isAdditiveUpdate = isUpdateAdditive(currentProjects, updatedProjects, selectedProject, selectedSession);
-          
           if (!isAdditiveUpdate) {
             // Skip updates that would modify existing selected session/project
             return;
           }
           // Continue with additive updates below
         }
-        
         // Update projects state with the new data from WebSocket
         const updatedProjects = latestMessage.projects;
         setProjects(updatedProjects);
-        
         // Update selected project if it exists in the updated projects
         if (selectedProject) {
           const updatedSelectedProject = updatedProjects.find(p => p.name === selectedProject.name);
           if (updatedSelectedProject) {
             setSelectedProject(updatedSelectedProject);
-            
             // Update selected session only if it was deleted - avoid unnecessary reloads
             if (selectedSession) {
               const updatedSelectedSession = updatedSelectedProject.sessions?.find(s => s.id === selectedSession.id);
@@ -193,21 +185,18 @@ function AppContent() {
       setIsLoadingProjects(true);
       const response = await api.projects();
       const data = await response.json();
-      
       // Optimize to preserve object references when data hasn't changed
       setProjects(prevProjects => {
         // If no previous projects, just set the new data
         if (prevProjects.length === 0) {
           return data;
         }
-        
         // Check if the projects data has actually changed
         const hasChanges = data.some((newProject, index) => {
           const prevProject = prevProjects[index];
           if (!prevProject) {
             return true;
           }
-          
           // Compare key properties that would affect UI
           return (
             newProject.name !== prevProject.name ||
@@ -217,11 +206,9 @@ function AppContent() {
             JSON.stringify(newProject.sessions) !== JSON.stringify(prevProject.sessions)
           );
         }) || data.length !== prevProjects.length;
-        
         // Only update if there are actual changes
         return hasChanges ? data : prevProjects;
       });
-      
       // Don't auto-select any project - user should choose manually
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -251,7 +238,6 @@ function AppContent() {
           return;
         }
       }
-      
       // If session not found, it might be a newly created session
       // Just navigate to it and it will be found when the sidebar refreshes
       // Don't redirect to home, let the session load naturally
@@ -296,9 +282,8 @@ function AppContent() {
       setSelectedSession(null);
       navigate('/');
     }
-    
     // Update projects state locally instead of full refresh
-    setProjects(prevProjects => 
+    setProjects(prevProjects =>
       prevProjects.map(project => ({
         ...project,
         sessions: project.sessions?.filter(session => session.id !== sessionId) || [],
@@ -317,7 +302,6 @@ function AppContent() {
     try {
       const response = await api.projects();
       const freshProjects = await response.json();
-      
       // Optimize to preserve object references and minimize re-renders
       setProjects(prevProjects => {
         // Check if projects data has actually changed
@@ -326,7 +310,6 @@ function AppContent() {
           if (!prevProject) {
             return true;
           }
-          
           return (
             newProject.name !== prevProject.name ||
             newProject.displayName !== prevProject.displayName ||
@@ -335,10 +318,8 @@ function AppContent() {
             JSON.stringify(newProject.sessions) !== JSON.stringify(prevProject.sessions)
           );
         }) || freshProjects.length !== prevProjects.length;
-        
         return hasChanges ? freshProjects : prevProjects;
       });
-      
       // If we have a selected project, make sure it's still selected after refresh
       if (selectedProject) {
         const refreshedProject = freshProjects.find(p => p.name === selectedProject.name);
@@ -347,7 +328,6 @@ function AppContent() {
           if (JSON.stringify(refreshedProject) !== JSON.stringify(selectedProject)) {
             setSelectedProject(refreshedProject);
           }
-          
           // If we have a selected session, try to find it in the refreshed project
           if (selectedSession) {
             const refreshedSession = refreshedProject.sessions?.find(s => s.id === selectedSession.id);
@@ -369,15 +349,13 @@ function AppContent() {
       setSelectedSession(null);
       navigate('/');
     }
-    
     // Update projects state locally instead of full refresh
-    setProjects(prevProjects => 
+    setProjects(prevProjects =>
       prevProjects.filter(project => project.name !== projectName)
     );
   };
 
   // Session Protection Functions: Manage the lifecycle of active sessions
-  
   // markSessionAsActive: Called when user sends a message to mark session as protected
   // This includes both real session IDs and temporary "new-session-*" identifiers
   const markSessionAsActive = (sessionId) => {
@@ -425,11 +403,11 @@ function AppContent() {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center">
         {/* Backdrop */}
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm"
           onClick={() => setShowVersionModal(false)}
         />
-        
+
         {/* Modal */}
         <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md mx-4 p-6 space-y-4">
           {/* Header */}
@@ -508,7 +486,7 @@ function AppContent() {
   };
 
   return (
-    <div className="fixed inset-0 flex bg-zinc-950 text-white">
+    <div className="fixed inset-0 flex bg-zinc-700 text-white">
       {/* Fixed Desktop Sidebar */}
       {!isMobile && (
         <div className="w-80 flex-shrink-0 border-r border-border bg-card">
