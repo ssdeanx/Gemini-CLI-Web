@@ -9,7 +9,7 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: {
     parserOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       sourceType: "module",
     },
   },
