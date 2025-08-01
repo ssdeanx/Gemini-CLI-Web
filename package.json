@@ -23,12 +23,18 @@
     "ui",
     "assistant"
   ],
+  "author": "ssdeanx",
   "homepage": "https://github.com/ssdeanx/gemini-cli-web",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ssdeanx/gemini-cli-web.git"
   },
-  "author": "ssdeanx",
+  "bugs": {
+    "url": "https://github.com/ssdeanx/gemini-cli-web/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "license": "MIT",
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
@@ -59,7 +65,7 @@
     "framer-motion": "^12.23.12",
     "jsonwebtoken": "^9.0.2",
     "libsql": "^0.5.17",
-    "lucide-react": "^0.534.0",
+    "lucide-react": "^0.536.0",
     "mermaid": "^11.9.0",
     "mime-types": "^3.0.1",
     "monaco-editor": " ^0.52.2",
@@ -97,6 +103,8 @@
     "concurrently": "^9.2.0",
     "eslint": "^9.32.0",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.1.11",
     "vite": "^7.0.6"
