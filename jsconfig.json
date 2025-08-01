@@ -1,15 +1,27 @@
 {
-    "compilerOptions": {
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
-        "target": "ES2022",
-        "jsx": "react-jsx",
-        "allowImportingTsExtensions": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true
-    },
-    "exclude": [
-        "node_modules",
-        "**/node_modules/*"
-    ]
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+
+    // Ensure editors pick up ambient type declarations
+    "typeRoots": ["./types", "./node_modules/@types"]
+  },
+  "include": ["src", "server", "types"],
+  "exclude": ["node_modules", "dist", "build", "**/node_modules/*"]
 }

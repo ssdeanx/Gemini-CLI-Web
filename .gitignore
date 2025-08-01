@@ -24,6 +24,9 @@ out/
 *.kiro/
 *.kiro
 *.kiro/**/*.md
+*.clinerules/
+*.clinerules/
+*.clinerules/**/*.md
 
 
 *.augment/
