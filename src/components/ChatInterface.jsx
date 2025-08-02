@@ -238,7 +238,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                         </details>
                       );
                     }
-                  } catch (e) {
+                  } catch {
                     // Fall back to raw display if parsing fails
                   }
                   return (
@@ -340,7 +340,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                           </details>
                         );
                       }
-                    } catch (e) {
+                    } catch {
                       // Fall back to regular display
                     }
                   }
@@ -374,7 +374,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                           </details>
                         );
                       }
-                    } catch (e) {
+                    } catch {
                       // Fall back to regular display
                     }
                   }
@@ -421,7 +421,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                           </div>
                         </details>
                       );
-                    } catch (e) {
+                    } catch {
                       // Fall back to regular display
                     }
                   }
@@ -445,7 +445,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                           </div>
                         );
                       }
-                    } catch (e) {
+                    } catch {
                       // Fall back to regular display
                     }
                   }
@@ -471,7 +471,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                           </details>
                         );
                       }
-                    } catch (e) {
+                    } catch {
                       // Fall back to regular display
                     }
                   }
@@ -557,7 +557,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                                 </div>
                               );
                             }
-                          } catch (e) {
+                          } catch {
                             // Fall through to regular handling
                           }
                         }
@@ -581,7 +581,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                                 </div>
                               );
                             }
-                          } catch (e) {
+                          } catch {
                             // Fall through to regular handling
                           }
                         }
@@ -886,7 +886,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       </div>
                     );
                   }
-                } catch (e) {
+                } catch {
                   return (
                     <div className="bg-gemini-50 dark:bg-gemini-900/20 border-l-2 border-gemini-300 dark:border-gemini-600 pl-3 py-1 mb-2 text-sm text-gemini-700 dark:text-gemini-300">
                       📖 Read file
@@ -909,7 +909,7 @@ const MessageComponent = memo(({ message, index, prevMessage, createDiff, onFile
                       </div>
                     );
                   }
-                } catch (e) {
+                } catch {
                   return (
                     <div className="bg-gemini-50 dark:bg-gemini-900/20 border-l-2 border-gemini-300 dark:border-gemini-600 pl-3 py-1 mb-2 text-sm text-gemini-700 dark:text-gemini-300">
                       📝 Update todo list
@@ -1059,7 +1059,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     try {
       const settings = JSON.parse(localStorage.getItem('gemini-tools-settings') || '{}');
       return settings.skipPermissions || false;
-    } catch (e) {
+    } catch  {
       return false;
     }
   });
@@ -1067,7 +1067,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     try {
       const settings = JSON.parse(localStorage.getItem('gemini-tools-settings') || '{}');
       return settings.selectedModel || 'gemini-2.5-flash';
-    } catch (e) {
+    } catch  {
       return 'gemini-2.5-flash';
     }
   });
@@ -1108,7 +1108,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
       if (cache.has(key)) {
         return cache.get(key);
       }
-      
       const result = calculateDiff(oldStr, newStr);
       cache.set(key, result);
       if (cache.size > 100) {
@@ -1124,7 +1123,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     if (!projectName || !sessionId) {
       return [];
     }
-    
     setIsLoadingSessionMessages(true);
     try {
       const response = await api.sessionMessages(projectName, sessionId);
@@ -1133,7 +1131,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
       }
       const data = await response.json();
       return data.messages || [];
-    } catch (error) {
+    } catch {
       // console.error('Error loading session messages:', error);
       return [];
     } finally {
@@ -1344,7 +1342,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
               if (autoScrollToBottom) {
                 setTimeout(() => scrollToBottom(), 200);
               }
-            } catch (error) {
+            } catch {
               // console.error('Failed to load session messages:', error);
             } finally {
               setIsLoadingSessionMessages(false);
@@ -1413,15 +1411,13 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         const settings = JSON.parse(localStorage.getItem('gemini-tools-settings') || '{}');
         setIsYoloMode(settings.skipPermissions || false);
         setSelectedModel(settings.selectedModel || 'gemini-2.5-flash');
-      } catch (e) {
+      } catch {
         setIsYoloMode(false);
         setSelectedModel('gemini-2.5-flash');
       }
     };
-    
     // Check on mount and when storage changes
     checkSettings();
-    
     const handleStorageChange = (e) => {
       if (e.key === 'gemini-tools-settings') {
         checkSettings();
@@ -1434,13 +1430,11 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         }]);
       }
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
-    
     // Also check when component gains focus
     const handleFocus = () => checkSettings();
     window.addEventListener('focus', handleFocus);
-    
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('focus', handleFocus);
@@ -1470,7 +1464,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           break;
 
         case 'gemini-response':
-          const messageData = latestMessage.data.message || latestMessage.data;
+          { const messageData = latestMessage.data.message || latestMessage.data;
           // Handle Gemini CLI session duplication bug workaround:
           // When resuming a session, Gemini CLI creates a new session instead of resuming.
           // We detect this by checking for system/init messages with session_id that differs
@@ -1552,7 +1546,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
               timestamp: new Date()
             }]);
           }
-          
           // Handle tool results from user messages (these come separately)
           if (messageData.role === 'user' && Array.isArray(messageData.content)) {
             for (const part of messageData.content) {
@@ -1574,8 +1567,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
               }
             }
           }
-          break;
-          
+          break; }
         case 'gemini-output':
           setChatMessages(prev => [...prev, {
             type: 'assistant',
@@ -1592,7 +1584,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             isInteractivePrompt: true
           }]);
           break;
-
         case 'gemini-error':
           // console.log('Gemini error, setting isLoading to false:', latestMessage.error);
           setChatMessages(prev => [...prev, {
@@ -1604,10 +1595,9 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           setCanAbortSession(false);
           setGeminiStatus(null);
           break;
-
         case 'gemini-complete':
           // console.log('Gemini completed, setting isLoading to false');
-          setIsLoading(false);
+          { setIsLoading(false);
           setCanAbortSession(false);
           setGeminiStatus(null);
           // Play notification sound when response is complete
@@ -1631,7 +1621,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
           if (selectedProject && latestMessage.exitCode === 0) {
             localStorage.removeItem(`chat_messages_${selectedProject.name}`);
           }
-          break;
+          break; }
 
         case 'session-aborted':
           setIsLoading(false);
@@ -1652,7 +1642,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         case 'gemini-status':
           // Handle Gemini working status messages
           // Debug - Received gemini-status message
-          const statusData = latestMessage.data;
+          { const statusData = latestMessage.data;
           if (statusData) {
             // Parse the status message to extract relevant information
             let statusInfo = {
@@ -1687,7 +1677,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             setIsLoading(true);
             setCanAbortSession(statusInfo.can_interrupt);
           }
-          break;
+          break; }
 
       }
     }
@@ -1709,7 +1699,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
         const flatFiles = flattenFileTree(files);
         setFileList(flatFiles);
       }
-    } catch (error) {
+    } catch  {
       // console.error('Error fetching files:', error);
     }
   };
@@ -1993,7 +1983,6 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
     // Always scroll to bottom when user sends a message and reset scroll state
     setIsUserScrolledUp(false); // Reset scroll state so auto-scroll works for Gemini's response
     setTimeout(() => scrollToBottom(), 100); // Longer delay to ensure message is rendered
-
     // Session Protection: Mark session as active to prevent automatic project updates during conversation
     // This is crucial for maintaining chat state integrity. We handle two cases:
     // 1. Existing sessions: Use the real currentSessionId
@@ -2017,7 +2006,7 @@ function ChatInterface({ selectedProject, selectedSession, ws, sendMessage, mess
             selectedModel: settings.selectedModel || 'gemini-2.5-flash'
           };
         }
-      } catch (error) {
+      } catch {
         // console.error('Error loading tools settings:', error);
       }
       return {
