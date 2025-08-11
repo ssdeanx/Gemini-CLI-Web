@@ -1,0 +1,532 @@
+openapi: 3.1.0
+info:
+  title: Gemini-CLI-Web API
+  version: 0.1.0
+  description: REST and WebSocket API for Gemini-CLI-Web
+servers:
+  - url: http://localhost:4008
+    description: Express API (dev/prod)
+  - url: http://localhost:4009
+    description: Vite dev proxy
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuthStatus:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+      required: [authenticated]
+    LoginRequest:
+      type: object
+      properties:
+        username: { type: string }
+        password: { type: string }
+      required: [username, password]
+    LoginResponse:
+      type: object
+      properties:
+        token: { type: string }
+      required: [token]
+    Project:
+      type: object
+      properties:
+        name: { type: string }
+        displayName: { type: string }
+        sessions:
+          type: array
+          items: { $ref: '#/components/schemas/SessionSummary' }
+        sessionMeta:
+          type: object
+          additionalProperties: true
+    SessionSummary:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      required: [id]
+    FileReadResponse:
+      type: object
+      properties:
+        content: { type: string }
+        path: { type: string }
+      required: [content, path]
+    FileWriteRequest:
+      type: object
+      properties:
+        filePath: { type: string }
+        content: { type: string }
+      required: [filePath, content]
+    SuccessResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        message: { type: string }
+      required: [success]
+    GitStatus:
+      type: object
+      properties:
+        branch: { type: string }
+        modified: { type: array, items: { type: string } }
+        added: { type: array, items: { type: string } }
+        deleted: { type: array, items: { type: string } }
+        untracked: { type: array, items: { type: string } }
+    GitCommits:
+      type: object
+      properties:
+        commits:
+          type: array
+          items:
+            type: object
+            properties:
+              hash: { type: string }
+              author: { type: string }
+              email: { type: string }
+              date: { type: string }
+              message: { type: string }
+              stats:
+                type: object
+                additionalProperties: true
+    RemoteStatus:
+      type: object
+      properties:
+        hasRemote: { type: boolean }
+        branch: { type: string }
+        remoteBranch: { type: string }
+        remoteName: { type: string }
+        ahead: { type: integer }
+        behind: { type: integer }
+        isUpToDate: { type: boolean }
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/auth/status:
+    get:
+      summary: Auth status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthStatus' }
+  /api/auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LoginResponse' }
+  /api/auth/register:
+    post:
+      summary: Register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200': { description: OK }
+  /api/auth/user:
+    get:
+      summary: Current user
+      responses:
+        '200': { description: OK }
+  /api/auth/logout:
+    post:
+      summary: Logout
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessResponse' }
+
+  /api/config:
+    get:
+      summary: Server config
+      responses:
+        '200': { description: OK }
+
+  /api/projects:
+    get:
+      summary: List projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Project' }
+  /api/projects/create:
+    post:
+      summary: Create project by path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path: { type: string }
+              required: [path]
+      responses:
+        '200': { description: OK }
+  /api/projects/{projectName}/rename:
+    put:
+      summary: Rename project
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                displayName: { type: string }
+              required: [displayName]
+      responses:
+        '200': { description: OK }
+  /api/projects/{projectName}:
+    delete:
+      summary: Delete project
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  /api/projects/{projectName}/sessions:
+    get:
+      summary: List sessions (paged)
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer }
+        - in: query
+          name: offset
+          schema: { type: integer }
+      responses:
+        '200': { description: OK }
+  /api/projects/{projectName}/sessions/{sessionId}/messages:
+    get:
+      summary: Session messages
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+        - in: path
+          name: sessionId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/projects/{projectName}/sessions/{sessionId}:
+    delete:
+      summary: Delete session
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+        - in: path
+          name: sessionId
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+  /api/projects/{projectName}/files:
+    get:
+      summary: List files
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/projects/{projectName}/file:
+    get:
+      summary: Read file
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+        - in: query
+          name: filePath
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FileReadResponse' }
+    put:
+      summary: Save file
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FileWriteRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SuccessResponse' }
+  /api/projects/{projectName}/files/content:
+    get:
+      summary: Read binary content
+      parameters:
+        - in: path
+          name: projectName
+          required: true
+          schema: { type: string }
+        - in: query
+          name: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Binary stream }
+
+  /api/git/status:
+    get:
+      summary: Git status
+      parameters:
+        - in: query
+          name: project
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GitStatus' }
+  /api/git/branches:
+    get:
+      summary: Git branches
+      parameters:
+        - in: query
+          name: project
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/git/remote-status:
+    get:
+      summary: Remote status
+      parameters:
+        - in: query
+          name: project
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RemoteStatus' }
+  /api/git/checkout:
+    post:
+      summary: Checkout branch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project: { type: string }
+                branch: { type: string }
+              required: [project, branch]
+      responses:
+        '200': { description: OK }
+  /api/git/create-branch:
+    post:
+      summary: Create branch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project: { type: string }
+                branch: { type: string }
+              required: [project, branch]
+      responses:
+        '200': { description: OK }
+  /api/git/fetch:
+    post:
+      summary: Fetch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project: { type: string }
+              required: [project]
+      responses:
+        '200': { description: OK }
+  /api/git/pull:
+    post:
+      summary: Pull
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project: { type: string }
+              required: [project]
+      responses:
+        '200': { description: OK }
+        '500': { description: Error }
+  /api/git/push:
+    post:
+      summary: Push
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project: { type: string }
+              required: [project]
+      responses:
+        '200': { description: OK }
+        '500': { description: Error }
+  /api/git/discard:
+    post:
+      summary: Discard file changes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project: { type: string }
+                file: { type: string }
+              required: [project, file]
+      responses:
+        '200': { description: OK }
+  /api/git/diff:
+    get:
+      summary: Diff for file
+      parameters:
+        - in: query
+          name: project
+          required: true
+          schema: { type: string }
+        - in: query
+          name: file
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/git/commits:
+    get:
+      summary: Recent commits
+      parameters:
+        - in: query
+          name: project
+          required: true
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/GitCommits' }
+  /api/git/commit-diff:
+    get:
+      summary: Diff for commit
+      parameters:
+        - in: query
+          name: project
+          required: true
+          schema: { type: string }
+        - in: query
+          name: commit
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /api/git/generate-commit-message:
+    post:
+      summary: Generate commit message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project: { type: string }
+                files:
+                  type: array
+                  items: { type: string }
+              required: [project]
+      responses:
+        '200': { description: OK }
+  /api/git/commit:
+    post:
+      summary: Commit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project: { type: string }
+                message: { type: string }
+                files:
+                  type: array
+                  items: { type: string }
+              required: [project, message]
+      responses:
+        '200': { description: OK }

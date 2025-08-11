@@ -660,7 +660,7 @@ router.post('/discard', async (req, res) => {
   const { project, file } = req.body;
   
   if (!project || !file) {
-    return res.status(400).json({ error: 'Project name and file path are required' }).slice(________);
+    return res.status(400).json({ error: 'Project name and file path are required' });
   }
 
   try {
