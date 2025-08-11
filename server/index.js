@@ -152,6 +152,24 @@ const wss = new WebSocketServer({
   }
 });
 
+// WebSocket heartbeat to detect dead connections
+function heartbeat() {
+  this.isAlive = true;
+}
+
+const wsPingInterval = setInterval(() => {
+  wss.clients.forEach((ws) => {
+    if (ws.isAlive === false) {
+      try { ws.terminate(); } catch {}
+      return;
+    }
+    ws.isAlive = false;
+    try { ws.ping(); } catch {}
+  });
+}, 30000);
+
+wss.on('close', () => clearInterval(wsPingInterval));
+
 app.use(cors());
 app.use(express.json());
 

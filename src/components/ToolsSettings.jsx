@@ -906,11 +906,11 @@ function ToolsSettings({ isOpen, onClose }) {
                 Tool Pattern Examples:
               </h4>
               <ul className="text-sm text-gemini-800 dark:text-gemini-200 space-y-1">
-                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">"Bash(git log:*)"</code> - Allow all git log commands</li>
-                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">"Bash(git diff:*)"</code> - Allow all git diff commands</li>
-                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">"Write"</code> - Allow all Write tool usage</li>
-                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">"Read"</code> - Allow all Read tool usage</li>
-                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">"Bash(rm:*)"</code> - Block all rm commands (dangerous)</li>
+                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">&quot;Bash(git log:*)&quot;</code> - Allow all git log commands</li>
+                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">&quot;Bash(git diff:*)&quot;</code> - Allow all git diff commands</li>
+                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">&quot;Write&quot;</code> - Allow all Write tool usage</li>
+                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">&quot;Read&quot;</code> - Allow all Read tool usage</li>
+                <li><code className="bg-gemini-100 dark:bg-gemini-800 px-1 rounded">&quot;Bash(rm:*)&quot;</code> - Block all rm commands (dangerous)</li>
               </ul>
             </div>
 
