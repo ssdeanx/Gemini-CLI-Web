@@ -422,6 +422,8 @@ app.get('/api/projects/:projectName/files', authenticateToken, async (req, res) 
 
 // WebSocket connection handler that routes based on URL path
 wss.on('connection', (ws, request) => {
+  ws.isAlive = true;
+  ws.on('pong', heartbeat);
   const {url} = request;
   // console.log('🔗 Client connected to:', url);
   // Parse URL to get pathname without query parameters
@@ -446,6 +448,10 @@ function handleChatConnection(ws) {
   ws.on('message', async (message) => {
     try {
       const data = JSON.parse(message);
+      if (data.type === 'ping') {
+        ws.send(JSON.stringify({ type: 'pong' }));
+        return;
+      }
       if (data.type === 'gemini-command') {
         // console.log('💬 User message:', data.command || '[Continue/Resume]');
         // console.log('📁 Project:', data.options?.projectPath || 'Unknown');

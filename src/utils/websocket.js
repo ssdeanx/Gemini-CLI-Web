@@ -5,6 +5,9 @@ export function useWebSocket() {
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
   const reconnectTimeoutRef = useRef(null);
+  const reconnectAttemptsRef = useRef(0);
+  const heartbeatIntervalRef = useRef(null);
+  const pongTimeoutRef = useRef(null);
 
   useEffect(() => {
     connect();
@@ -12,6 +15,12 @@ export function useWebSocket() {
     return () => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
+      }
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+      }
+      if (pongTimeoutRef.current) {
+        clearTimeout(pongTimeoutRef.current);
       }
       if (ws) {
         ws.close();
@@ -47,7 +56,7 @@ export function useWebSocket() {
           const apiPort = window.location.port === '4009' ? '4008' : window.location.port;
           wsBaseUrl = `${protocol}//${window.location.hostname}:${apiPort}`;
         }
-      } catch (error) {
+      } catch {
         // console.warn('Could not fetch server config, falling back to current host with API server port');
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         // For development, API server is typically on port 4008 when Vite is on 4009
@@ -62,14 +71,30 @@ export function useWebSocket() {
       websocket.onopen = () => {
         setIsConnected(true);
         setWs(websocket);
+        reconnectAttemptsRef.current = 0;
+
+        heartbeatIntervalRef.current = setInterval(() => {
+          if (websocket.readyState === WebSocket.OPEN) {
+            websocket.send(JSON.stringify({ type: 'ping' }));
+            pongTimeoutRef.current = setTimeout(() => {
+              try { websocket.close(); } catch { /* ignore */ }
+            }, 10000);
+          }
+        }, 30000);
       };
 
       websocket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
+          if (data.type === 'pong') {
+            if (pongTimeoutRef.current) {
+              clearTimeout(pongTimeoutRef.current);
+            }
+            return;
+          }
           setMessages(prev => [...prev, data]);
-        } catch (error) {
-          // console.error('Error parsing WebSocket message:', error);
+        } catch {
+          // console.error('Error parsing WebSocket message');
         }
       };
 
@@ -77,18 +102,27 @@ export function useWebSocket() {
         setIsConnected(false);
         setWs(null);
 
-        // Attempt to reconnect after 3 seconds
+        if (heartbeatIntervalRef.current) {
+          clearInterval(heartbeatIntervalRef.current);
+        }
+        if (pongTimeoutRef.current) {
+          clearTimeout(pongTimeoutRef.current);
+        }
+
+        const attempt = reconnectAttemptsRef.current;
+        reconnectAttemptsRef.current += 1;
+        const delay = Math.min(30000, 1000 * Math.pow(2, attempt));
         reconnectTimeoutRef.current = setTimeout(() => {
           connect();
-        }, 3000);
+        }, delay);
       };
 
-      websocket.onerror = (error) => {
-        // console.error('WebSocket error:', error);
+      websocket.onerror = () => {
+        // console.error('WebSocket error');
       };
 
-    } catch (error) {
-      // console.error('Error creating WebSocket connection:', error);
+    } catch {
+      // console.error('Error creating WebSocket connection');
     }
   };
 

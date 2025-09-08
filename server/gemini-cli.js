@@ -6,12 +6,13 @@ import sessionManager from './sessionManager.js';
 
 let activeGeminiProcesses = new Map(); // Track active processes by session ID
 
-async function spawnGemini(command, options = {}, ws) {
-  return new Promise(async (resolve, reject) => {
-    const { sessionId, projectPath, cwd, resume, toolsSettings, permissionMode, images } = options;
-    let capturedSessionId = sessionId; // Track session ID throughout the process
-    let sessionCreatedSent = false; // Track if we've already sent session-created event
-    let fullResponse = ''; // Accumulate the full response
+function spawnGemini(command, options = {}, ws) {
+  return new Promise((resolve, reject) => {
+    (async () => {
+      const { sessionId, cwd, toolsSettings, images, model, debug } = options;
+      let capturedSessionId = sessionId; // Track session ID throughout the process
+      let sessionCreatedSent = false; // Track if we've already sent session-created event
+      let fullResponse = ''; // Accumulate the full response
     
     // Process images if provided
     
@@ -96,8 +97,8 @@ async function spawnGemini(command, options = {}, ws) {
         }
         
         
-      } catch (error) {
-        // console.error('Error processing images for Gemini:', error);
+      } catch {
+        // console.error('Error processing images for Gemini');
       }
     }
     
@@ -106,7 +107,7 @@ async function spawnGemini(command, options = {}, ws) {
     
     // Add basic flags for Gemini
     // Only add debug flag if explicitly requested
-    if (options.debug) {
+    if (debug) {
       args.push('--debug');
     }
     
@@ -139,7 +140,8 @@ async function spawnGemini(command, options = {}, ws) {
               hasMcpServers = true;
             }
           }
-        } catch (e) {
+        } catch {
+          // ignore
         }
       }
       
@@ -161,31 +163,28 @@ async function spawnGemini(command, options = {}, ws) {
             if (hasGlobalServers || hasProjectServers) {
               configPath = geminiConfigPath;
             }
-          } catch (e) {
+          } catch {
             // No valid config found
           }
         }
         
         if (configPath) {
           args.push('--mcp-config', configPath);
-        } else {
         }
       }
-    } catch (error) {
-      // If there's any error checking for MCP configs, don't add the flag
+    } catch {
       // MCP config check failed, proceeding without MCP support
     }
     
     // Add model for all sessions (both new and resumed)
     // Debug - Model from options and resume session
-    const modelToUse = options.model || 'gemini-2.5-flash';
+    const modelToUse = model || 'gemini-2.5-flash';
     // Debug - Using model
     args.push('--model', modelToUse);
     
     // Add --yolo flag if skipPermissions is enabled
     if (settings.skipPermissions) {
       args.push('--yolo');
-    } else {
     }
     
     // Gemini doesn't support these tool permission flags
@@ -194,10 +193,16 @@ async function spawnGemini(command, options = {}, ws) {
     // console.log('Spawning Gemini CLI with args:', args);
     // console.log('Working directory:', workingDir);
     
+    // Wait for any existing process for this session to terminate before spawning a new one
+    if (capturedSessionId) {
+      await abortGeminiSession(capturedSessionId);
+    }
+
     // Try to find gemini in PATH first, then fall back to environment variable
     const geminiPath = process.env.GEMINI_PATH || 'gemini';
     // console.log('Full command:', geminiPath, args.join(' '));
-    
+
+
     const geminiProcess = spawn(geminiPath, args, {
       cwd: workingDir,
       stdio: ['pipe', 'pipe', 'pipe'],
@@ -239,11 +244,8 @@ async function spawnGemini(command, options = {}, ws) {
     }
     
     // Handle stdout (Gemini outputs plain text)
-    let outputBuffer = '';
-    
     geminiProcess.stdout.on('data', (data) => {
       const rawOutput = data.toString();
-      outputBuffer += rawOutput;
       // Debug - Raw Gemini stdout
       hasReceivedOutput = true;
       clearTimeout(timeout);
@@ -350,13 +352,13 @@ async function spawnGemini(command, options = {}, ws) {
       // Clean up temporary image files if any
       if (geminiProcess.tempImagePaths && geminiProcess.tempImagePaths.length > 0) {
         for (const imagePath of geminiProcess.tempImagePaths) {
-          await fs.unlink(imagePath).catch(err => {
-            // console.error(`Failed to delete temp image ${imagePath}:`, err)
+          await fs.unlink(imagePath).catch(() => {
+            // console.error(`Failed to delete temp image ${imagePath}`);
           });
         }
         if (geminiProcess.tempDir) {
-          await fs.rm(geminiProcess.tempDir, { recursive: true, force: true }).catch(err => {
-            // console.error(`Failed to delete temp directory ${geminiProcess.tempDir}:`, err)
+          await fs.rm(geminiProcess.tempDir, { recursive: true, force: true }).catch(() => {
+            // console.error(`Failed to delete temp directory ${geminiProcess.tempDir}`);
           });
         }
       }
@@ -393,57 +395,57 @@ async function spawnGemini(command, options = {}, ws) {
       // Interactive mode without initial prompt
       // Keep stdin open for interactive use
     }
+    })().catch(reject);
   });
 }
 
 function abortGeminiSession(sessionId) {
-  // Debug - Attempting to abort Gemini session
-  // Debug - Active processes
-  
-  // Try to find the process by session ID or any key that contains the session ID
-  let process = activeGeminiProcesses.get(sessionId);
-  let processKey = sessionId;
-  
-  if (!process) {
-    // Search for process with matching session ID in keys
-    for (const [key, proc] of activeGeminiProcesses.entries()) {
-      if (key.includes(sessionId) || sessionId.includes(key)) {
-        process = proc;
-        processKey = key;
-        break;
+  return new Promise((resolve) => {
+    // Try to find the process by session ID or any key that contains the session ID
+    let process = activeGeminiProcesses.get(sessionId);
+    let processKey = sessionId;
+
+    if (!process) {
+      for (const [key, proc] of activeGeminiProcesses.entries()) {
+        if (key.includes(sessionId) || sessionId.includes(key)) {
+          process = proc;
+          processKey = key;
+          break;
+        }
       }
     }
-  }
-  
-  if (process) {
-    // Debug - Found process for session
-    try {
-      // First try SIGTERM
-      process.kill('SIGTERM');
-      
-      // Set a timeout to force kill if process doesn't exit
-      setTimeout(() => {
-        if (activeGeminiProcesses.has(processKey)) {
-          // Debug - Process didn't terminate, forcing kill
-          try {
-            process.kill('SIGKILL');
-          } catch (e) {
-            // console.error('Error force killing process:', e);
-          }
-        }
-      }, 2000); // Wait 2 seconds before force kill
-      
-      activeGeminiProcesses.delete(processKey);
-      return true;
-    } catch (error) {
-      // console.error('Error killing process:', error);
-      activeGeminiProcesses.delete(processKey);
-      return false;
+
+    if (!process) {
+      resolve(false);
+      return;
     }
-  }
-  
-  // Debug - No process found for session
-  return false;
+
+    const cleanup = () => {
+      activeGeminiProcesses.delete(processKey);
+      resolve(true);
+    };
+
+    process.once('close', cleanup);
+    process.once('exit', cleanup);
+
+    try {
+      process.kill('SIGTERM');
+    } catch {
+      cleanup();
+      return;
+    }
+
+    // Force kill if process doesn't exit
+    setTimeout(() => {
+      if (activeGeminiProcesses.has(processKey)) {
+        try {
+          process.kill('SIGKILL');
+        } catch {
+          // ignore
+        }
+      }
+    }, 2000);
+  });
 }
 
 export {
@@ -452,8 +454,8 @@ export {
   getGeminiSpec
 };
 
-async function getGeminiSpec(type, context) {
-  return new Promise(async (resolve, reject) => {
+function getGeminiSpec(type, context) {
+  return new Promise((resolve, reject) => {
     let fullResponse = '';
     const args = [];
 
