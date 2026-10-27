@@ -85,6 +85,7 @@ A desktop and mobile UI for [Gemini CLI](https://github.com/google-gemini/gemini
 
 - [Node.js](https://nodejs.org/) v20 or higher
 - [Gemini CLI](https://github.com/google-gemini/gemini-cli) installed and configured
+- Windows only: [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) with the "Desktop development with C++" workload — required to compile the `node-pty` native module (`npm install` fails with `gyp ERR! find VS` without it)
 
 ### Installation
 

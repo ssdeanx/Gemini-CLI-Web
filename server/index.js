@@ -422,6 +422,11 @@ app.get('/api/projects/:projectName/files', authenticateToken, async (req, res) 
 
 // WebSocket connection handler that routes based on URL path
 wss.on('connection', (ws, request) => {
+  // Mark alive and reply to server pings — without this the 30s
+  // heartbeat below terminates idle shell/chat connections (issue #15).
+  // Browsers answer ws pings automatically; we just have to listen.
+  ws.isAlive = true;
+  ws.on('pong', heartbeat);
   const {url} = request;
   // console.log('🔗 Client connected to:', url);
   // Parse URL to get pathname without query parameters
